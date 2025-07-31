@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:logize/pools/models/model_class.dart';
 import 'package:logize/pools/records/record_class.dart';
+import 'package:logize/utils/feedback.dart';
 import 'package:logize/utils/parse_map.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 
 typedef Col = CollectionBox<Map>?;
 
@@ -11,19 +15,32 @@ class HiveDB {
   BoxCollection? hdb;
 
   init() async {
-    await Hive.initFlutter();
-    hdb = await BoxCollection.open('deta-hive', {'records', 'models'});
-    records = await hdb!.openBox<Map>('records');
-    models = await hdb!.openBox<Map>('models');
+    try {
+      if (Platform.isIOS) {
+        await Hive.initFlutter((await getLibraryDirectory()).path);
+      } else {
+        await Hive.initFlutter();
+      }
+      hdb = await BoxCollection.open('deta-hive', {'records', 'models'});
+      records = await hdb!.openBox<Map>('records');
+      models = await hdb!.openBox<Map>('models');
 
-    // CLEAR DATABASE (DEV PURPOSES ONLY)
-    //await records!.clear();
-    //await models!.clear();
+      if (records == null || models == null) {
+        feedback('boxes are null');
+      }
+
+      // CLEAR DATABASE (DEV PURPOSES ONLY)
+      //await records!.clear();
+      //await models!.clear();
+    } catch (e) {
+      feedback('failed to init db: $e');
+    }
   }
 
   Future<String> saveModel(Model model) async {
-    final saveType =
-        (await models!.get(model.id) == null) ? 'add' : 'update';
+    final saveType = (await models!.get(model.id) == null)
+        ? 'add'
+        : 'update';
     await models!.put(model.id, model.serialize());
     return saveType;
   }
@@ -36,8 +53,9 @@ class HiveDB {
     await hdb!.transaction(() async {
       final recs = (await records!.getAllValues()).values;
       if (recs.isEmpty) return;
-      final recordsToDelete =
-          recs.where((record) => record['modelId'] == id).toList();
+      final recordsToDelete = recs
+          .where((record) => record['modelId'] == id)
+          .toList();
       for (final record in recordsToDelete) {
         await records!.delete(record['id']);
       }

@@ -2,6 +2,7 @@ import 'package:logize/apis/db.dart';
 import 'package:logize/pools/items/item_class.dart';
 import 'package:logize/pools/models/model_class.dart';
 import 'package:logize/pools/pools.dart';
+import 'package:logize/utils/feedback.dart';
 import 'package:logize/utils/parse_map.dart';
 
 typedef Models = Map<String, Model>;
@@ -25,11 +26,13 @@ class ModelsPool extends Pool<Models?> {
               Model.fromMap(map: parseMap(value)),
             );
           } catch (e) {
+	    feedback('model parse error');
             throw Exception('Failed to parse : $e');
           }
         });
         emit();
       } catch (e) {
+        feedback('Failed to retrieve models: $e');
         throw Exception('Failed to retrieve models: $e');
       }
     }
@@ -97,28 +100,24 @@ class ModelsPool extends Pool<Models?> {
     }
 
     // parse crazy map to lists of items
-    final List<List<Item>> itemLists =
-        scheduleMap.keys
-            .map<List<Item>>(
-              (type) =>
-                  scheduleMap[type]!.entries
-                      .map<Item>(
-                        (e) => Item(
-                          modelId: e.value.id,
-                          date: strDay,
-                          winnerSchRule: MapEntry(
-                            '$type/${e.key}',
-                            double.parse(
-                              e.value.scheduleRules![type]![e.key.split(
-                                '/',
-                              )[0]]!,
-                            ),
-                          ),
-                        ),
-                      )
-                      .toList(),
-            )
-            .toList();
+    final List<List<Item>> itemLists = scheduleMap.keys
+        .map<List<Item>>(
+          (type) => scheduleMap[type]!.entries
+              .map<Item>(
+                (e) => Item(
+                  modelId: e.value.id,
+                  date: strDay,
+                  winnerSchRule: MapEntry(
+                    '$type/${e.key}',
+                    double.parse(
+                      e.value.scheduleRules![type]![e.key.split('/')[0]]!,
+                    ),
+                  ),
+                ),
+              )
+              .toList(),
+        )
+        .toList();
 
     return [...itemLists[0], ...itemLists[1]];
   }

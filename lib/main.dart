@@ -13,6 +13,8 @@ import 'package:flutter/material.dart';
 
 final sharedPrefs = SharedPreferencesAsync();
 
+final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FlutterLocalization.instance.ensureInitialized();
@@ -38,15 +40,16 @@ class Logize extends StatelessWidget {
       initLanguageCode: 'en',
     );
 
-    FlutterLocalization.instance.onTranslatedLanguage =
-        (_) => themeModePool.emit();
+    FlutterLocalization.instance.onTranslatedLanguage = (_) =>
+        themeModePool.emit();
 
     return Swimmer<ThemeMode>(
       pool: themeModePool,
       builder: (context, mode) {
         eventProcessor.listen();
         return MaterialApp(
-          title: 'DETA',
+          title: 'Logize',
+          scaffoldMessengerKey: scaffoldMessengerKey,
           supportedLocales: FlutterLocalization.instance.supportedLocales,
           localizationsDelegates:
               FlutterLocalization.instance.localizationsDelegates,
@@ -60,17 +63,14 @@ class Logize extends StatelessWidget {
                 builder: (context, content) => content,
               ),
             ),
-            body:
-                screenIsLarge
-                    ? Row(
-                      children: [
-                        SideNavbar(key: UniqueKey()),
-                        Expanded(
-                          child: RootScreenSwitch(key: UniqueKey()),
-                        ),
-                      ],
-                    )
-                    : RootScreenSwitch(key: UniqueKey()),
+            body: screenIsLarge
+                ? Row(
+                    children: [
+                      SideNavbar(key: UniqueKey()),
+                      Expanded(child: RootScreenSwitch(key: UniqueKey())),
+                    ],
+                  )
+                : RootScreenSwitch(key: UniqueKey()),
             bottomNavigationBar: !screenIsLarge ? Navbar() : null,
           ),
         );
