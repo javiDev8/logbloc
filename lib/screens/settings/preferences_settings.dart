@@ -1,0 +1,72 @@
+import 'package:logize/config/locales.dart';
+import 'package:logize/pools/pools.dart';
+import 'package:logize/pools/theme_mode_pool.dart';
+import 'package:logize/widgets/design/button.dart';
+import 'package:logize/widgets/design/dropdown.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+
+class PreferencesSettings extends StatelessWidget {
+  const PreferencesSettings({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Text(Tr.theme.getString(context)),
+            Expanded(child: SizedBox()),
+            Swimmer<ThemeMode?>(
+              pool: themeModePool,
+              builder:
+                  (context, theme) => Row(
+                    children: [
+                      Button(
+                        Tr.light.getString(context),
+                        onPressed:
+                            () =>
+                                themeModePool.changeMode(ThemeMode.light),
+                      ),
+                      Button(
+                        Tr.dark.getString(context),
+                        onPressed:
+                            () => themeModePool.changeMode(ThemeMode.dark),
+                      ),
+                      Button(
+                        Tr.system.getString(context),
+                        onPressed:
+                            () =>
+                                themeModePool.changeMode(ThemeMode.system),
+                      ),
+                    ],
+                  ),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            Text(Tr.language.getString(context)),
+            Expanded(child: SizedBox()),
+            Padding(
+              padding: EdgeInsets.only(left: 10, top: 10),
+              child: Dropdown(
+                entries: [
+                  DropdownMenuEntry(value: 'en', label: 'english'),
+                  DropdownMenuEntry(value: 'es', label: 'español'),
+                ],
+                init:
+                    FlutterLocalization
+                        .instance
+                        .currentLocale!
+                        .languageCode,
+                onSelect:
+                    (val) => FlutterLocalization.instance.translate(val!),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
