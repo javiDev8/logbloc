@@ -6,6 +6,7 @@ class Button extends StatelessWidget {
   final VoidCallback onPressed;
   final bool? lg;
   final IconData? lead;
+  final Icon? leadi;
   final Color? overwrittenColor;
   final int variant;
   final bool filled;
@@ -16,6 +17,7 @@ class Button extends StatelessWidget {
     super.key,
     this.lg,
     this.lead,
+    this.leadi,
     this.overwrittenColor,
     this.variant = 0,
     this.filled = true,
@@ -25,10 +27,9 @@ class Button extends StatelessWidget {
   Widget build(BuildContext context) {
     final p = lg == null || !lg! ? 10.0 : 50.0;
 
-    final color =
-        themeModePool.data == ThemeMode.light
-            ? Colors.black
-            : Colors.white;
+    final color = themeModePool.data == ThemeMode.light
+        ? Colors.black
+        : Colors.white;
     final txtStyle = TextStyle(fontWeight: FontWeight.w600, color: color);
 
     final cs = Theme.of(context).colorScheme;
@@ -42,14 +43,15 @@ class Button extends StatelessWidget {
       side: WidgetStatePropertyAll(
         BorderSide(color: overwrittenColor ?? variants[variant], width: 2),
       ),
-      backgroundColor:
-          filled
-              ? WidgetStateProperty.resolveWith(
-                (_) => overwrittenColor ?? variants[variant],
-              )
-              : null,
+      backgroundColor: filled
+          ? WidgetStateProperty.resolveWith(
+              (_) => overwrittenColor ?? variants[variant],
+            )
+          : null,
     );
-    if (lead != null && text != null) {
+    final thereIsLead = (lead != null || leadi != null);
+
+    if (thereIsLead && text != null) {
       return Padding(
         padding: EdgeInsets.all(5),
         child: TextButton.icon(
@@ -61,13 +63,13 @@ class Button extends StatelessWidget {
           ),
           icon: Padding(
             padding: EdgeInsets.only(left: 10),
-            child: Icon(lead, color: color),
+            child: leadi ?? Icon(lead, color: color),
           ),
         ),
       );
     }
 
-    if (text != null && lead == null) {
+    if (text != null && !thereIsLead) {
       return Padding(
         padding: EdgeInsets.all(5),
         child: TextButton(
@@ -86,14 +88,14 @@ class Button extends StatelessWidget {
       );
     }
 
-    if (lead != null && text == null) {
+    if (thereIsLead && text == null) {
       return Padding(
         padding: EdgeInsets.all(5),
         child: IconButton(
           padding: EdgeInsets.all(15),
           onPressed: onPressed,
           style: style,
-          icon: Icon(lead, color: color),
+          icon: leadi ?? Icon(lead, color: color),
           color: color,
         ),
       );

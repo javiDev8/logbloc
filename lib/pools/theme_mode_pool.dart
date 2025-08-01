@@ -6,12 +6,9 @@ const seedColor = Color.fromARGB(1, 230, 173, 83);
 
 ColorScheme genColorScheme(Brightness brightness) => ColorScheme.fromSeed(
   seedColor: seedColor,
-  //seedColor: Colors.amber,
   contrastLevel: 0,
   dynamicSchemeVariant: DynamicSchemeVariant.fidelity,
   brightness: brightness,
-  //secondary: Color.fromARGB(1, 230, 127, 83),
-  //secondaryContainer: Color.fromRGBO(242, 174, 128, 1),
 );
 
 final detaTheme = ThemeData(colorScheme: genColorScheme(Brightness.light));
@@ -25,12 +22,7 @@ class ThemeModePool extends Pool<ThemeMode?> {
   ThemeModePool(super.def);
   init() async {
     final isDark = await sharedPrefs.getBool(prefKey);
-    if (isDark == null) {
-      data = ThemeMode.system;
-      return;
-    }
-    if (isDark) data = ThemeMode.dark;
-    if (!isDark) data = ThemeMode.light;
+    data = isDark == null || isDark ? ThemeMode.dark : ThemeMode.light;
   }
 
   changeMode(ThemeMode mode) async {

@@ -1,7 +1,6 @@
 import 'package:logize/pools/pools.dart';
 import 'package:logize/pools/screen_index_pool.dart';
 import 'package:logize/pools/topbar_pool.dart';
-import 'package:logize/screens/analysis/analysis_screen.dart';
 import 'package:logize/screens/daily/daily_screen.dart';
 import 'package:logize/screens/models/models_screen.dart';
 import 'package:logize/screens/settings/settings_screen.dart';
@@ -17,7 +16,6 @@ class RootScreen {
 final List<RootScreen> rootScreens = [
   RootScreen(screen: ModelsScreen(), nav: GlobalKey<NavigatorState>()),
   RootScreen(screen: DailyScreen(), nav: GlobalKey<NavigatorState>()),
-  RootScreen(screen: AnalysisScreen(), nav: GlobalKey<NavigatorState>()),
   RootScreen(screen: SettingsScreen(), nav: GlobalKey<NavigatorState>()),
 ];
 

@@ -23,7 +23,7 @@ class AddFtButton extends StatelessWidget {
           context: context,
           builder:
               (context) => SizedBox(
-                height: MediaQuery.sizeOf(context).height / 2,
+                height: availableFtTypes.length * 50 + 100,
                 child: Padding(
                   padding: EdgeInsets.all(10),
                   child: Center(

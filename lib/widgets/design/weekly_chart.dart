@@ -1,6 +1,7 @@
 import 'package:logize/utils/fmt_date.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:logize/widgets/design/txt.dart';
 
 class WeeklyChart extends StatelessWidget {
   final PageController pageController = PageController(initialPage: 1000);
@@ -100,10 +101,9 @@ class WeeklyChart extends StatelessWidget {
                           barRods: [
                             BarChartRodData(
                               toY: weekData[i],
-                              color:
-                                  Theme.of(
-                                    context,
-                                  ).colorScheme.tertiaryContainer,
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.tertiaryContainer,
                               width: 30,
                               borderRadius: BorderRadius.circular(4),
                             ),
@@ -115,7 +115,7 @@ class WeeklyChart extends StatelessWidget {
                         show: true,
                         bottomTitles: AxisTitles(
                           sideTitles: SideTitles(
-                            reservedSize: 50,
+                            reservedSize: 55,
                             showTitles: true,
                             getTitlesWidget: (value, meta) {
                               final dayIndex = value.toInt();
@@ -128,11 +128,13 @@ class WeeklyChart extends StatelessWidget {
                                 child: Column(
                                   children: [
                                     Text(_formatDayOfWeek(day)),
-                                    Text(
+                                    Txt(
                                       day
                                           .toString()
                                           .split(' ')[0]
                                           .split('-')[2],
+                                      w: 8,
+                                      p: EdgeInsets.zero,
                                     ),
                                   ],
                                 ),
@@ -155,21 +157,17 @@ class WeeklyChart extends StatelessWidget {
                       barTouchData: BarTouchData(
                         enabled: true,
                         touchTooltipData: BarTouchTooltipData(
-                          getTooltipItem: (
-                            group,
-                            groupIndex,
-                            rod,
-                            rodIndex,
-                          ) {
-                            String val = rod.toY.toStringAsFixed(1);
-                            if (integer != null && integer!) {
-                              val = val.split('.')[0];
-                            }
-                            return BarTooltipItem(
-                              '$val ${unit ?? ''}',
-                              const TextStyle(color: Colors.white),
-                            );
-                          },
+                          getTooltipItem:
+                              (group, groupIndex, rod, rodIndex) {
+                                String val = rod.toY.toStringAsFixed(1);
+                                if (integer != null && integer!) {
+                                  val = val.split('.')[0];
+                                }
+                                return BarTooltipItem(
+                                  '$val ${unit ?? ''}',
+                                  const TextStyle(color: Colors.white),
+                                );
+                              },
                         ),
                       ),
                       alignment: BarChartAlignment.spaceAround,

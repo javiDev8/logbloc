@@ -8,6 +8,7 @@ class TxtField extends StatelessWidget {
   final String? Function(String?)? validator;
   final String? label;
   final void Function(PointerDownEvent)? onTapOutside;
+  final int? maxLines;
 
   const TxtField({
     super.key,
@@ -18,6 +19,7 @@ class TxtField extends StatelessWidget {
     this.validator,
     this.onTapOutside,
     this.label,
+    this.maxLines,
   });
 
   @override
@@ -25,23 +27,27 @@ class TxtField extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(7),
       child: TextFormField(
+        maxLines: maxLines,
         onTapOutside: onTapOutside,
         validator: validator,
         onChanged: onChanged,
-        controller:
-            initialValue == null
-                ? null
-                : TextEditingController(text: initialValue),
+        controller: initialValue == null
+            ? null
+            : TextEditingController(text: initialValue),
         decoration: InputDecoration(
           label: label == null ? null : Text(label!),
-          contentPadding: EdgeInsets.only(left: 20, right: 20),
+          contentPadding: EdgeInsets.only(
+            left: 20,
+            right: 20,
+            top: maxLines == null ? 10 : 0,
+            bottom: maxLines == null ? 10 : 0,
+          ),
           hintText: hint,
-          border:
-              round == null || !round!
-                  ? null
-                  : OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(30)),
-                  ),
+          border: round == null || !round!
+              ? null
+              : OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(30)),
+                ),
         ),
       ),
     );

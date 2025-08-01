@@ -23,10 +23,6 @@ class SideNavbar extends StatelessWidget {
                     label: Tr.agenda.getString(context),
                   ),
                   NavigationDestination(
-                    icon: Icon(Icons.bar_chart),
-                    label: Tr.analysis.getString(context),
-                  ),
-                  NavigationDestination(
                     icon: Icon(Icons.settings),
                     label: Tr.settings.getString(context),
                   ),

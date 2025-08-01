@@ -36,6 +36,7 @@ class TextFtWidget extends StatelessWidget {
             ),
         if (!lock.record)
           TxtField(
+	    maxLines: null,
             initialValue: ft.content,
             round: true,
             hint: 'content',

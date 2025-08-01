@@ -14,7 +14,10 @@ class HiveDB {
   init() async {
     try {
       await Hive.initFlutter();
-      hdb = await BoxCollection.open('/logizehivedb', {'records', 'models'});
+      hdb = await BoxCollection.open('/logizehivedb', {
+        'records',
+        'models',
+      });
       records = await hdb!.openBox<Map>('records');
       models = await hdb!.openBox<Map>('models');
 
@@ -52,8 +55,9 @@ class HiveDB {
       for (final record in recordsToDelete) {
         await records!.delete(record['id']);
       }
-      await models!.delete(id);
     });
+    // must be outside transaction
+    await models!.delete(id);
   }
 
   // records

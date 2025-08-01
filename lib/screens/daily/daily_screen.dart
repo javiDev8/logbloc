@@ -1,5 +1,4 @@
 import 'package:logize/pools/items/items_by_day_pool.dart';
-import 'package:logize/pools/models/model_edit_pool.dart';
 import 'package:logize/pools/models/models_pool.dart';
 import 'package:logize/pools/pools.dart';
 import 'package:logize/pools/topbar_pool.dart';
@@ -14,6 +13,7 @@ import 'package:logize/widgets/design/txt.dart';
 import 'package:logize/widgets/item_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:logize/widgets/model_edit_title.dart';
 
 final int initPage = 999999999;
 DateTime initDate = DateTime.now();
@@ -80,21 +80,20 @@ class DailyScreen extends StatelessWidget {
                             index: newIndex,
                           );
                         },
-                        children:
-                            items
-                                .map<Widget>(
-                                  (item) => Row(
-                                    key: Key(item.id),
-                                    children: [
-                                      ItemBox(
-                                        key: UniqueKey(),
-                                        item: item,
-                                        screenTitle: item.model!.name,
-                                      ),
-                                    ],
+                        children: items
+                            .map<Widget>(
+                              (item) => Row(
+                                key: Key(item.id),
+                                children: [
+                                  ItemBox(
+                                    key: UniqueKey(),
+                                    item: item,
+                                    screenTitle: item.model!.name,
                                   ),
-                                )
-                                .toList(),
+                                ],
+                              ),
+                            )
+                            .toList(),
                       ),
                     );
                   },
@@ -108,99 +107,78 @@ class DailyScreen extends StatelessWidget {
                   isDismissible: false,
                   enableDrag: false,
                   context: context,
-                  builder:
-                      (context) => SizedBox(
-                        height: MediaQuery.of(context).size.height / 2,
-                        child: Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Center(
-                            child:
-                                modelsPool.data!.values.isEmpty
-                                    ? Column(
+                  builder: (context) => SizedBox(
+                    height: MediaQuery.of(context).size.height / 2,
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Center(
+                        child: modelsPool.data!.values.isEmpty
+                            ? Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Exp(),
+                                      IconButton(
+                                        onPressed: () => navPop(),
+                                        icon: Icon(Icons.close),
+                                      ),
+                                    ],
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
-                                        Row(
-                                          children: [
-                                            Exp(),
-                                            IconButton(
-                                              onPressed: () => navPop(),
-                                              icon: Icon(Icons.close),
+                                        Txt('no models'),
+                                        Button(
+                                          'make your first model!',
+                                          onPressed: () => navLink(
+                                            rootIndex: 0,
+                                            screen: ModelEditScreen(),
+                                            title: ModelEditTitle(
+                                              title: 'new model',
                                             ),
-                                          ],
-                                        ),
-                                        Expanded(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Txt('no models'),
-                                              Button(
-                                                'make your first model!',
-                                                onPressed:
-                                                    () => navLink(
-                                                      rootIndex: 0,
-                                                      screen:
-                                                          ModelEditScreen(),
-                                                      title: Row(
-                                                        children: [
-                                                          Text(
-                                                            'new model',
-                                                          ),
-                                                          Exp(),
-                                                          IconButton(
-                                                            onPressed:
-                                                                () async =>
-                                                                    await modelEditPool
-                                                                        .save(),
-                                                            icon: Icon(
-                                                              Icons.save,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                              ),
-                                            ],
                                           ),
                                         ),
                                       ],
-                                    )
-                                    : ListView(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: Text(
-                                                'select an available model',
-                                                textAlign:
-                                                    TextAlign.center,
-                                              ),
-                                            ),
-                                            IconButton(
-                                              onPressed: () => navPop(),
-                                              icon: Icon(Icons.close),
-                                            ),
-                                          ],
-                                        ),
-
-                                        ...modelsPool.data!.values
-                                            .map<Widget>(
-                                              (model) => ListTile(
-                                                title: Text(model.name),
-                                                onTap: () {
-                                                  itemsByDayPool
-                                                      .scheduleModel(
-                                                        model,
-                                                        currentDate,
-                                                      );
-                                                  navPop();
-                                                },
-                                              ),
-                                            ),
-                                      ],
                                     ),
-                          ),
-                        ),
+                                  ),
+                                ],
+                              )
+                            : ListView(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          'Select an available model',
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                      IconButton(
+                                        onPressed: () => navPop(),
+                                        icon: Icon(Icons.close),
+                                      ),
+                                    ],
+                                  ),
+
+                                  ...modelsPool.data!.values.map<Widget>(
+                                    (model) => ListTile(
+                                      title: Text(model.name),
+                                      onTap: () {
+                                        itemsByDayPool.scheduleModel(
+                                          model,
+                                          currentDate,
+                                        );
+                                        navPop();
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
                       ),
+                    ),
+                  ),
                 );
               },
               icon: Icon(Icons.article, size: 30),
