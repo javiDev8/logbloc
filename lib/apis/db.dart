@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:logize/pools/models/model_class.dart';
 import 'package:logize/pools/records/record_class.dart';
 import 'package:logize/utils/feedback.dart';
@@ -16,11 +14,9 @@ class HiveDB {
 
   init() async {
     try {
-      if (Platform.isIOS) {
-        await Hive.initFlutter((await getLibraryDirectory()).path);
-      } else {
-        await Hive.initFlutter();
-      }
+      await Hive.initFlutter(
+        (await getApplicationDocumentsDirectory()).path,
+      );
       hdb = await BoxCollection.open('deta-hive', {'records', 'models'});
       records = await hdb!.openBox<Map>('records');
       models = await hdb!.openBox<Map>('models');
