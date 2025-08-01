@@ -3,7 +3,6 @@ import 'package:logize/pools/records/record_class.dart';
 import 'package:logize/utils/feedback.dart';
 import 'package:logize/utils/parse_map.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
-import 'package:path_provider/path_provider.dart';
 
 typedef Col = CollectionBox<Map>?;
 
@@ -14,10 +13,8 @@ class HiveDB {
 
   init() async {
     try {
-      await Hive.initFlutter(
-        (await getApplicationDocumentsDirectory()).path,
-      );
-      hdb = await BoxCollection.open('deta-hive', {'records', 'models'});
+      await Hive.initFlutter();
+      hdb = await BoxCollection.open('/logizehivedb', {'records', 'models'});
       records = await hdb!.openBox<Map>('records');
       models = await hdb!.openBox<Map>('models');
 
