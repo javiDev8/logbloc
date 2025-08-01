@@ -19,28 +19,25 @@ class PreferencesSettings extends StatelessWidget {
             Expanded(child: SizedBox()),
             Swimmer<ThemeMode?>(
               pool: themeModePool,
-              builder:
-                  (context, theme) => Row(
-                    children: [
-                      Button(
-                        Tr.light.getString(context),
-                        onPressed:
-                            () =>
-                                themeModePool.changeMode(ThemeMode.light),
-                      ),
-                      Button(
-                        Tr.dark.getString(context),
-                        onPressed:
-                            () => themeModePool.changeMode(ThemeMode.dark),
-                      ),
-                      Button(
-                        Tr.system.getString(context),
-                        onPressed:
-                            () =>
-                                themeModePool.changeMode(ThemeMode.system),
-                      ),
-                    ],
+              builder: (context, theme) => Row(
+                children: [
+                  Button(
+                    Tr.light.getString(context),
+                    onPressed: () =>
+                        themeModePool.changeMode(ThemeMode.light),
+                    lead: Icons.light_mode,
+                    filled: theme == ThemeMode.light,
                   ),
+                  Button(
+                    Tr.dark.getString(context),
+                    onPressed: () =>
+                        themeModePool.changeMode(ThemeMode.dark),
+
+                    lead: Icons.dark_mode,
+                    filled: theme == ThemeMode.dark,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -55,13 +52,12 @@ class PreferencesSettings extends StatelessWidget {
                   DropdownMenuEntry(value: 'en', label: 'english'),
                   DropdownMenuEntry(value: 'es', label: 'español'),
                 ],
-                init:
-                    FlutterLocalization
-                        .instance
-                        .currentLocale!
-                        .languageCode,
-                onSelect:
-                    (val) => FlutterLocalization.instance.translate(val!),
+                init: FlutterLocalization
+                    .instance
+                    .currentLocale!
+                    .languageCode,
+                onSelect: (val) =>
+                    FlutterLocalization.instance.translate(val!),
               ),
             ),
           ],

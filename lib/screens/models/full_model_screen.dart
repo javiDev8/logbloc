@@ -24,47 +24,26 @@ class FullModelScreen extends StatelessWidget {
             modelsPool.retrieve();
             return Center(child: CircularProgressIndicator());
           }
+          final modelName = models[model.id]!.name;
           return ListView(
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Column(
-                    children: [
-                      Text('created at'),
-                      Text('20/Jul/25 14:52'),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Text(
-                        models[model.id]!.recordsQuantity.toString(),
-                        style: TextStyle(fontSize: 40),
-                      ),
-                      Text('records'),
-                    ],
-                  ),
-                ],
-              ),
-              Row(
                 children: [
                   Button(
-                    'records',
-                    onPressed:
-                        () => navPush(
-                          context: context,
-                          screen: ModelRecordsScreen(model: model),
-                          title: Text('records'),
-                        ),
+                    'records (${models[model.id]!.recordsQuantity.toString()})',
+                    onPressed: () => navPush(
+                      context: context,
+                      screen: ModelRecordsScreen(model: model),
+                      title: Text('$modelName records'),
+                    ),
                   ),
                   Button(
                     'stats',
-                    onPressed:
-                        () => navPush(
-                          context: context,
-                          screen: ModelStatsScreen(model: model),
-                          title: Text('analysis'),
-                        ),
+                    onPressed: () => navPush(
+                      context: context,
+                      screen: ModelStatsScreen(model: model),
+                      title: Text('$modelName stats'),
+                    ),
                   ),
                 ],
               ),
