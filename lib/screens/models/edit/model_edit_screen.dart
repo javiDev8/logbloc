@@ -105,10 +105,11 @@ class ModelEditScreen extends StatelessWidget {
                       padding: EdgeInsets.only(top: 15, bottom: 15),
                       child: Column(
                         children: [
-			  SectionDivider(string: 'Color picker',),
+                          SectionDivider(string: 'Color picker'),
                           ...[0, 1, 2].map<Widget>(
                             (k) => Row(
-			      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceEvenly,
                               children:
                                   List.generate(
                                     7,

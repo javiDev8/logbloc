@@ -27,6 +27,9 @@ class TxtField extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(7),
       child: TextFormField(
+        onTapUpOutside: (_) {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
         maxLines: maxLines,
         onTapOutside: onTapOutside,
         validator: validator,

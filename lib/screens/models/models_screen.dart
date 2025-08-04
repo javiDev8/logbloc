@@ -45,21 +45,20 @@ class ModelsScreen extends StatelessWidget {
                   (m) => ListTile(
                     key: Key(m.value.name),
                     title: Text(m.value.name),
-                    onTap:
-                        () => navPush(
-                          context: context,
-                          screen: FullModelScreen(model: m.value),
-                          title: Row(
-                            children: [
-                              Text(m.value.name),
-                              Exp(),
-                              ModelLeadMenuWidget(
-                                model: m.value,
-                                parentCtx: context,
-                              ),
-                            ],
+                    onTap: () => navPush(
+                      context: context,
+                      screen: FullModelScreen(model: m.value),
+                      title: Row(
+                        children: [
+                          Text(m.value.name),
+                          Exp(),
+                          ModelLeadMenuWidget(
+                            model: m.value,
+                            parentCtx: context,
                           ),
-                        ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -68,12 +67,11 @@ class ModelsScreen extends StatelessWidget {
         ),
         ActButton(
           icon: Icon(Icons.layers, size: 30),
-          onPressed:
-              () => navPush(
-                context: context,
-                screen: Scaffold(body: ModelEditScreen()),
-                title: ModelEditTitle(title: 'new model'),
-              ),
+          onPressed: () => navPush(
+            context: context,
+            screen: Scaffold(body: ModelEditScreen()),
+            title: ModelEditTitle(title: 'new model'),
+          ),
         ),
       ],
     );

@@ -11,8 +11,10 @@ class ModelEditPool extends Pool<Model> {
   ModelEditPool(super.def);
 
   save() async {
+    final modelCopy = Model.fromMap(map: data.serialize());
     final saveType = await data.save();
     topbarPool.popTitle();
+    rootScreens[topbarPool.rootIndex].nav.currentState!.pop();
     if (saveType == 'update') {
       topbarPool.setCurrentTitle(
         // ignore: sized_box_for_whitespace
@@ -23,11 +25,10 @@ class ModelEditPool extends Pool<Model> {
               Text(data.name),
               Exp(),
               Builder(
-                builder:
-                    (context) => ModelLeadMenuWidget(
-                      model: data,
-                      parentCtx: context,
-                    ),
+                builder: (context) => ModelLeadMenuWidget(
+                  model: modelCopy,
+                  parentCtx: context,
+                ),
               ),
             ],
           ),
@@ -36,7 +37,6 @@ class ModelEditPool extends Pool<Model> {
     }
 
     clean();
-    rootScreens[topbarPool.rootIndex].nav.currentState!.pop();
   }
 
   editExistingModel(Model model) {

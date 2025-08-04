@@ -17,7 +17,6 @@ class TopbarPool extends Pool<Widget> {
   static final initTitles = [
     [TrText(Tr.models)],
     [PrettyDate(date: initDate)],
-    [TrText(Tr.analysis)],
     [TrText(Tr.settings)],
   ];
 
@@ -42,14 +41,13 @@ class TopbarPool extends Pool<Widget> {
       data = Row(
         children: [
           Builder(
-            builder:
-                (context) => IconButton(
-                  onPressed: () {
-                    popTitle();
-                    rootScreens[rootIndex].nav.currentState!.pop();
-                  },
-                  icon: Icon(Icons.arrow_back),
-                ),
+            builder: (context) => IconButton(
+              onPressed: () {
+                popTitle();
+                rootScreens[rootIndex].nav.currentState!.pop();
+              },
+              icon: Icon(Icons.arrow_back),
+            ),
           ),
           title,
         ],
