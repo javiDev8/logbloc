@@ -7,6 +7,10 @@ import 'package:logize/screens/root_screen_switch.dart';
 import 'package:logize/widgets/design/exp.dart';
 import 'package:flutter/material.dart';
 
+// needed for average
+// ignore:depend_on_referenced_packages
+import 'package:collection/collection.dart';
+
 class ModelEditPool extends Pool<Model> {
   ModelEditPool(super.def);
 
@@ -50,6 +54,10 @@ class ModelEditPool extends Pool<Model> {
   }
 
   setFeature(Feature ft) {
+    if (data.features[ft.key] == null && data.features.isNotEmpty) {
+      // means feature is being added, so ensure appears on top
+      ft.position = data.getSortedFeatureList()[0].position - 1;
+    }
     data.features[ft.key] = ft;
     controller.sink.add('features');
   }
@@ -84,6 +92,33 @@ class ModelEditPool extends Pool<Model> {
   setColor(Color color) {
     data.color = color;
     controller.sink.add('color');
+  }
+
+  reorderFeature(int index, String ftKey) {
+    final prevIndex = index == 0 ? null : index - 1;
+    final nextIndex = index == data.features.length ? null : index;
+
+    if (prevIndex == null) {
+      double lowest = double.infinity;
+      for (final f in data.features.values) {
+        if (f.position < lowest) lowest = f.position;
+      }
+      data.features[ftKey]!.position = lowest - 1;
+    } else if (nextIndex == null) {
+      double greatest = 0;
+      for (final f in data.features.values) {
+        if (f.position > greatest) greatest = f.position;
+      }
+      data.features[ftKey]!.position = greatest + 1;
+    } else {
+      final sortedFts = data.getSortedFeatureList();
+      data.features[ftKey]!.position = <double>[
+        sortedFts[prevIndex].position,
+        sortedFts[nextIndex].position,
+      ].average;
+    }
+
+    controller.sink.add('features');
   }
 
   clean() {

@@ -9,6 +9,8 @@ class TextFt extends Feature {
     required super.type,
     required super.pinned,
     required super.isRequired,
+    required super.position,
+    super.schedule,
 
     required this.prompt,
     required this.content,
@@ -24,6 +26,9 @@ class TextFt extends Feature {
       type: ft.type,
       pinned: ft.pinned,
       isRequired: ft.isRequired,
+      position: ft.position,
+      schedule: ft.schedule,
+
       prompt: prompt,
       content: content,
     );
@@ -40,10 +45,9 @@ class TextFt extends Feature {
   ) => TextFt.fromBareFt(
     Feature.fromEntry(entry),
     prompt: entry.value['prompt'] as String,
-    content:
-        recordFt != null
-            ? recordFt['content'] as String
-            : entry.value['content'] as String,
+    content: recordFt != null
+        ? recordFt['content'] as String
+        : entry.value['content'] as String,
   );
 
   @override

@@ -25,6 +25,9 @@ class ItemBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final itemFormKey = GlobalKey<FormState>();
+
+    final sortedFts = item.getSortedFts();
+
     return Expanded(
       child: Container(
         margin: EdgeInsets.only(top: 10),
@@ -91,21 +94,21 @@ class ItemBox extends StatelessWidget {
                         ),
                         item.recordId == null
                             ? MenuOption(
-                              value: 'cancel',
-                              widget: ListTile(
-                                title: Text('cancel for this day'),
-                                leading: Icon(
-                                  Icons.cancel_presentation_rounded,
+                                value: 'cancel',
+                                widget: ListTile(
+                                  title: Text('cancel for this day'),
+                                  leading: Icon(
+                                    Icons.cancel_presentation_rounded,
+                                  ),
+                                ),
+                              )
+                            : MenuOption(
+                                value: 'clean',
+                                widget: ListTile(
+                                  title: Text('clean'),
+                                  leading: Icon(Icons.close),
                                 ),
                               ),
-                            )
-                            : MenuOption(
-                              value: 'clean',
-                              widget: ListTile(
-                                title: Text('clean'),
-                                leading: Icon(Icons.close),
-                              ),
-                            ),
                       ],
                     ),
                   ],
@@ -115,14 +118,13 @@ class ItemBox extends StatelessWidget {
             child: DecoratedBox(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                color:
-                    themeModePool.data == ThemeMode.dark
-                        ? (item.model?.color != null
-                            ? item.model!.color
-                            : Color.fromRGBO(100, 100, 100, 1))
-                        : (item.model?.color != null
-                            ? enbrightColor(item.model!.color!)
-                            : enbrightColor(Colors.grey)),
+                color: themeModePool.data == ThemeMode.dark
+                    ? (item.model?.color != null
+                          ? item.model!.color
+                          : Color.fromRGBO(100, 100, 100, 1))
+                    : (item.model?.color != null
+                          ? enbrightColor(item.model!.color!)
+                          : enbrightColor(Colors.grey)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,27 +136,26 @@ class ItemBox extends StatelessWidget {
                         if (item.date != null)
                           Padding(
                             padding: EdgeInsets.only(right: 10),
-                            child:
-                                item.recordId == null
-                                    ? Icon(Icons.circle_outlined)
-                                    : Icon(Icons.circle),
+                            child: item.recordId == null
+                                ? Icon(Icons.circle_outlined)
+                                : Icon(Icons.circle),
                           ),
 
                         item.date == null && item.record != null
                             ? Text(
-                              hdate(DateTime.parse(item.record!.date)),
-                            )
+                                hdate(DateTime.parse(item.record!.date)),
+                              )
                             : Text(
-                              item.modelName ?? '',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w800,
+                                item.modelName ?? '',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w800,
+                                ),
                               ),
-                            ),
 
                         Exp(),
 
                         if (item.date != null)
-                          ...item.model!.features.values
+                          ...sortedFts
                               .where((f) => !f.pinned)
                               .map<Widget>(
                                 (ft) => Padding(
@@ -174,7 +175,7 @@ class ItemBox extends StatelessWidget {
                     ),
                   ),
 
-                  ...item.features.values
+                  ...sortedFts
                       .where((f) => f.pinned)
                       .map<Widget>(
                         (ft) => FeatureWidget(

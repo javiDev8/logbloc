@@ -9,11 +9,7 @@ import 'package:flutter/material.dart';
 class ItemScreen extends StatelessWidget {
   final Item item;
   final GlobalKey<FormState> formKey;
-  const ItemScreen({
-    super.key,
-    required this.item,
-    required this.formKey,
-  });
+  const ItemScreen({super.key, required this.item, required this.formKey});
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +26,8 @@ class ItemScreen extends StatelessWidget {
         ),
       ),
     );
+
+    final sortedFts = item.getSortedFts(staged: true);
 
     paintFt(Feature ft) => FeatureWidget(
       key: UniqueKey(),
@@ -50,14 +48,10 @@ class ItemScreen extends StatelessWidget {
             ),
 
           // pinned
-          ...item.stagedFeatures.values
-              .where((f) => f.pinned)
-              .map<Widget>(paintFt),
+          ...sortedFts.where((f) => f.pinned).map<Widget>(paintFt),
 
           // not pinned
-          ...item.stagedFeatures.values
-              .where((f) => !f.pinned)
-              .map<Widget>(paintFt),
+          ...sortedFts.where((f) => !f.pinned).map<Widget>(paintFt),
         ],
       ),
     );

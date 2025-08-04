@@ -10,6 +10,8 @@ class NumberFt extends Feature {
     required super.type,
     required super.pinned,
     required super.isRequired,
+    required super.position,
+    super.schedule,
 
     required this.label,
     this.value,
@@ -27,6 +29,9 @@ class NumberFt extends Feature {
       type: ft.type,
       pinned: ft.pinned,
       isRequired: ft.isRequired,
+      position: ft.position,
+      schedule: ft.schedule,
+
       label: label,
       value: value,
       unit: unit,
@@ -48,10 +53,9 @@ class NumberFt extends Feature {
   ) => NumberFt.fromBareFt(
     Feature.fromEntry(entry),
     label: entry.value['label'] as String,
-    value:
-        recordFt != null
-            ? (recordFt['value'] as num?)?.toDouble()
-            : (entry.value['value'] as num?)?.toDouble(),
+    value: recordFt != null
+        ? (recordFt['value'] as num?)?.toDouble()
+        : (entry.value['value'] as num?)?.toDouble(),
     unit: entry.value['unit'],
   );
 

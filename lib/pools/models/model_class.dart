@@ -38,10 +38,9 @@ class Model {
     id: map['id'],
     name: map['name'],
     recordsQuantity: map['records-quantity'] as int,
-    color:
-        map.containsKey('color')
-            ? Color(int.parse(map['color'] as String))
-            : null,
+    color: map.containsKey('color')
+        ? Color(int.parse(map['color'] as String))
+        : null,
     features: Map.fromEntries(
       (map['features'] as Map<String, dynamic>).entries
           .map<MapEntry<String, Feature>>(
@@ -137,5 +136,11 @@ class Model {
       scheduleRules!['day']![strDate] = 'c';
     }
     await save();
+  }
+
+  List<Feature> getSortedFeatureList() {
+    List<Feature> fts = features.values.toList();
+    fts.sort((a, b) => a.position.compareTo(b.position));
+    return fts;
   }
 }

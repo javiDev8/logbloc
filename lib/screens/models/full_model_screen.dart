@@ -52,11 +52,11 @@ class FullModelScreen extends StatelessWidget {
                 string: 'features (${model.features.length.toString()})',
               ),
 
-              ...models[model.id]!.features.entries.map(
+              ...models[model.id]!.getSortedFeatureList().map(
                 (ft) => FeatureWidget(
                   detailed: true,
                   lock: FeatureLock(model: true, record: true),
-                  feature: ft.value,
+                  feature: ft,
                 ),
               ),
             ],

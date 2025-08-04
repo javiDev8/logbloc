@@ -39,11 +39,11 @@ class Item {
             entry.key,
             record?.features[entry.key] != null
                 ? featureSwitch(
-                      parseType: 'class',
-                      entry: serializedEntry,
-                      recordFt: record?.features[entry.key],
-                    )
-                    as Feature
+                        parseType: 'class',
+                        entry: serializedEntry,
+                        recordFt: record?.features[entry.key],
+                      )
+                      as Feature
                 : modelFt,
           );
         }) ??
@@ -81,5 +81,13 @@ class Item {
     } else {
       await record!.save();
     }
+  }
+
+  List<Feature> getSortedFts({bool staged = false}) {
+    final fts = staged
+        ? stagedFeatures.values.toList()
+        : features.values.toList();
+    fts.sort((a, b) => a.position.compareTo(b.position));
+    return fts;
   }
 }
