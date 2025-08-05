@@ -26,24 +26,23 @@ class ModelRecordsScreen extends StatelessWidget {
         return Padding(
           padding: EdgeInsets.symmetric(horizontal: 7),
           child: ListView(
-            children:
-                records
-                    .map<Widget>(
-                      (r) => Row(
-                        children: [
-                          ItemBox(
-                            key: UniqueKey(),
-                            item: Item(
-                              modelId: model.id,
-                              recordId: r.id,
-                              winnerSchRule: MapEntry('', 0),
-                            ),
-                            screenTitle: hdate(DateTime.parse(r.date)),
-                          ),
-                        ],
+            children: records
+                .map<Widget>(
+                  (r) => Row(
+                    children: [
+                      ItemBox(
+                        key: UniqueKey(),
+                        item: Item(
+                          modelId: model.id,
+                          recordId: r.id,
+                          schedule: r.schedule,
+                        ),
+                        screenTitle: hdate(DateTime.parse(r.schedule.day)),
                       ),
-                    )
-                    .toList(),
+                    ],
+                  ),
+                )
+                .toList(),
           ),
         );
       },

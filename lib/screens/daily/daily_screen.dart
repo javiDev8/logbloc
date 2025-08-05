@@ -64,9 +64,8 @@ class DailyScreen extends StatelessWidget {
                     }
 
                     items.sort(
-                      (a, b) => a.winnerSchRule.value.compareTo(
-                        b.winnerSchRule.value,
-                      ),
+                      (a, b) =>
+                          a.schedule.place.compareTo(b.schedule.place),
                     );
 
                     return Padding(

@@ -1,19 +1,18 @@
 import 'package:logize/apis/db.dart';
 import 'package:logize/event_processor.dart';
+import 'package:logize/pools/models/model_class.dart';
 
 class Rec {
   String id;
   String modelId;
-  String date;
   Map<String, dynamic> features;
-  double sortPlace;
+  Schedule schedule;
 
   Rec({
     required this.id,
     required this.modelId,
-    required this.date,
     required this.features,
-    required this.sortPlace,
+    required this.schedule,
   });
 
   serialize() {
@@ -21,8 +20,7 @@ class Rec {
       'id': id,
       'modelId': modelId,
       'features': features,
-      'date': date,
-      'sortPlace': sortPlace,
+      'schedule': schedule.serialize(),
     };
   }
 
@@ -31,8 +29,7 @@ class Rec {
       id: map['id'] as String,
       modelId: map['modelId'] as String,
       features: Map<String, dynamic>.from(map['features'] as Map),
-      date: map['date'] as String,
-      sortPlace: (map['sortPlace'] as num).toDouble(),
+      schedule: Schedule.fromMap(map['schedule']),
     );
   }
 

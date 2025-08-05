@@ -1,4 +1,5 @@
 import 'package:logize/apis/db.dart';
+import 'package:logize/pools/items/item_class.dart';
 import 'package:logize/pools/pools.dart';
 import 'package:logize/pools/records/record_class.dart';
 import 'package:logize/utils/parse_map.dart';
@@ -25,15 +26,22 @@ class RecordsPool extends Pool<Map<String, Rec>?> {
     }
   }
 
-  List<Rec>? getRecordsByDay(String strday) {
+  List<Item>? getDayItems(String strDay) {
     if (data == null) {
       retrieve();
       return null;
     }
 
-    return data!.entries
-        .where((rec) => rec.value.date == strday)
-        .map<Rec>((re) => re.value)
+    return data!.values
+        .where((rec) => rec.schedule.day == strDay)
+        .map<Item>(
+          (rec) => Item(
+            recordId: rec.id,
+            modelId: rec.modelId,
+            schedule: rec.schedule,
+            date: strDay,
+          ),
+        )
         .toList();
   }
 

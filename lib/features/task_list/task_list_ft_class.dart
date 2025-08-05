@@ -53,7 +53,6 @@ class TaskListFt extends Feature {
     required super.pinned,
     required super.isRequired,
     required super.position,
-    super.schedule,
 
     required this.tasks,
   });
@@ -68,7 +67,6 @@ class TaskListFt extends Feature {
       pinned: ft.pinned,
       isRequired: ft.isRequired,
       position: ft.position,
-      schedule: ft.schedule,
 
       tasks: tasks,
     );

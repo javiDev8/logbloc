@@ -12,13 +12,13 @@ class Item {
   String? recordId;
   String? date;
   Features stagedFeatures;
-  MapEntry<String, double> winnerSchRule;
+  Schedule schedule;
 
   Item({
     required this.modelId,
+    required this.schedule,
     this.recordId,
     this.date,
-    required this.winnerSchRule,
   }) : stagedFeatures = {},
        id = UniqueKey().toString();
 
@@ -29,24 +29,30 @@ class Item {
   String? get modelName => model?.name;
 
   Features get features => Map.fromEntries(
-    model?.features.entries.map((entry) {
-          final modelFt = entry.value;
-          final serializedEntry = MapEntry(
-            entry.key,
-            entry.value.serialize(),
-          );
-          return MapEntry(
-            entry.key,
-            record?.features[entry.key] != null
-                ? featureSwitch(
-                        parseType: 'class',
-                        entry: serializedEntry,
-                        recordFt: record?.features[entry.key],
-                      )
-                      as Feature
-                : modelFt,
-          );
-        }) ??
+    model?.features.entries
+            .where(
+              (ft) =>
+                  schedule.includedFts == null ||
+                  schedule.includedFts?.contains(ft.key) == true,
+            )
+            .map((entry) {
+              final modelFt = entry.value;
+              final serializedEntry = MapEntry(
+                entry.key,
+                entry.value.serialize(),
+              );
+              return MapEntry(
+                entry.key,
+                record?.features[entry.key] != null
+                    ? featureSwitch(
+                            parseType: 'class',
+                            entry: serializedEntry,
+                            recordFt: record?.features[entry.key],
+                          )
+                          as Feature
+                    : modelFt,
+              );
+            }) ??
         [],
   );
 
@@ -59,11 +65,15 @@ class Item {
     try {
       if (recordId == null) {
         await Rec(
-          sortPlace: winnerSchRule.value,
+          schedule: Schedule(
+            id: schedule.id,
+            day: date!,
+            includedFts: schedule.includedFts,
+            place: schedule.place,
+          ),
           id: UniqueKey().toString(),
           modelId: modelId,
           features: serializedFeatures,
-          date: date!,
         ).save();
       } else {
         recordsPool.data![recordId]!.features = serializedFeatures;

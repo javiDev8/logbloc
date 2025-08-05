@@ -6,25 +6,69 @@ import 'package:flutter/material.dart';
 
 // the num represents a priority for sorting, being
 // 0 the default, so "0" means is there, null means is not
-typedef ScheduleRules = Map<String, Map<String, String>>;
 
 typedef Features = Map<String, Feature>;
+
+class Schedule {
+  String id;
+  String day;
+  double place;
+  String? period; // null -> puntual
+  List<String>? includedFts; // null -> all
+
+  static const periods = [null, 'day', 'week', 'month', 'year'];
+
+  Schedule({
+    required this.id,
+    required this.day,
+    required this.place,
+    this.period,
+    this.includedFts,
+  });
+
+  factory Schedule.fromMap(Map<String, dynamic> map) => Schedule(
+    id: map['id'] as String,
+    day: map['day'] as String,
+    place: (map['place'] as num).toDouble(),
+    period: map['period'] as String?,
+    includedFts: map['includedFts'] as List<String>?,
+  );
+
+  factory Schedule.empty({required String day, String? period}) =>
+      Schedule(
+        day: day,
+        period: period,
+        id: UniqueKey().toString(),
+        place: 0.0,
+      );
+
+  Map<String, dynamic> serialize() => {
+    'id': id,
+    'day': day,
+    'place': place,
+    if (period != null) 'period': period,
+    if (includedFts != null) 'includedFts': includedFts,
+  };
+}
 
 class Model {
   String id;
   String name;
   Features features;
-  ScheduleRules? scheduleRules;
   int recordsQuantity;
   Color? color;
+
+  List<Schedule>? schedules;
+  List<String>? cancelledDates;
 
   Model({
     required this.name,
     required this.features,
     required this.recordsQuantity,
     required this.id,
-    this.scheduleRules,
     this.color,
+    this.schedules,
+    this.cancelledDates,
   });
 
   factory Model.empty() => Model(
@@ -50,29 +94,30 @@ class Model {
             ),
           ),
     ),
-    scheduleRules: (map['scheduleRules'] as Map<String, dynamic>?)?.map(
-      (key, value) => MapEntry(
-        key,
-        (value as Map<String, dynamic>).map((k, v) => MapEntry(k, v)),
-      ),
-    ),
+    schedules: map['schedules'] == null
+        ? null
+        : List<Schedule>.from(
+            map['schedules']?.map<Schedule>(
+              (e) => Schedule.fromMap(Map<String, dynamic>.from(e)),
+            ),
+          ),
+
+    cancelledDates: map['cancelled-dates'],
   );
 
-  Map<String, dynamic> serialize() {
-    final map = {
-      'id': id,
-      'name': name,
-      'records-quantity': recordsQuantity,
-      'features': features.map(
-        (key, value) => MapEntry(key, value.serialize()),
-      ),
-      'scheduleRules': scheduleRules,
-    };
-    if (color != null) {
-      map['color'] = color!.toARGB32().toString();
-    }
-    return map;
-  }
+  Map<String, dynamic> serialize() => {
+    'id': id,
+    'name': name,
+    'records-quantity': recordsQuantity,
+    'features': features.map(
+      (key, value) => MapEntry(key, value.serialize()),
+    ),
+
+    if (color != null) 'color': color!.toARGB32().toString(),
+    if (schedules != null)
+      'schedules': schedules!.map((s) => s.serialize()).toList(),
+    if (cancelledDates != null) 'cancelled-dates': cancelledDates,
+  };
 
   Future<String> save() async {
     try {
@@ -107,35 +152,9 @@ class Model {
     }
   }
 
-  addScheduleRule(
-    Map<String, String> map,
-    // expected map format is { 'day': '2025-06-01' } or
-    // { 'week-day': '3' } or { 'month-day': 15 } ...etc
-  ) {
-    scheduleRules ??= {};
-    scheduleRules![map.entries.first.key] ??= {};
-    if ((scheduleRules![map.entries.first.key]!.containsKey(
-          map.entries.first.value,
-        )) &&
-        map.keys.first == 'week-day') {
-      scheduleRules![map.entries.first.key]!.remove(
-        map.entries.first.value,
-      );
-    } else {
-      scheduleRules![map.entries.first.key]![map.entries.first.value] =
-          '${DateTime.now().millisecondsSinceEpoch.toString()}.0';
-    }
-  }
-
-  cancelSchedule(String strDate) async {
-    if (scheduleRules!.containsKey('day') &&
-        scheduleRules!['day']!.containsKey(strDate)) {
-      scheduleRules!['day']!.remove(strDate);
-    } else {
-      scheduleRules!['day'] ??= {};
-      scheduleRules!['day']![strDate] = 'c';
-    }
-    await save();
+  addSchedule(Schedule sch) {
+    schedules ??= [];
+    schedules!.add(sch);
   }
 
   List<Feature> getSortedFeatureList() {

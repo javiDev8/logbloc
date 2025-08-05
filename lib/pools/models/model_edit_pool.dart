@@ -67,26 +67,9 @@ class ModelEditPool extends Pool<Model> {
     controller.sink.add('features');
   }
 
-  addScheduleRuleKey(String key) {
-    data.scheduleRules ??= {};
-    if (data.scheduleRules!.containsKey(key)) return;
-    data.scheduleRules![key] = {};
-    controller.sink.add('schedule-rules');
-  }
-
-  removeScheduleKey(String key) {
-    data.scheduleRules!.remove(key);
-    controller.sink.add('schedule-rules');
-  }
-
-  addSchedule(map) {
-    data.addScheduleRule(map);
-    controller.sink.add('schedule-rules');
-  }
-
-  removeSchedule(Map<String, dynamic> map) {
-    data.scheduleRules![map.keys.first]!.remove(map.values.first);
-    controller.sink.add('schedule-rules');
+  addSchedule(Schedule sch) {
+    data.addSchedule(sch);
+    controller.sink.add('schedules');
   }
 
   setColor(Color color) {

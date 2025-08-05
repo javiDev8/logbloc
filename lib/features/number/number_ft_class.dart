@@ -11,7 +11,6 @@ class NumberFt extends Feature {
     required super.pinned,
     required super.isRequired,
     required super.position,
-    super.schedule,
 
     required this.label,
     this.value,
@@ -30,7 +29,6 @@ class NumberFt extends Feature {
       pinned: ft.pinned,
       isRequired: ft.isRequired,
       position: ft.position,
-      schedule: ft.schedule,
 
       label: label,
       value: value,

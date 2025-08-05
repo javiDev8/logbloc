@@ -10,7 +10,6 @@ class TextFt extends Feature {
     required super.pinned,
     required super.isRequired,
     required super.position,
-    super.schedule,
 
     required this.prompt,
     required this.content,
@@ -27,7 +26,6 @@ class TextFt extends Feature {
       pinned: ft.pinned,
       isRequired: ft.isRequired,
       position: ft.position,
-      schedule: ft.schedule,
 
       prompt: prompt,
       content: content,

@@ -4,7 +4,6 @@ class Feature {
   bool pinned;
   bool isRequired;
   double position;
-  String? schedule;
 
   Feature({
     required this.id,
@@ -12,7 +11,6 @@ class Feature {
     required this.pinned,
     required this.isRequired,
     required this.position,
-    this.schedule,
   });
 
   get key => '$type-$id';
@@ -38,21 +36,14 @@ class Feature {
       pinned: map['pinned'],
       isRequired: map['isRequired'],
       position: map['position'],
-      schedule: map['schedule'],
     );
   }
 
-  Map<String, dynamic> serialize() {
-    final serial = {
-      'pinned': pinned,
-      'isRequired': isRequired,
-      'position': position,
-    };
-    if (schedule != null) {
-      serial['schedule'] = schedule!;
-    }
-    return serial;
-  }
+  Map<String, dynamic> serialize() => {
+    'pinned': pinned,
+    'isRequired': isRequired,
+    'position': position,
+  };
 
   Map<String, dynamic> makeRec() => {};
 }

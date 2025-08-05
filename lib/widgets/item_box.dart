@@ -60,11 +60,6 @@ class ItemBox extends StatelessWidget {
                             navPop();
                             break;
 
-                          case 'cancel':
-                            await item.model!.cancelSchedule(item.date!);
-                            navPop();
-                            break;
-
                           case 'go-to-model':
                             navLink(
                               rootIndex: 0,
@@ -92,23 +87,14 @@ class ItemBox extends StatelessWidget {
                             leading: Icon(Icons.arrow_forward),
                           ),
                         ),
-                        item.recordId == null
-                            ? MenuOption(
-                                value: 'cancel',
-                                widget: ListTile(
-                                  title: Text('cancel for this day'),
-                                  leading: Icon(
-                                    Icons.cancel_presentation_rounded,
-                                  ),
-                                ),
-                              )
-                            : MenuOption(
-                                value: 'clean',
-                                widget: ListTile(
-                                  title: Text('clean'),
-                                  leading: Icon(Icons.close),
-                                ),
-                              ),
+                        if (item.recordId != null)
+                          MenuOption(
+                            value: 'clean',
+                            widget: ListTile(
+                              title: Text('clean'),
+                              leading: Icon(Icons.close),
+                            ),
+                          ),
                       ],
                     ),
                   ],
@@ -143,7 +129,11 @@ class ItemBox extends StatelessWidget {
 
                         item.date == null && item.record != null
                             ? Text(
-                                hdate(DateTime.parse(item.record!.date)),
+                                hdate(
+                                  DateTime.parse(
+                                    item.record!.schedule.day,
+                                  ),
+                                ),
                               )
                             : Text(
                                 item.modelName ?? '',

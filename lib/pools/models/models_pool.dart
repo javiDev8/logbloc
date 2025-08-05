@@ -26,7 +26,7 @@ class ModelsPool extends Pool<Models?> {
               Model.fromMap(map: parseMap(value)),
             );
           } catch (e) {
-	    feedback('model parse error');
+            feedback('model parse error');
             throw Exception('Failed to parse : $e');
           }
         });
@@ -38,88 +38,46 @@ class ModelsPool extends Pool<Models?> {
     }
   }
 
-  List<Item>? getModelItemsByDay(String strDay) {
+  List<Item>? getDayItems(String strDay) {
     if (data == null) {
       retrieve();
       return null;
     }
-    final ruleTypes = ['week-day', 'day'];
+    final List<Item> items = [];
 
-    // get all models for given date classified by rule type
-    final Map<String, Map<String, Model>> scheduleMap = Map.fromEntries(
-      ruleTypes.map<MapEntry<String, Map<String, Model>>>((ruletype) {
-        late final String key;
-        switch (ruletype) {
-          case 'week-day':
-            key = (DateTime.parse(strDay).weekday - 1).toString();
-            break;
-          case 'day':
-            key = strDay;
-            break;
-        }
+    for (final period in Schedule.periods) {
+      final date = DateTime.parse(strDay);
+      late final String day;
+      switch (period) {
+        case null:
+          day = strDay;
+          break;
+        case 'week':
+          day = date.weekday.toString();
+          break;
+        case 'month':
+          day = date.day.toString();
+          break;
+        case 'year':
+          date.year.toString();
+          break;
+      }
 
-        return MapEntry(
-          ruletype,
-          Map.fromEntries(
-            data!.values
-                .where((m) => m.scheduleRules?[ruletype]?[key] != null)
-                .map<MapEntry<String, Model>>(
-                  (m) => MapEntry('$key/${m.id}', m),
-                )
-                .toList(),
-          ),
-        );
-      }),
-    );
-
-    if (scheduleMap['week-day']!.isNotEmpty &&
-        scheduleMap['day']!.isNotEmpty) {
-      // remove low hierarchy rule matched models,
-      // for now is just "day" over "weekly-day"
-      scheduleMap['week-day']!.removeWhere((key, weekModel) {
-        late Model? modelMatch;
-        try {
-          modelMatch = scheduleMap['day']!.values.firstWhere(
-            (dayModel) => dayModel.id == weekModel.id,
+      for (final model in data!.values) {
+        if (model.schedules?.isNotEmpty == true) {
+          final schMatches = model.schedules!.where(
+            (sch) => sch.period == period && sch.day == day,
           );
-        } catch (e) {
-          modelMatch = null;
+          items.addAll(
+            schMatches.map(
+              (s) => Item(modelId: model.id, schedule: s, date: strDay),
+            ),
+          );
         }
-        if (modelMatch == null) {
-          return false;
-        }
-        return true;
-      });
+      }
     }
 
-    // apply cancelations
-    if (scheduleMap['day']!.isNotEmpty) {
-      scheduleMap['day']!.removeWhere(
-        (sch, m) => m.scheduleRules!['day']![sch.split('/')[0]] == 'c',
-      );
-    }
-
-    // parse crazy map to lists of items
-    final List<List<Item>> itemLists = scheduleMap.keys
-        .map<List<Item>>(
-          (type) => scheduleMap[type]!.entries
-              .map<Item>(
-                (e) => Item(
-                  modelId: e.value.id,
-                  date: strDay,
-                  winnerSchRule: MapEntry(
-                    '$type/${e.key}',
-                    double.parse(
-                      e.value.scheduleRules![type]![e.key.split('/')[0]]!,
-                    ),
-                  ),
-                ),
-              )
-              .toList(),
-        )
-        .toList();
-
-    return [...itemLists[0], ...itemLists[1]];
+    return items;
   }
 }
 

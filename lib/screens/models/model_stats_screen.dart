@@ -27,7 +27,7 @@ class ModelStatsScreen extends StatelessWidget {
                 .where((rec) => rec.features.keys.contains(mFt.key))
                 .map(
                   (rec) => {
-                    'date': DateTime.parse(rec.date),
+                    'date': DateTime.parse(rec.schedule.day),
                     ...rec.features[mFt.key] as Map<String, dynamic>,
                   },
                 )

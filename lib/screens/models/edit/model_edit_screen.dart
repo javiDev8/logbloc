@@ -6,7 +6,7 @@ import 'package:logize/pools/models/model_edit_pool.dart';
 import 'package:logize/pools/pools.dart';
 import 'package:logize/pools/theme_mode_pool.dart';
 import 'package:logize/screens/models/edit/actions/add_ft_button.dart';
-import 'package:logize/screens/models/edit/schedule_rules_widget.dart';
+import 'package:logize/screens/models/edit/schedules.dart';
 import 'package:logize/utils/color_convert.dart';
 import 'package:logize/widgets/design/button.dart';
 import 'package:logize/widgets/design/section_divider.dart';
@@ -117,7 +117,12 @@ class ModelEditScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      ScheduleRulesWidget(key: UniqueKey()),
+
+                      SchedulesView(
+                        key: UniqueKey(),
+                        locked: false,
+                        model: modelEditPool.data,
+                      ),
 
                       Padding(
                         padding: EdgeInsets.only(top: 15, bottom: 15),
