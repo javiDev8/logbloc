@@ -3,6 +3,7 @@ import 'package:logize/event_processor.dart';
 import 'package:logize/features/feature_class.dart';
 import 'package:logize/features/feature_switch.dart';
 import 'package:flutter/material.dart';
+import 'package:logize/pools/tags_pool.dart';
 
 // the num represents a priority for sorting, being
 // 0 the default, so "0" means is there, null means is not
@@ -51,40 +52,72 @@ class Schedule {
   };
 }
 
+class Tag {
+  String id;
+  String name;
+  Color? color;
+
+  Tag({required this.id, required this.name, this.color});
+
+  factory Tag.empty() => Tag(id: UniqueKey().toString(), name: '');
+
+  factory Tag.fromMap(Map<String, dynamic> map) => Tag(
+    id: map['id'] as String,
+    name: map['name'] as String,
+    color: map.containsKey('color')
+        ? Color(int.parse(map['color'] as String))
+        : null,
+  );
+
+  serialize() => {
+    'id': id,
+    'name': name,
+    if (color != null) 'color': color!.toARGB32().toString(),
+  };
+
+  save() async {}
+}
+
 class Model {
   String id;
   String name;
   Features features;
-  int recordsQuantity;
-  Color? color;
-
+  int recordCount;
+  DateTime createdAt;
   List<Schedule>? schedules;
-  List<String>? cancelledDates;
+  Map<String, String>? cancelledSchedules;
+  Color? color;
+  Map<String, Tag>? tags;
 
   Model({
+    required this.id,
     required this.name,
     required this.features,
-    required this.recordsQuantity,
-    required this.id,
-    this.color,
+    required this.recordCount,
+    required this.createdAt,
     this.schedules,
-    this.cancelledDates,
+    this.cancelledSchedules,
+    this.color,
+    this.tags,
   });
 
   factory Model.empty() => Model(
     name: '',
     features: {},
-    recordsQuantity: 0,
+    recordCount: 0,
     id: UniqueKey().toString(),
+    createdAt: DateTime.now(),
   );
 
   factory Model.fromMap({required Map<String, dynamic> map}) => Model(
     id: map['id'],
     name: map['name'],
-    recordsQuantity: map['records-quantity'] as int,
-    color: map.containsKey('color')
-        ? Color(int.parse(map['color'] as String))
-        : null,
+    recordCount: map['record-count'] as int,
+
+    createdAt: DateTime.fromMillisecondsSinceEpoch(
+      map['created-at'] as int,
+    ),
+
     features: Map.fromEntries(
       (map['features'] as Map<String, dynamic>).entries
           .map<MapEntry<String, Feature>>(
@@ -94,6 +127,7 @@ class Model {
             ),
           ),
     ),
+
     schedules: map['schedules'] == null
         ? null
         : List<Schedule>.from(
@@ -102,25 +136,43 @@ class Model {
             ),
           ),
 
-    cancelledDates: map['cancelled-dates'],
+    cancelledSchedules: map['cancelled-schedules'],
+
+    color: map.containsKey('color')
+        ? Color(int.parse(map['color'] as String))
+        : null,
+
+    tags: map['tags'] == null || tagsPool.data == null
+        ? null
+        : Map.fromEntries(
+            (map['tags'] as List<String>)
+                // ensure is contained in tags pool
+                .where((tid) => tagsPool.data!.keys.contains(tid))
+                .map<MapEntry<String, Tag>>(
+                  (tid) => MapEntry(tid, tagsPool.data![tid]!),
+                ),
+          ),
   );
 
   Map<String, dynamic> serialize() => {
     'id': id,
     'name': name,
-    'records-quantity': recordsQuantity,
+    'record-count': recordCount,
+    'created-at': createdAt.millisecondsSinceEpoch,
     'features': features.map(
       (key, value) => MapEntry(key, value.serialize()),
     ),
-
-    if (color != null) 'color': color!.toARGB32().toString(),
     if (schedules != null)
       'schedules': schedules!.map((s) => s.serialize()).toList(),
-    if (cancelledDates != null) 'cancelled-dates': cancelledDates,
+    if (cancelledSchedules != null)
+      'cancelled-schedules': cancelledSchedules,
+    if (color != null) 'color': color!.toARGB32(),
+    if (tags != null) 'tags': tags!.keys.toList(),
   };
 
   Future<String> save() async {
     try {
+      createdAt = DateTime.now();
       final eventType = await db.saveModel(this);
       eventProcessor.emitEvent(
         Event(

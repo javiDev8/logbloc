@@ -34,7 +34,9 @@ class ItemsByDayPool extends Pool<ItemsByDay> {
       // swallow
       items.addAll(
         modelItems.where((mi) {
-          if (mi.model!.cancelledDates?.contains(strDay) == true) {
+          if (mi.model!.cancelledSchedules?.keys.contains(strDay) ==
+                  true &&
+              mi.model!.cancelledSchedules![strDay]! == mi.schedule.id) {
             return false;
           }
 

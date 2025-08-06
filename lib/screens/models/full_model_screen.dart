@@ -30,7 +30,7 @@ class FullModelScreen extends StatelessWidget {
               Row(
                 children: [
                   Button(
-                    'records (${models[model.id]!.recordsQuantity.toString()})',
+                    'records (${models[model.id]!.recordCount.toString()})',
                     onPressed: () => navPush(
                       context: context,
                       screen: ModelRecordsScreen(model: model),

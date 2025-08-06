@@ -72,11 +72,6 @@ class ModelEditPool extends Pool<Model> {
     controller.sink.add('schedules');
   }
 
-  setColor(Color color) {
-    data.color = color;
-    controller.sink.add('color');
-  }
-
   reorderFeature(int index, String ftKey) {
     final prevIndex = index == 0 ? null : index - 1;
     final nextIndex = index == data.features.length ? null : index;

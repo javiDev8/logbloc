@@ -8,6 +8,7 @@ import 'package:logize/pools/theme_mode_pool.dart';
 import 'package:logize/screens/models/edit/actions/add_ft_button.dart';
 import 'package:logize/screens/models/edit/schedules.dart';
 import 'package:logize/utils/color_convert.dart';
+import 'package:logize/utils/noticable_print.dart';
 import 'package:logize/widgets/design/button.dart';
 import 'package:logize/widgets/design/section_divider.dart';
 import 'package:logize/widgets/design/txt_field.dart';
@@ -72,7 +73,8 @@ class ModelEditScreen extends StatelessWidget {
                           listenedEvents: ['color'],
                           builder: (context, m) => Button(
                             null,
-                            overwrittenColor: m.color ?? Colors.grey,
+                            overwrittenColor:
+                                m.tags?.values.first.color ?? Colors.grey,
                             filled: index == 2,
                             onPressed: () => tabIndexPool.set((_) => 2),
                             lead: Icons.palette,
@@ -161,7 +163,7 @@ class ModelEditScreen extends StatelessWidget {
                                         constraints: BoxConstraints(),
                                         color: color,
                                         onPressed: () {
-                                          modelEditPool.setColor(color);
+                                          nPrint('deprecated!');
                                         },
                                         icon: Icon(Icons.circle),
                                       );

@@ -3,8 +3,8 @@ import 'package:logize/pools/models/model_class.dart';
 import 'package:logize/pools/models/models_pool.dart';
 import 'package:logize/pools/pools.dart';
 import 'package:logize/screens/models/edit/model_edit_screen.dart';
-import 'package:logize/screens/models/full_model_screen.dart';
 import 'package:logize/screens/models/model_lead_menu_widget.dart';
+import 'package:logize/screens/models/model_screen/model_screen.dart';
 import 'package:logize/utils/nav.dart';
 import 'package:logize/widgets/design/act_button.dart';
 import 'package:logize/widgets/design/exp.dart';
@@ -47,7 +47,8 @@ class ModelsScreen extends StatelessWidget {
                     title: Text(m.value.name),
                     onTap: () => navPush(
                       context: context,
-                      screen: FullModelScreen(model: m.value),
+                      //screen: FullModelScreen(model: m.value),
+                      screen: ModelScreen(model: m.value),
                       title: Row(
                         children: [
                           Text(m.value.name),

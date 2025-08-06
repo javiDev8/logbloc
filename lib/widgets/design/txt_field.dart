@@ -9,6 +9,8 @@ class TxtField extends StatelessWidget {
   final String? label;
   final void Function(PointerDownEvent)? onTapOutside;
   final int? maxLines;
+  final Widget? lead;
+  final bool? enabled;
 
   const TxtField({
     super.key,
@@ -20,6 +22,8 @@ class TxtField extends StatelessWidget {
     this.onTapOutside,
     this.label,
     this.maxLines,
+    this.lead,
+    this.enabled,
   });
 
   @override
@@ -27,6 +31,7 @@ class TxtField extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(7),
       child: TextFormField(
+        enabled: enabled,
         onTapUpOutside: (_) {
           FocusManager.instance.primaryFocus?.unfocus();
         },
@@ -38,6 +43,8 @@ class TxtField extends StatelessWidget {
             ? null
             : TextEditingController(text: initialValue),
         decoration: InputDecoration(
+	  fillColor: Colors.white,
+          prefixIcon: lead,
           label: label == null ? null : Text(label!),
           contentPadding: EdgeInsets.only(
             left: 20,

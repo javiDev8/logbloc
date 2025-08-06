@@ -2,6 +2,7 @@ import 'package:logize/apis/db.dart';
 import 'package:logize/pools/items/item_class.dart';
 import 'package:logize/pools/models/model_class.dart';
 import 'package:logize/pools/pools.dart';
+import 'package:logize/pools/tags_pool.dart';
 import 'package:logize/utils/feedback.dart';
 import 'package:logize/utils/parse_map.dart';
 
@@ -18,13 +19,12 @@ class ModelsPool extends Pool<Models?> {
   retrieve() async {
     if (data == null) {
       try {
+        await tagsPool.retrieve();
         final models = await db.models!.getAllValues();
         data = models.map<String, Model>((key, value) {
           try {
-            return MapEntry(
-              key.toString(),
-              Model.fromMap(map: parseMap(value)),
-            );
+            final model = Model.fromMap(map: parseMap(value));
+            return MapEntry(key.toString(), model);
           } catch (e) {
             feedback('model parse error');
             throw Exception('Failed to parse : $e');
