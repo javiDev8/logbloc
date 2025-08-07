@@ -4,7 +4,6 @@ import 'package:logize/pools/models/model_edit_pool.dart';
 import 'package:logize/pools/pools.dart';
 import 'package:logize/pools/theme_mode_pool.dart';
 import 'package:logize/utils/noticable_print.dart';
-import 'package:logize/widgets/design/button.dart';
 import 'package:logize/widgets/design/exp.dart';
 import 'package:flutter/material.dart';
 import 'package:logize/widgets/design/menu_button.dart';
@@ -28,22 +27,25 @@ class ReadOnlyFtWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool expanded = false;
     final isBright = themeModePool.data == ThemeMode.light;
     final b = isBright ? 210 : 80;
     final color = Color.fromRGBO(b, b, b, isBright ? 0.3 : 0.5);
-    return StatefulBuilder(
-      builder: (context, setState) => Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadiusGeometry.all(Radius.circular(20)),
-        ),
-        color: color,
-        child: InkWell(
-          child: Padding(
-            padding: EdgeInsetsGeometry.all(10),
-            child: Column(
-              children: [
-                Row(
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadiusGeometry.all(Radius.circular(20)),
+      ),
+      color: color,
+      child: Row(
+        children: [
+          Expanded(
+            child: InkWell(
+              onTap: () {
+                nPrint('nav to ft recs');
+              },
+              child: Padding(
+                padding: EdgeInsetsGeometry.all(10),
+                child: Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 8),
@@ -54,51 +56,34 @@ class ReadOnlyFtWidget extends StatelessWidget {
                       ),
                     ),
                     Txt(feature.title, w: 8),
-                    Exp(),
-                    expanded
-                        ? MenuButton(
-                            options: [
-                              MenuOption(
-                                value: false,
-                                widget: ListTile(
-                                  onTap: () {
-                                    modelEditPool.dirt(true);
-                                    setEditing((_) => true);
-                                    Navigator.of(context).pop();
-                                  },
-                                  title: Text('edit'),
-                                  leading: Icon(Icons.edit),
-                                ),
-                              ),
-                            ],
-                          )
-                        : IconButton(
-                            onPressed: () =>
-                                setState(() => expanded = true),
-                            icon: Icon(Icons.arrow_drop_down_outlined),
-                          ),
                   ],
                 ),
-                if (expanded)
-                  Row(
-                    children: [
-                      Button(
-                        'records',
-                        lead: Icons.arrow_forward,
-                        onPressed: () {},
-                        filled: false,
-                      ),
-                      Exp(),
-                      IconButton(
-                        onPressed: () => setState(() => expanded = false),
-                        icon: Icon(Icons.arrow_drop_up_outlined),
-                      ),
-                    ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsetsGeometry.only(right: 10),
+            child: MenuButton(
+              onSelected: (val) {
+                switch (val) {
+                  case 'edit':
+                    setEditing((_) => true);
+                    modelEditPool.dirt(true);
+                    break;
+                }
+              },
+              options: [
+                MenuOption(
+                  value: 'edit',
+                  widget: ListTile(
+                    title: Txt('edit'),
+                    leading: Icon(Icons.edit),
                   ),
+                ),
               ],
             ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -111,7 +96,6 @@ class FtWid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    nPrint('feature is new? ${feature.isNew}');
     final editingPool = Pool<bool>(feature.isNew == true);
 
     return Swimmer<bool>(

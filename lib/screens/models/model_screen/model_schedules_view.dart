@@ -18,9 +18,10 @@ class ModelSchedulesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsetsGeometry.symmetric(horizontal: 5, vertical: 10),
+      padding: EdgeInsetsGeometry.symmetric(horizontal: 5),
       child: LazySwimmer<Model>(
         pool: modelEditPool,
+	listenedEvents: ['schedules'],
         builder: (context, model) => Column(
           children: [
             SectionDivider(lead: AddSchRuleButton()),
@@ -64,44 +65,44 @@ class ScheduleWidget extends StatelessWidget {
 
     bool expanded = false;
 
-    return InkWell(
-      onTap: () {},
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadiusGeometry.all(Radius.circular(20)),
-        ),
-        color: themeModePool.data == ThemeMode.dark
-            ? endarkColor(color)
-            : enbrightColor(color),
-        child: Padding(
-          padding: EdgeInsetsGeometry.all(10),
-          child: StatefulBuilder(
-            builder: (context, setState) => Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(child: Txt(day, w: 8)),
-                    IconButton(
-                      onPressed: () =>
-                          setState(() => expanded = !expanded),
-                      icon: Icon(
-                        expanded
-                            ? Icons.arrow_drop_up_outlined
-                            : Icons.arrow_drop_down_outlined,
-                      ),
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadiusGeometry.all(Radius.circular(20)),
+      ),
+      color: themeModePool.data == ThemeMode.dark
+          ? endarkColor(color)
+          : enbrightColor(color),
+      child: Padding(
+        padding: EdgeInsetsGeometry.all(10),
+        child: StatefulBuilder(
+          builder: (context, setState) => Column(
+            children: [
+              Row(
+                children: [
+                  Expanded(child: Txt(day, w: 8)),
+                  IconButton(
+                    onPressed: () => setState(() => expanded = !expanded),
+                    icon: Icon(
+                      expanded
+                          ? Icons.arrow_drop_up_outlined
+                          : Icons.arrow_drop_down_outlined,
                     ),
-                  ],
-                ),
+                  ),
+                ],
+              ),
 
-                if (expanded)
-                  ...modelEditPool.data.features.values.map<Widget>(
-                    (ft) => Row(
-                      children: [
-                        Checkbox(
+              if (expanded)
+                ...modelEditPool.data.features.values.map<Widget>((ft) {
+                  //bool expanded = false;
+                  return Row(
+                    children: [
+                      StatefulBuilder(
+                        builder: (context, setState) => Checkbox(
                           value:
                               schedule.includedFts?.contains(ft.key) ==
                               true,
                           onChanged: (val) {
+                            modelEditPool.dirt(true);
                             if (val == true &&
                                 schedule.includedFts?.contains(ft.key) !=
                                     true) {
@@ -114,21 +115,18 @@ class ScheduleWidget extends StatelessWidget {
                                 (ftKey) => ftKey == ft.key,
                               );
                             }
-                            modelEditPool.controller.sink.add('schedules');
+                            setState(() => {});
                           },
                         ),
-                        Icon(
-                          featureSwitch(
-                            parseType: 'icon',
-                            ftType: ft.type,
-                          ),
-                        ),
-                        Txt(ft.title, w: 7),
-                      ],
-                    ),
-                  ),
-              ],
-            ),
+                      ),
+                      Icon(
+                        featureSwitch(parseType: 'icon', ftType: ft.type),
+                      ),
+                      Txt(ft.title, w: 7),
+                    ],
+                  );
+                }),
+            ],
           ),
         ),
       ),

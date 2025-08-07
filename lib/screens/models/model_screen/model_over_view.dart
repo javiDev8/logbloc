@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:logize/pools/models/model_class.dart';
 import 'package:logize/pools/models/model_edit_pool.dart';
+import 'package:logize/pools/models/models_pool.dart';
 import 'package:logize/pools/pools.dart';
 import 'package:logize/screens/models/model_records_screen.dart';
-import 'package:logize/utils/fmt_date.dart';
 import 'package:logize/utils/nav.dart';
 import 'package:logize/widgets/design/button.dart';
 import 'package:logize/widgets/design/exp.dart';
-import 'package:logize/widgets/design/section_divider.dart';
 import 'package:logize/widgets/design/txt.dart';
 import 'package:logize/widgets/design/txt_field.dart';
 
@@ -16,14 +16,6 @@ class ModelOverView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Map<String, String> details = {
-      'name': modelEditPool.data.name,
-      'records': modelEditPool.data.recordCount.toString(),
-      'features': modelEditPool.data.features.length.toString(),
-      'schedules': modelEditPool.data.schedules?.length.toString() ?? '0',
-      'created at': hdate(modelEditPool.data.createdAt),
-    };
-
     final color =
         modelEditPool.data.color ??
         modelEditPool.data.tags?.values.first.color;
@@ -82,42 +74,24 @@ class ModelOverView extends StatelessWidget {
             Row(
               children: [
                 Exp(),
-                Button(
-                  'records (${modelEditPool.data.recordCount})',
-                  filled: false,
-                  lead: Icons.arrow_forward,
-                  onPressed: () => navPush(
-                    context: context,
-                    screen: ModelRecordsScreen(model: modelEditPool.data),
-                    title: Text('${modelEditPool.data.name} records'),
+                Swimmer<Map<String, Model>?>(
+                  pool: modelsPool,
+                  builder: (context, allModels) => Button(
+                    'records (${allModels?[modelEditPool.data.id]?.recordCount ?? ''})',
+                    filled: false,
+                    lead: Icons.arrow_forward,
+                    onPressed: () => navPush(
+                      context: context,
+                      screen: ModelRecordsScreen(
+                        model: modelEditPool.data,
+                      ),
+                      title: Text('${modelEditPool.data.name} records'),
+                    ),
                   ),
                 ),
               ],
             ),
 
-          if (!isNew)
-            Padding(
-              padding: EdgeInsetsGeometry.all(10),
-              child: Column(
-                children: [
-                  SectionDivider(string: 'Details'),
-                  ...details.entries.map(
-                    (de) => Padding(
-                      padding: EdgeInsetsGeometry.symmetric(
-                        horizontal: 20,
-                      ),
-                      child: Row(
-                        children: [
-                          Txt(de.key, w: 8),
-                          Exp(),
-                          Txt(de.value),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
         ],
       ),
     );

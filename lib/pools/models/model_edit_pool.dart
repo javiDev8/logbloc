@@ -92,6 +92,7 @@ class ModelEditPool extends Pool<Model> {
     }
 
     controller.sink.add('features');
+    dirt(true);
   }
 }
 

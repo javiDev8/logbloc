@@ -14,28 +14,33 @@ class ModelFeaturesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsetsGeometry.symmetric(horizontal: 5, vertical: 10),
+      padding: EdgeInsetsGeometry.symmetric(horizontal: 5),
       child: LazySwimmer<Model>(
         pool: modelEditPool,
         listenedEvents: ['features'],
-        builder: (context, model) => Column(
-          children: [
-            SectionDivider(lead: AddFtButton()),
-            Expanded(
-              child: ListView(
-                children: model
-                    .getSortedFeatureList()
-                    .map(
-                      (ft) => FtWid(
-                        feature: ft,
-                        lock: FeatureLock(model: false, record: true),
-                      ),
-                    )
-                    .toList(),
+        builder: (context, model) {
+          final features = model.getSortedFeatureList();
+          return Column(
+            children: [
+              SectionDivider(lead: AddFtButton()),
+              Expanded(
+                child: ReorderableListView(
+                  onReorder: (oldIndex, newIndex) => modelEditPool
+                      .reorderFeature(newIndex, features[oldIndex].key),
+                  children: features
+                      .map(
+                        (ft) => FtWid(
+                          key: Key(ft.key),
+                          feature: ft,
+                          lock: FeatureLock(model: false, record: true),
+                        ),
+                      )
+                      .toList(),
+                ),
               ),
-            ),
-          ],
-        ),
+            ],
+          );
+        },
       ),
     );
   }
