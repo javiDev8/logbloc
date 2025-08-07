@@ -3,7 +3,7 @@ import 'package:logize/features/feature_widget.dart';
 import 'package:logize/pools/items/item_class.dart';
 import 'package:logize/pools/theme_mode_pool.dart';
 import 'package:logize/screens/daily/item_screen.dart';
-import 'package:logize/screens/models/full_model_screen.dart';
+import 'package:logize/screens/models/model_screen/model_screen.dart';
 import 'package:logize/utils/color_convert.dart';
 import 'package:logize/utils/fmt_date.dart';
 import 'package:logize/utils/nav.dart';
@@ -63,14 +63,8 @@ class ItemBox extends StatelessWidget {
                           case 'go-to-model':
                             navLink(
                               rootIndex: 0,
-                              screen: FullModelScreen(model: item.model!),
-                              title: Row(
-                                children: [
-                                  Text(item.model!.name),
-                                  Exp(),
-                                  ModelTitle(),
-                                ],
-                              ),
+                              screen: ModelScreen(model: item.model!),
+                              title: ModelTitle(),
                             );
 
                             break;
