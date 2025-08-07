@@ -6,6 +6,7 @@ class Txt extends StatelessWidget {
   final int? w; // weight
   final double? s; // size
   final TextAlign? a;
+  final Color? color;
 
   final weights = [
     FontWeight.w100,
@@ -19,7 +20,7 @@ class Txt extends StatelessWidget {
     FontWeight.w900,
   ];
 
-  Txt(this.text, {super.key, this.w, this.p, this.s, this.a});
+  Txt(this.text, {super.key, this.w, this.p, this.s, this.a, this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +32,7 @@ class Txt extends StatelessWidget {
         style: TextStyle(
           fontWeight: w == null ? null : weights[w!],
           fontSize: s,
+          color: color,
         ),
       ),
     );

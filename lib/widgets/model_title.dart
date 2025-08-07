@@ -4,13 +4,16 @@ import 'package:logize/pools/models/model_class.dart';
 import 'package:logize/pools/models/model_edit_pool.dart';
 import 'package:logize/pools/pools.dart';
 import 'package:logize/pools/topbar_pool.dart';
+import 'package:logize/utils/feedback.dart';
 import 'package:logize/utils/nav.dart';
 import 'package:logize/widgets/design/exp.dart';
+import 'package:logize/widgets/design/menu_button.dart';
 import 'package:logize/widgets/design/none.dart';
 import 'package:logize/widgets/design/txt.dart';
 
 class ModelTitle extends StatelessWidget {
-  const ModelTitle({super.key});
+  final bool? isNew;
+  const ModelTitle({super.key, this.isNew});
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +37,45 @@ class ModelTitle extends StatelessWidget {
                 )
               : None(),
         ),
+
+        if (isNew != true)
+          MenuButton(
+            onSelected: (val) async {
+              switch (val) {
+                case 'delete':
+                  try {
+                    await modelEditPool.data.delete();
+                    feedback('model deleted', type: FeedbackType.success);
+                    navPop();
+                    break;
+                  } catch (e) {
+                    feedback(
+                      'model deletion failed',
+                      type: FeedbackType.error,
+                    );
+                  }
+                default:
+                  throw Exception('option not implemented');
+              }
+            },
+
+            options: [
+              MenuOption(
+                value: 'archive',
+                widget: ListTile(
+                  title: Text('archive'),
+                  leading: Icon(Icons.archive),
+                ),
+              ),
+              MenuOption(
+                value: 'delete',
+                widget: ListTile(
+                  title: Text('delete'),
+                  leading: Icon(Icons.delete),
+                ),
+              ),
+            ],
+          ),
       ],
     );
   }

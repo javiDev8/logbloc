@@ -20,18 +20,19 @@ class ModelEditPool extends Pool<Model> {
   }
 
   save() async {
-    if (!editModelFormKey.currentState!.validate() ||
+    if (modelEditPool.data.name.isEmpty ||
+        !editModelFormKey.currentState!.validate() ||
         data.features.values.firstWhereOrNull((f) => f.title.isEmpty) !=
             null) {
-      feedback('check your inputs');
+      feedback('check your inputs', type: FeedbackType.error);
       return;
     }
     if (modelEditPool.data.features.isEmpty) {
-      feedback('add at least one feature');
+      feedback('add at least one feature', type: FeedbackType.error);
       return;
     }
     final saveType = await data.save();
-    feedback('model saved');
+    feedback('model saved', type: FeedbackType.success);
     dirt(false);
     if (saveType == 'add') {
       navPop();

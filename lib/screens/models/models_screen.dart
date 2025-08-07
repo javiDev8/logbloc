@@ -59,7 +59,7 @@ class ModelsScreen extends StatelessWidget {
           onPressed: () => navPush(
             context: context,
             screen: ModelScreen(),
-            title: ModelTitle(),
+            title: ModelTitle(isNew: true),
           ),
         ),
       ],

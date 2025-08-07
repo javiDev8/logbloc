@@ -72,6 +72,7 @@ class ScheduleWidget extends StatelessWidget {
       color: themeModePool.data == ThemeMode.dark
           ? endarkColor(color)
           : enbrightColor(color),
+
       child: Padding(
         padding: EdgeInsetsGeometry.all(10),
         child: StatefulBuilder(
