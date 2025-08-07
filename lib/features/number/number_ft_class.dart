@@ -1,36 +1,36 @@
 import 'package:logize/features/feature_class.dart';
 
 class NumberFt extends Feature {
-  String label;
   double? value;
   String unit;
 
   NumberFt({
     required super.id,
     required super.type,
+    required super.title,
     required super.pinned,
     required super.isRequired,
     required super.position,
+    super.isNew,
 
-    required this.label,
     this.value,
     required this.unit,
   });
 
   factory NumberFt.fromBareFt(
     Feature ft, {
-    required String label,
     required double? value,
     required String unit,
   }) {
     return NumberFt(
       id: ft.id,
       type: ft.type,
+      title: ft.title,
       pinned: ft.pinned,
       isRequired: ft.isRequired,
       position: ft.position,
+      isNew: ft.isNew,
 
-      label: label,
       value: value,
       unit: unit,
     );
@@ -39,7 +39,6 @@ class NumberFt extends Feature {
   @override
   factory NumberFt.empty() => NumberFt.fromBareFt(
     Feature.empty('number'),
-    label: '',
     value: null,
     unit: '',
   );
@@ -50,7 +49,6 @@ class NumberFt extends Feature {
     Map<String, dynamic>? recordFt,
   ) => NumberFt.fromBareFt(
     Feature.fromEntry(entry),
-    label: entry.value['label'] as String,
     value: recordFt != null
         ? (recordFt['value'] as num?)?.toDouble()
         : (entry.value['value'] as num?)?.toDouble(),
@@ -60,7 +58,6 @@ class NumberFt extends Feature {
   @override
   Map<String, dynamic> serialize() => {
     ...super.serialize(),
-    'label': label,
     'value': value,
     'unit': unit,
   };
@@ -68,7 +65,6 @@ class NumberFt extends Feature {
   @override
   Map<String, dynamic> makeRec() => {'value': value};
 
-  setLabel(String newLabel) => label = newLabel;
   setUnit(String newUnit) => unit = newUnit;
   setValue(double newValue) => value = newValue;
 }

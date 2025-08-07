@@ -1,4 +1,5 @@
 import 'package:logize/config/locales.dart';
+import 'package:logize/pools/models/model_edit_pool.dart';
 import 'package:logize/pools/pools.dart';
 import 'package:logize/pools/screen_index_pool.dart';
 import 'package:logize/screens/daily/daily_screen.dart';
@@ -43,6 +44,9 @@ class TopbarPool extends Pool<Widget> {
           Builder(
             builder: (context) => IconButton(
               onPressed: () {
+                if (rootIndex == 0) {
+		  modelEditPool.dirty = false;
+                }
                 popTitle();
                 rootScreens[rootIndex].nav.currentState!.pop();
               },

@@ -13,8 +13,12 @@ navPush({
   topbarPool.pushTitle(Container(width: 290, child: title));
 }
 
-navPop() {
-  rootScreens[screenIndexPool.data].nav.currentState!.pop();
+navPop({BuildContext? context}) {
+  if (context != null) {
+    Navigator.of(context);
+  } else {
+    rootScreens[screenIndexPool.data].nav.currentState!.pop();
+  }
   topbarPool.popTitle();
 }
 

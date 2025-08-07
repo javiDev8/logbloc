@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logize/pools/models/model_class.dart';
+import 'package:logize/pools/models/model_edit_pool.dart';
 import 'package:logize/pools/models/models_pool.dart';
 import 'package:logize/pools/pools.dart';
 import 'package:logize/screens/models/model_screen/model_features_view.dart';
@@ -7,9 +8,11 @@ import 'package:logize/screens/models/model_screen/model_over_view.dart';
 import 'package:logize/screens/models/model_screen/model_schedules_view.dart';
 import 'package:logize/widgets/design/txt.dart';
 
+final editModelFormKey = GlobalKey<FormState>();
+
 class ModelScreen extends StatefulWidget {
-  final Model model;
-  const ModelScreen({super.key, required this.model});
+  final Model? model;
+  const ModelScreen({super.key, this.model});
 
   @override
   State<ModelScreen> createState() => ModelScreenState();
@@ -33,6 +36,9 @@ class ModelScreenState extends State<ModelScreen>
 
   @override
   Widget build(BuildContext context) {
+    final isNew = widget.model == null;
+    modelEditPool.data = widget.model ?? Model.empty();
+    modelEditPool.dirty = isNew;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: Swimmer(
@@ -56,13 +62,16 @@ class ModelScreenState extends State<ModelScreen>
                 ],
               ),
               Expanded(
-                child: TabBarView(
-                  controller: tabController,
-                  children: [
-                    ModelOverView(model: widget.model),
-                    ModelFeaturesView(model: widget.model),
-                    ModelSchedulesView(model: widget.model),
-                  ],
+                child: Form(
+                  key: editModelFormKey,
+                  child: TabBarView(
+                    controller: tabController,
+                    children: [
+                      ModelOverView(isNew: isNew),
+                      ModelFeaturesView(),
+                      ModelSchedulesView(),
+                    ],
+                  ),
                 ),
               ),
             ],

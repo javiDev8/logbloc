@@ -43,7 +43,7 @@ class LazySwimmer<T> extends Swimmer<T> {
 
   @override
   Widget build(BuildContext context) {
-    final midController = StreamController();
+    final midController = StreamController.broadcast();
     emit() => midController.sink.add(true);
     T? prev;
     T next = pool.data;
@@ -63,32 +63,6 @@ class LazySwimmer<T> extends Swimmer<T> {
         prev = next;
         return builder(context, next);
       },
-    );
-  }
-}
-
-class MultiSwimmer extends StatelessWidget {
-  final List<Pool> pools;
-  final Widget Function(BuildContext, List) builder;
-  const MultiSwimmer({
-    super.key,
-    required this.pools,
-    required this.builder,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final midController = StreamController();
-    for (final pool in pools) {
-      pool.controller.stream.listen(
-        (data) => midController.sink.add(true),
-      );
-    }
-    return StreamBuilder(
-      stream: midController.stream,
-      builder:
-          (context, snap) =>
-              builder(context, pools.map((p) => p.data).toList()),
     );
   }
 }

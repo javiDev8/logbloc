@@ -18,7 +18,7 @@ class NumberFtStatsWidget extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 30),
-          child: SectionDivider(string: '"${ft.label}" (${ft.unit})'),
+          child: SectionDivider(string: '"${ft.title}" (${ft.unit})'),
         ),
         ftRecs.isEmpty
             ? Center(child: Text('no records'))

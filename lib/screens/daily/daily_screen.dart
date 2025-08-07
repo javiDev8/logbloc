@@ -2,7 +2,7 @@ import 'package:logize/pools/items/items_by_day_pool.dart';
 import 'package:logize/pools/models/models_pool.dart';
 import 'package:logize/pools/pools.dart';
 import 'package:logize/pools/topbar_pool.dart';
-import 'package:logize/screens/models/edit/model_edit_screen.dart';
+import 'package:logize/screens/models/model_screen/model_screen.dart';
 import 'package:logize/utils/fmt_date.dart';
 import 'package:logize/utils/nav.dart';
 import 'package:logize/widgets/design/act_button.dart';
@@ -13,7 +13,7 @@ import 'package:logize/widgets/design/txt.dart';
 import 'package:logize/widgets/item_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:logize/widgets/model_edit_title.dart';
+import 'package:logize/widgets/model_title.dart';
 
 final int initPage = 999999999;
 DateTime initDate = DateTime.now();
@@ -133,10 +133,8 @@ class DailyScreen extends StatelessWidget {
                                           'make your first model!',
                                           onPressed: () => navLink(
                                             rootIndex: 0,
-                                            screen: ModelEditScreen(),
-                                            title: ModelEditTitle(
-                                              title: 'new model',
-                                            ),
+                                            screen: ModelScreen(),
+                                            title: ModelTitle(),
                                           ),
                                         ),
                                       ],

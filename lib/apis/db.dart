@@ -29,9 +29,9 @@ class HiveDB {
       }
 
       // CLEAR DATABASE (DEV PURPOSES ONLY)
-      //await records!.clear();
-      //await models!.clear();
-      //await tags!.clear();
+      await records!.clear();
+      await models!.clear();
+      await tags!.clear();
     } catch (e) {
       feedback('failed to init db: $e');
     }

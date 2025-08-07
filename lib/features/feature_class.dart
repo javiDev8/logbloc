@@ -1,16 +1,20 @@
 class Feature {
-  String type;
   String id;
+  String type;
+  String title;
   bool pinned;
   bool isRequired;
   double position;
+  bool? isNew;
 
   Feature({
     required this.id,
     required this.type,
+    required this.title,
     required this.pinned,
     required this.isRequired,
     required this.position,
+    this.isNew,
   });
 
   get key => '$type-$id';
@@ -20,11 +24,13 @@ class Feature {
 
   factory Feature.empty(String type) {
     return Feature(
-      type: type,
       id: genId(),
+      type: type,
+      title: '',
       pinned: false,
       isRequired: false,
       position: 0,
+      isNew: true,
     );
   }
 
@@ -33,17 +39,24 @@ class Feature {
     return Feature(
       id: entry.key.split('-')[1],
       type: entry.key.split('-')[0],
+      title: map['title'],
       pinned: map['pinned'],
       isRequired: map['isRequired'],
       position: map['position'],
     );
   }
 
-  Map<String, dynamic> serialize() => {
-    'pinned': pinned,
-    'isRequired': isRequired,
-    'position': position,
-  };
+  setTitle(String t) => title = t;
+
+  Map<String, dynamic> serialize() {
+    isNew = null; // on save
+    return {
+      'title': title,
+      'pinned': pinned,
+      'isRequired': isRequired,
+      'position': position,
+    };
+  }
 
   Map<String, dynamic> makeRec() => {};
 }

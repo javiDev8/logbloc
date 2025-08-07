@@ -40,7 +40,7 @@ class Schedule {
         day: day,
         period: period,
         id: UniqueKey().toString(),
-        place: 0.0,
+        place: DateTime.now().millisecondsSinceEpoch.toDouble(),
       );
 
   Map<String, dynamic> serialize() => {

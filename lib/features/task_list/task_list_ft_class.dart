@@ -1,58 +1,15 @@
 import 'package:logize/features/feature_class.dart';
 
-class Task {
-  String id;
-  bool isRoot;
-  String title;
-  bool done;
-  int doneSubTasks;
-  List<String> childrenIds;
-
-  Task({
-    required this.id,
-    required this.isRoot,
-    required this.title,
-    required this.done,
-    required this.doneSubTasks,
-    required this.childrenIds,
-  });
-
-  factory Task.empty({required bool isRoot, List<String>? chIds}) => Task(
-    id: Feature.genId(),
-    isRoot: isRoot,
-    title: '',
-    done: false,
-    doneSubTasks: 0,
-    childrenIds: chIds ?? [],
-  );
-
-  factory Task.fromMap(Map<String, dynamic> map) => Task(
-    id: map['id'] as String,
-    isRoot: map['isRoot'] as bool,
-    title: map['title'] as String,
-    done: map['done'] as bool,
-    doneSubTasks: map['doneSubTasks'] as int,
-    childrenIds: List<String>.from(map['childrenIds'] as List),
-  );
-
-  serialize() => {
-    'id': id,
-    'isRoot': isRoot,
-    'title': title,
-    'done': done,
-    'doneSubTasks': doneSubTasks,
-    'childrenIds': childrenIds,
-  };
-}
-
 class TaskListFt extends Feature {
   final Map<String, Task> tasks;
   TaskListFt({
     required super.id,
     required super.type,
+    required super.title,
     required super.pinned,
     required super.isRequired,
     required super.position,
+    super.isNew,
 
     required this.tasks,
   });
@@ -64,9 +21,11 @@ class TaskListFt extends Feature {
     return TaskListFt(
       id: ft.id,
       type: ft.type,
+      title: ft.title,
       pinned: ft.pinned,
       isRequired: ft.isRequired,
       position: ft.position,
+      isNew: ft.isNew,
 
       tasks: tasks,
     );
@@ -87,13 +46,16 @@ class TaskListFt extends Feature {
     Map<String, dynamic>? recordFt,
   ) => TaskListFt.fromBareFt(
     Feature.fromEntry(entry),
-    tasks: (recordFt == null
-            ? entry.value['tasks'] as Map<String, dynamic>
-            : recordFt['tasks'] as Map<String, dynamic>)
-        .map(
-          (key, value) =>
-              MapEntry(key, Task.fromMap(value as Map<String, dynamic>)),
-        ),
+    tasks:
+        (recordFt == null
+                ? entry.value['tasks'] as Map<String, dynamic>
+                : recordFt['tasks'] as Map<String, dynamic>)
+            .map(
+              (key, value) => MapEntry(
+                key,
+                Task.fromMap(value as Map<String, dynamic>),
+              ),
+            ),
   );
 
   @override
@@ -187,4 +149,49 @@ class TaskListFt extends Feature {
     checkUp(task);
     checkDown(task);
   }
+}
+
+class Task {
+  String id;
+  bool isRoot;
+  String title;
+  bool done;
+  int doneSubTasks;
+  List<String> childrenIds;
+
+  Task({
+    required this.id,
+    required this.isRoot,
+    required this.title,
+    required this.done,
+    required this.doneSubTasks,
+    required this.childrenIds,
+  });
+
+  factory Task.empty({required bool isRoot, List<String>? chIds}) => Task(
+    id: Feature.genId(),
+    isRoot: isRoot,
+    title: '',
+    done: false,
+    doneSubTasks: 0,
+    childrenIds: chIds ?? [],
+  );
+
+  factory Task.fromMap(Map<String, dynamic> map) => Task(
+    id: map['id'] as String,
+    isRoot: map['isRoot'] as bool,
+    title: map['title'] as String,
+    done: map['done'] as bool,
+    doneSubTasks: map['doneSubTasks'] as int,
+    childrenIds: List<String>.from(map['childrenIds'] as List),
+  );
+
+  serialize() => {
+    'id': id,
+    'isRoot': isRoot,
+    'title': title,
+    'done': done,
+    'doneSubTasks': doneSubTasks,
+    'childrenIds': childrenIds,
+  };
 }

@@ -19,19 +19,19 @@ class NumberFtWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        if (detailed) Expanded(child: Text('label:')),
+        if (detailed) Expanded(child: Text('title:')),
 
         Expanded(
           child:
               lock.model
-                  ? Txt(ft.label, w: 8,)
+                  ? Txt(ft.title, w: 8,)
                   : TxtField(
-                    hint: "label",
+                    hint: "title",
                     round: true,
-                    initialValue: ft.label,
-                    onChanged: (txt) => ft.setLabel(txt),
+                    initialValue: ft.title,
+                    onChanged: (txt) => ft.setTitle(txt),
                     validator:
-                        (str) => str!.isEmpty ? 'write a label' : null,
+                        (str) => str!.isEmpty ? 'write a title' : null,
                   ),
         ),
 

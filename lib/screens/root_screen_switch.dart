@@ -1,3 +1,4 @@
+import 'package:logize/pools/models/model_edit_pool.dart';
 import 'package:logize/pools/pools.dart';
 import 'package:logize/pools/screen_index_pool.dart';
 import 'package:logize/pools/topbar_pool.dart';
@@ -26,42 +27,43 @@ class RootScreenSwitch extends StatelessWidget {
   Widget build(BuildContext context) {
     return Swimmer<int>(
       pool: screenIndexPool,
-      builder:
-          (ctx, index) => PopScope(
-            canPop: false,
-            onPopInvokedWithResult: (d, r) {
-              final currentRootState =
-                  rootScreens[screenIndexPool.data].nav.currentState;
-              if (currentRootState != null && currentRootState.canPop()) {
-                topbarPool.popTitle();
-                currentRootState.pop();
-              } else {
-                SystemNavigator.pop();
-              }
-            },
+      builder: (ctx, index) => PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (d, r) {
+          final currentRootState =
+              rootScreens[screenIndexPool.data].nav.currentState;
+          if (currentRootState != null && currentRootState.canPop()) {
+            if (screenIndexPool.data == 0) {
+              modelEditPool.dirty = false;
+            }
+            topbarPool.popTitle();
+            currentRootState.pop();
+          } else {
+            SystemNavigator.pop();
+          }
+        },
 
-            child: IndexedStack(
-              index: index,
-              children:
-                  rootScreens
-                      .map<Widget>(
-                        (root) => Navigator(
-                          key: root.nav,
-                          onGenerateRoute: (route) {
-                            if (route.name == '/') {
-                              return MaterialPageRoute(
-                                settings: route,
-                                builder: (context) => root.screen,
-                              );
-                            } else {
-                              return null; // handled ny non root navigation
-                            }
-                          },
-                        ),
-                      )
-                      .toList(),
-            ),
-          ),
+        child: IndexedStack(
+          index: index,
+          children: rootScreens
+              .map<Widget>(
+                (root) => Navigator(
+                  key: root.nav,
+                  onGenerateRoute: (route) {
+                    if (route.name == '/') {
+                      return MaterialPageRoute(
+                        settings: route,
+                        builder: (context) => root.screen,
+                      );
+                    } else {
+                      return null; // handled ny non root navigation
+                    }
+                  },
+                ),
+              )
+              .toList(),
+        ),
+      ),
     );
   }
 }

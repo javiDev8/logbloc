@@ -4,7 +4,6 @@ import 'package:logize/pools/items/item_class.dart';
 import 'package:logize/pools/theme_mode_pool.dart';
 import 'package:logize/screens/daily/item_screen.dart';
 import 'package:logize/screens/models/full_model_screen.dart';
-import 'package:logize/screens/models/model_lead_menu_widget.dart';
 import 'package:logize/utils/color_convert.dart';
 import 'package:logize/utils/fmt_date.dart';
 import 'package:logize/utils/nav.dart';
@@ -12,6 +11,7 @@ import 'package:logize/widgets/design/exp.dart';
 import 'package:logize/widgets/design/menu_button.dart';
 
 import 'package:flutter/material.dart';
+import 'package:logize/widgets/model_title.dart';
 
 class ItemBox extends StatelessWidget {
   final Item item;
@@ -68,10 +68,7 @@ class ItemBox extends StatelessWidget {
                                 children: [
                                   Text(item.model!.name),
                                   Exp(),
-                                  ModelLeadMenuWidget(
-                                    model: item.model!,
-                                    parentCtx: context,
-                                  ),
+                                  ModelTitle(),
                                 ],
                               ),
                             );

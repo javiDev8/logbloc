@@ -18,7 +18,7 @@ class TextFtStatsWidget extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 30),
-          child: SectionDivider(string: '"${ft.prompt}" content length'),
+          child: SectionDivider(string: '"${ft.title}" content length'),
         ),
         ftRecs.isEmpty
             ? Center(child: Text('no records'))

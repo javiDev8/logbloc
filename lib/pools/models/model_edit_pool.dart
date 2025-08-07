@@ -1,46 +1,41 @@
 import 'package:logize/features/feature_class.dart';
 import 'package:logize/pools/models/model_class.dart';
 import 'package:logize/pools/pools.dart';
-import 'package:logize/pools/topbar_pool.dart';
-import 'package:logize/screens/models/model_lead_menu_widget.dart';
-import 'package:logize/screens/root_screen_switch.dart';
-import 'package:logize/widgets/design/exp.dart';
-import 'package:flutter/material.dart';
+import 'package:logize/screens/models/model_screen/model_screen.dart';
+import 'package:logize/utils/feedback.dart';
+import 'package:logize/utils/nav.dart';
 
 // needed for average
 // ignore:depend_on_referenced_packages
 import 'package:collection/collection.dart';
 
 class ModelEditPool extends Pool<Model> {
-  ModelEditPool(super.def);
+  bool dirty;
+
+  ModelEditPool(super.def) : dirty = false;
+
+  dirt(bool? d) {
+    dirty = d ?? true;
+    controller.sink.add('dirty');
+  }
 
   save() async {
-    final modelCopy = Model.fromMap(map: data.serialize());
-    final saveType = await data.save();
-    topbarPool.popTitle();
-    rootScreens[topbarPool.rootIndex].nav.currentState!.pop();
-    if (saveType == 'update') {
-      topbarPool.setCurrentTitle(
-        // ignore: sized_box_for_whitespace
-        Container(
-          width: 290,
-          child: Row(
-            children: [
-              Text(data.name),
-              Exp(),
-              Builder(
-                builder: (context) => ModelLeadMenuWidget(
-                  model: modelCopy,
-                  parentCtx: context,
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
+    if (!editModelFormKey.currentState!.validate() ||
+        data.features.values.firstWhereOrNull((f) => f.title.isEmpty) !=
+            null) {
+      feedback('check your inputs');
+      return;
     }
-
-    clean();
+    if (modelEditPool.data.features.isEmpty) {
+      feedback('add at least one feature');
+      return;
+    }
+    final saveType = await data.save();
+    feedback('model saved');
+    dirt(false);
+    if (saveType == 'add') {
+      navPop();
+    }
   }
 
   editExistingModel(Model model) {
@@ -97,10 +92,6 @@ class ModelEditPool extends Pool<Model> {
     }
 
     controller.sink.add('features');
-  }
-
-  clean() {
-    data = Model.empty();
   }
 }
 

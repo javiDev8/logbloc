@@ -22,29 +22,28 @@ class TextFtWidget extends StatelessWidget {
       children: [
         lock.model
             ? Row(
-              children: [
-                if (detailed) Expanded(child: Text('prompt:')),
-                Expanded(child: Txt(ft.prompt, w: 8)),
-              ],
-            )
+                children: [
+                  if (detailed) Expanded(child: Text('title:')),
+                  Expanded(child: Txt(ft.title, w: 8)),
+                ],
+              )
             : TxtField(
-              hint: 'prompt',
-              initialValue: ft.prompt,
-              round: true,
-              onChanged: (txt) => ft.setPrompt(txt),
-              validator: (str) => str!.isEmpty ? 'write a prompt' : null,
-            ),
+                hint: 'title',
+                initialValue: ft.title,
+                round: true,
+                onChanged: (txt) => ft.setTitle(txt),
+                validator: (str) => str!.isEmpty ? 'write a title' : null,
+              ),
         if (!lock.record)
           TxtField(
-	    maxLines: null,
+            maxLines: null,
             initialValue: ft.content,
             round: true,
             hint: 'content',
             onChanged: (str) => ft.setContent(str),
-            validator:
-                ft.isRequired
-                    ? (str) => str!.isEmpty ? 'empty' : null
-                    : null,
+            validator: ft.isRequired
+                ? (str) => str!.isEmpty ? 'empty' : null
+                : null,
           ),
 
         if (lock.record &&
