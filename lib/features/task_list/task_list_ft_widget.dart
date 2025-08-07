@@ -18,10 +18,9 @@ class TaskWidget extends StatelessWidget {
     final ftLock = inherited.ftLock;
     final detailed = inherited.detailed;
 
-    final childrenTasks =
-        task.childrenIds
-            .map<Task>((id) => tasks.values.firstWhere((t) => t.id == id))
-            .toList();
+    final childrenTasks = task.childrenIds
+        .map<Task>((id) => tasks.values.firstWhere((t) => t.id == id))
+        .toList();
 
     final renameTogglePool = Pool<bool>(false);
 
@@ -29,54 +28,37 @@ class TaskWidget extends StatelessWidget {
       children: [
         Row(
           children: [
-            if (!task.isRoot)
-              Checkbox(
-                value: task.done,
-                onChanged:
-                    (!ftLock.model || (ftLock.model && ftLock.record))
-                        ? null
-                        : (val) {
-                          task.done = val ?? false;
-                          updateList(action: 'check', payload: task);
-                        },
-              ),
+            Checkbox(
+              value: task.done,
+              onChanged: (!ftLock.model || (ftLock.model && ftLock.record))
+                  ? null
+                  : (val) {
+                      task.done = val ?? false;
+                      updateList(action: 'check', payload: task);
+                    },
+            ),
             Swimmer<bool>(
               pool: renameTogglePool,
-              builder:
-                  (ctx, renaming) => Expanded(
-                    child:
-                        ftLock.model && !renaming && task.title != ''
-                            ? Txt(task.title, w: 8)
-                            : TxtField(
-                              validator:
-                                  (str) => str!.isEmpty ? 'empty!' : null,
-                              round: task.isRoot,
-                              hint:
-                                  task.isRoot ? 'list title' : 'task name',
-                              onTapOutside: (_) {
-                                updateList(
-                                  action: 'update',
-                                  payload: task,
-                                );
-                              },
-                              onChanged: (text) {
-                                task.title = text;
-                              },
-                              initialValue: task.title,
-                            ),
-                  ),
+              builder: (ctx, renaming) => Expanded(
+                child: ftLock.model && !renaming && task.title != ''
+                    ? Txt(task.title, w: 8)
+                    : TxtField(
+                        validator: (str) => str!.isEmpty ? 'empty!' : null,
+                        hint: 'task name',
+                        onTapOutside: (_) {
+                          updateList(action: 'update', payload: task);
+                        },
+                        onChanged: (text) {
+                          task.title = text;
+                        },
+                        initialValue: task.title,
+                      ),
+              ),
             ),
 
             if (task.childrenIds.isNotEmpty)
               Text(
                 '(${ftLock.model && !detailed ? '${task.doneSubTasks}/' : ''}${task.childrenIds.length})',
-              ),
-
-            if (task.isRoot && !ftLock.model)
-              IconButton(
-                onPressed:
-                    () => updateList(action: 'add', payload: task.id),
-                icon: Icon(Icons.add),
               ),
 
             if (ftLock.model != ftLock.record)
@@ -100,29 +82,25 @@ class TaskWidget extends StatelessWidget {
                   }
                 },
                 options: [
-                  if (!task.isRoot)
-                    MenuOption(
-                      value: 'delete',
-                      widget: ListTile(
-                        title: Text('delete'),
-                        leading: Icon(Icons.close),
-                      ),
-                    ),
-                  if (ftLock.model)
-                    MenuOption(
-                      value: 'edit',
-                      widget: ListTile(
-                        title: Text('rename'),
-                        leading: Icon(Icons.edit),
-                      ),
-                    ),
                   MenuOption(
                     value: 'add',
                     widget: ListTile(
-                      title: Text(
-                        task.isRoot ? 'add task' : 'add subtask',
-                      ),
+                      title: Text('add subtask'),
                       leading: Icon(Icons.add),
+                    ),
+                  ),
+                  MenuOption(
+                    value: 'edit',
+                    widget: ListTile(
+                      title: Text('rename'),
+                      leading: Icon(Icons.edit),
+                    ),
+                  ),
+                  MenuOption(
+                    value: 'delete',
+                    widget: ListTile(
+                      title: Text('remove'),
+                      leading: Icon(Icons.close),
                     ),
                   ),
                 ],
@@ -130,12 +108,11 @@ class TaskWidget extends StatelessWidget {
           ],
         ),
         Padding(
-          padding: EdgeInsets.only(left: task.isRoot ? 0 : 30),
+          padding: EdgeInsets.only(left: 30),
           child: Column(
-            children:
-                childrenTasks
-                    .map((t) => TaskWidget(task: t, key: Key(t.id)))
-                    .toList(),
+            children: childrenTasks
+                .map((t) => TaskWidget(task: t, key: Key(t.id)))
+                .toList(),
           ),
         ),
       ],
@@ -185,8 +162,36 @@ class TaskListFtWidget extends StatelessWidget {
           ftLock: lock,
           tasks: ft.tasks,
           updateList: updateList,
-          child: TaskWidget(
-            task: ft.tasks.values.firstWhere((task) => task.isRoot),
+          child: StatefulBuilder(
+            builder: (context, setState) => Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: lock.model
+                          ? Txt(ft.title, w: 8)
+                          : TxtField(
+                              round: true,
+                              label: 'list title',
+                              initialValue: ft.title,
+                              onChanged: (str) => ft.setTitle(str),
+                            ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        final newRootTask = Task.empty(isRoot: true);
+                        ft.tasks[newRootTask.id] = newRootTask;
+                        setState(() => {});
+                      },
+                      icon: Icon(Icons.add),
+                    ),
+                  ],
+                ),
+                ...ft.tasks.values
+                    .where((task) => task.isRoot)
+                    .map((t) => TaskWidget(task: t)),
+              ],
+            ),
           ),
         );
       },
@@ -211,8 +216,8 @@ class InheritedTaskList extends InheritedWidget {
   }) : super();
 
   static InheritedTaskList of(BuildContext context) {
-    final InheritedTaskList? result =
-        context.dependOnInheritedWidgetOfExactType<InheritedTaskList>();
+    final InheritedTaskList? result = context
+        .dependOnInheritedWidgetOfExactType<InheritedTaskList>();
     assert(
       result != null,
       'No TaskListFtInheritedWidget found in context',

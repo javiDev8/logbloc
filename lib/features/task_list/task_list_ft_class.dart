@@ -32,13 +32,8 @@ class TaskListFt extends Feature {
   }
 
   @override
-  factory TaskListFt.empty() {
-    final rootTask = Task.empty(isRoot: true, chIds: []);
-    return TaskListFt.fromBareFt(
-      Feature.empty('task_list'),
-      tasks: {rootTask.id: rootTask},
-    );
-  }
+  factory TaskListFt.empty() =>
+      TaskListFt.fromBareFt(Feature.empty('task_list'), tasks: {});
 
   @override
   factory TaskListFt.fromEntry(
@@ -46,26 +41,27 @@ class TaskListFt extends Feature {
     Map<String, dynamic>? recordFt,
   ) => TaskListFt.fromBareFt(
     Feature.fromEntry(entry),
-    tasks:
-        (recordFt == null
-                ? entry.value['tasks'] as Map<String, dynamic>
-                : recordFt['tasks'] as Map<String, dynamic>)
-            .map(
-              (key, value) => MapEntry(
-                key,
-                Task.fromMap(value as Map<String, dynamic>),
-              ),
-            ),
+    tasks: Map.fromEntries(
+      (recordFt == null
+              ? entry.value['tasks'] as Map<String, dynamic>
+              : recordFt['tasks'] as Map<String, dynamic>)
+          .entries
+          .map((entry) => MapEntry(entry.key, Task.fromEntry(entry))),
+    ),
   );
 
   @override
   serialize() => {
     ...super.serialize(),
-    'tasks': tasks.map((key, value) => MapEntry(key, value.serialize())),
+    'tasks': Map<String, dynamic>.fromEntries(
+      tasks.values.map((task) => task.serialize()),
+    ),
   };
 
   @override
-  Map<String, dynamic> makeRec() => serialize();
+  Map<String, dynamic> makeRec() => {
+    'tasks': Map.fromEntries(tasks.values.map((task) => task.serialize())),
+  };
 
   addTask({required String parentId}) {
     final task = Task.empty(isRoot: false);
@@ -100,9 +96,12 @@ class TaskListFt extends Feature {
     }
 
     deleteDown(task);
-    final parent = tasks.values.firstWhere(
-      (t) => t.childrenIds.contains(task.id),
-    );
+    final parent = tasks.values
+        .toList()
+        .where((t) => t.childrenIds.contains(task.id))
+        .firstOrNull;
+
+    if (parent == null) return;
 
     parent.childrenIds.removeWhere((i) => i == task.id);
     if (!parent.done &&
@@ -177,21 +176,23 @@ class Task {
     childrenIds: chIds ?? [],
   );
 
-  factory Task.fromMap(Map<String, dynamic> map) => Task(
-    id: map['id'] as String,
-    isRoot: map['isRoot'] as bool,
-    title: map['title'] as String,
-    done: map['done'] as bool,
-    doneSubTasks: map['doneSubTasks'] as int,
-    childrenIds: List<String>.from(map['childrenIds'] as List),
-  );
+  factory Task.fromEntry(MapEntry<String, dynamic> entry) {
+    final map = entry.value;
+    return Task(
+      id: entry.key,
+      isRoot: map['isRoot'] as bool,
+      title: map['title'] as String,
+      done: map['done'] as bool,
+      doneSubTasks: map['doneSubTasks'] as int,
+      childrenIds: List<String>.from(map['childrenIds'] as List),
+    );
+  }
 
-  serialize() => {
-    'id': id,
+  MapEntry<String, dynamic> serialize() => MapEntry(id, {
     'isRoot': isRoot,
     'title': title,
     'done': done,
     'doneSubTasks': doneSubTasks,
     'childrenIds': childrenIds,
-  };
+  });
 }
