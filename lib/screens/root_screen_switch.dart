@@ -33,11 +33,11 @@ class RootScreenSwitch extends StatelessWidget {
           final currentRootState =
               rootScreens[screenIndexPool.data].nav.currentState;
           if (currentRootState != null && currentRootState.canPop()) {
-            if (screenIndexPool.data == 0) {
-              modelEditPool.dirty = false;
-            }
             topbarPool.popTitle();
             currentRootState.pop();
+            if (screenIndexPool.data == 0 && !currentRootState.canPop()) {
+              modelEditPool.dirty = false;
+            }
           } else {
             SystemNavigator.pop();
           }

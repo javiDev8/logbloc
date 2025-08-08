@@ -177,6 +177,12 @@ class TaskListFtWidget extends StatelessWidget {
                               onChanged: (str) => ft.setTitle(str),
                             ),
                     ),
+                    Expanded(
+                      child: Txt(
+                        '(${ft.getRoots().length} / ${ft.getRoots(done: true).length})',
+                        w: 8,
+                      ),
+                    ),
                     IconButton(
                       onPressed: () {
                         final newRootTask = Task.empty(isRoot: true);

@@ -12,41 +12,38 @@ class TaskListFtStatsWidget extends StatelessWidget {
     required this.ft,
   });
 
-  Task getRootTask(Map<String, dynamic> ftRec) {
+  Iterable<Task> getRootTasks(Map<String, dynamic> ftRec) {
     final taskList = TaskListFt.fromEntry(
       MapEntry(ft.key, ft.serialize()),
       ftRec,
     );
-    return taskList.tasks.values.firstWhere((t) => t.isRoot);
+    return taskList.tasks.values.where((t) => t.isRoot);
   }
 
   double getDoneRate(Map<String, dynamic> ftRec) {
-    final rootTask = getRootTask(ftRec);
-    return rootTask.doneSubTasks / rootTask.childrenIds.length * 100;
+    final rootTasks = getRootTasks(ftRec);
+    return rootTasks.where((r) => r.done).length / rootTasks.length * 100;
   }
 
   @override
   Widget build(BuildContext context) {
-    final rootTask = getRootTask(ftRecs[0]);
-
     return Column(
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 30),
-          child: SectionDivider(
-            string: '"${rootTask.title}" done tasks rate',
-          ),
+          child: SectionDivider(string: '"${ft.title}" done tasks rate'),
         ),
         ftRecs.isEmpty
             ? Center(child: Text('no records'))
             : WeeklyChart(
-              integer: true,
-              recordFts: ftRecs,
+                operation: ChartOperation.average,
+                integer: true,
+                recordFts: ftRecs,
 
-              getRecordValue:
-                  (Map<String, dynamic> rec) => getDoneRate(rec),
-              unit: '%',
-            ),
+                getRecordValue: (Map<String, dynamic> rec) =>
+                    getDoneRate(rec),
+                unit: '%',
+              ),
       ],
     );
   }

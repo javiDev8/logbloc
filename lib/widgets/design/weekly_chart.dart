@@ -3,17 +3,21 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:logize/widgets/design/txt.dart';
 
+enum ChartOperation { add, average }
+
 class WeeklyChart extends StatelessWidget {
   final PageController pageController = PageController(initialPage: 1000);
   final double Function(Map<String, dynamic>) getRecordValue;
   final List<Map<String, dynamic>> recordFts;
   final String? unit;
   final bool? integer;
+  final ChartOperation operation;
 
   WeeklyChart({
     super.key,
     required this.recordFts,
     required this.getRecordValue,
+    required this.operation,
     this.unit,
     this.integer,
   });
@@ -49,21 +53,33 @@ class WeeklyChart extends StatelessWidget {
             Duration(days: (index - pageController.initialPage) * 7),
           );
 
-          final weekData = List.generate(
-            7,
-            (weekDayIndex) => recordFts
-                .where((rec) {
-                  final recDate = rec['date'];
-                  final weekDayDate = targetMonday.add(
-                    Duration(days: weekDayIndex),
-                  );
-                  return recDate.isAfter(
-                        weekDayDate.subtract(Duration(days: 1)),
-                      ) &&
-                      recDate.isBefore(weekDayDate.add(Duration(days: 1)));
-                })
-                .fold(0.0, (sum, rec) => sum + getRecordValue(rec)),
-          );
+          final weekData = List.generate(7, (weekDayIndex) {
+            final dayFtRecs = recordFts.where((rec) {
+              final recDate = rec['date'];
+              final weekDayDate = targetMonday.add(
+                Duration(days: weekDayIndex),
+              );
+              return recDate.isAfter(
+                    weekDayDate.subtract(Duration(days: 1)),
+                  ) &&
+                  recDate.isBefore(weekDayDate.add(Duration(days: 1)));
+            });
+
+            switch (operation) {
+              case ChartOperation.average:
+                if (dayFtRecs.isEmpty) return 0.0;
+                return dayFtRecs.fold<double>(
+                      0.0,
+                      (sum, rec) => sum + getRecordValue(rec),
+                    ) /
+                    dayFtRecs.length;
+              default:
+                return dayFtRecs.fold(
+                  0.0,
+                  (sum, rec) => sum + getRecordValue(rec),
+                );
+            }
+          });
 
           return Padding(
             padding: const EdgeInsets.all(16.0),

@@ -23,13 +23,14 @@ class TextFtStatsWidget extends StatelessWidget {
         ftRecs.isEmpty
             ? Center(child: Text('no records'))
             : WeeklyChart(
-              integer: true,
-              recordFts: ftRecs,
-              getRecordValue: (Map<String, dynamic> rec) {
-                return rec['content']?.length.toDouble() ?? 0.0;
-              },
-              unit: 'characters',
-            ),
+                operation: ChartOperation.add,
+                integer: true,
+                recordFts: ftRecs,
+                getRecordValue: (Map<String, dynamic> rec) {
+                  return rec['content']?.length.toDouble() ?? 0.0;
+                },
+                unit: 'characters',
+              ),
       ],
     );
   }

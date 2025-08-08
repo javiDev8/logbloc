@@ -44,8 +44,9 @@ class TopbarPool extends Pool<Widget> {
           Builder(
             builder: (context) => IconButton(
               onPressed: () {
-                if (rootIndex == 0) {
-		  modelEditPool.dirty = false;
+                if (rootIndex == 0 &&
+                    !rootScreens[rootIndex].nav.currentState!.canPop()) {
+                  modelEditPool.dirty = false;
                 }
                 popTitle();
                 rootScreens[rootIndex].nav.currentState!.pop();

@@ -3,7 +3,8 @@ import 'package:logize/features/feature_switch.dart';
 import 'package:logize/pools/models/model_edit_pool.dart';
 import 'package:logize/pools/pools.dart';
 import 'package:logize/pools/theme_mode_pool.dart';
-import 'package:logize/utils/noticable_print.dart';
+import 'package:logize/screens/models/model_screen/feature_stats_screen.dart';
+import 'package:logize/utils/nav.dart';
 import 'package:logize/widgets/design/exp.dart';
 import 'package:flutter/material.dart';
 import 'package:logize/widgets/design/menu_button.dart';
@@ -40,7 +41,11 @@ class ReadOnlyFtWidget extends StatelessWidget {
           Expanded(
             child: InkWell(
               onTap: () {
-                nPrint('nav to ft recs');
+                navPush(
+                  context: context,
+                  screen: FeatureStatsScreen(ftKey: feature.key),
+                  title: Txt('${feature.title} stats'),
+                );
               },
               child: Padding(
                 padding: EdgeInsetsGeometry.all(10),

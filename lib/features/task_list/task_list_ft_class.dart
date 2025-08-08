@@ -148,6 +148,10 @@ class TaskListFt extends Feature {
     checkUp(task);
     checkDown(task);
   }
+
+  List<Task> getRoots({bool? done}) => tasks.values
+      .where((task) => task.isRoot && (done == true ? (task.done) : true))
+      .toList();
 }
 
 class Task {
