@@ -49,7 +49,7 @@ class ItemBox extends StatelessWidget {
                           navPop();
                         }
                       },
-                      icon: Icon(Icons.save),
+                      icon: Icon(Icons.check_circle_outline),
                     ),
 
                     MenuButton(

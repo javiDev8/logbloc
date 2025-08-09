@@ -20,8 +20,8 @@ class ModelEditPool extends Pool<Model> {
   }
 
   save() async {
-    if (modelEditPool.data.name.isEmpty ||
-        !editModelFormKey.currentState!.validate() ||
+    if (!editModelFormKey.currentState!.validate() ||
+        modelEditPool.data.name.isEmpty ||
         data.features.values.firstWhereOrNull((f) => f.title.isEmpty) !=
             null) {
       feedback('check your inputs', type: FeedbackType.error);

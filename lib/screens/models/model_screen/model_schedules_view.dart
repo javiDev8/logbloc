@@ -21,7 +21,7 @@ class ModelSchedulesView extends StatelessWidget {
       padding: EdgeInsetsGeometry.symmetric(horizontal: 5),
       child: LazySwimmer<Model>(
         pool: modelEditPool,
-	listenedEvents: ['schedules'],
+        listenedEvents: ['schedules'],
         builder: (context, model) => Column(
           children: [
             SectionDivider(lead: AddSchRuleButton()),
@@ -91,42 +91,75 @@ class ScheduleWidget extends StatelessWidget {
                   ),
                 ],
               ),
-
               if (expanded)
-                ...modelEditPool.data.features.values.map<Widget>((ft) {
-                  //bool expanded = false;
-                  return Row(
-                    children: [
-                      StatefulBuilder(
-                        builder: (context, setState) => Checkbox(
-                          value:
-                              schedule.includedFts?.contains(ft.key) ==
-                              true,
+                Column(
+                  children: [
+                    Row(
+                      children: [
+                        Txt('include all features', w: 7),
+                        Checkbox(
+                          value: schedule.includedFts == null,
                           onChanged: (val) {
-                            modelEditPool.dirt(true);
-                            if (val == true &&
-                                schedule.includedFts?.contains(ft.key) !=
-                                    true) {
-                              schedule.includedFts ??= [];
-                              schedule.includedFts!.add(ft.key);
-                            } else if (val == false &&
-                                schedule.includedFts?.contains(ft.key) ==
-                                    true) {
-                              schedule.includedFts!.removeWhere(
-                                (ftKey) => ftKey == ft.key,
+                            if (val == true) {
+                              schedule.includedFts = null;
+                            } else if (val == false) {
+                              schedule.includedFts = List<String>.from(
+                                modelEditPool.data.features.keys,
                               );
                             }
                             setState(() => {});
                           },
                         ),
-                      ),
-                      Icon(
-                        featureSwitch(parseType: 'icon', ftType: ft.type),
-                      ),
-                      Txt(ft.title, w: 7),
-                    ],
-                  );
-                }),
+                      ],
+                    ),
+                    if (schedule.includedFts != null)
+                      ...modelEditPool.data.features.values.map<Widget>((
+                        ft,
+                      ) {
+                        //bool expanded = false;
+                        return Row(
+                          children: [
+                            StatefulBuilder(
+                              builder: (context, setState) => Checkbox(
+                                value:
+                                    schedule.includedFts?.contains(
+                                      ft.key,
+                                    ) ==
+                                    true,
+                                onChanged: (val) {
+                                  modelEditPool.dirt(true);
+                                  if (val == true &&
+                                      schedule.includedFts?.contains(
+                                            ft.key,
+                                          ) !=
+                                          true) {
+                                    schedule.includedFts ??= [];
+                                    schedule.includedFts!.add(ft.key);
+                                  } else if (val == false &&
+                                      schedule.includedFts?.contains(
+                                            ft.key,
+                                          ) ==
+                                          true) {
+                                    schedule.includedFts!.removeWhere(
+                                      (ftKey) => ftKey == ft.key,
+                                    );
+                                  }
+                                  setState(() => {});
+                                },
+                              ),
+                            ),
+                            Icon(
+                              featureSwitch(
+                                parseType: 'icon',
+                                ftType: ft.type,
+                              ),
+                            ),
+                            Txt(ft.title, w: 7),
+                          ],
+                        );
+                      }),
+                  ],
+                ),
             ],
           ),
         ),
