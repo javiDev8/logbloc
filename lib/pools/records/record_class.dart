@@ -1,6 +1,7 @@
 import 'package:logize/apis/db.dart';
 import 'package:logize/event_processor.dart';
 import 'package:logize/pools/models/model_class.dart';
+import 'package:logize/utils/feedback.dart';
 
 class Rec {
   String id;
@@ -48,7 +49,7 @@ class Rec {
     }
   }
 
-  delete() async {
+  Future<bool> delete() async {
     try {
       await db.deleteRecord(this);
       eventProcessor.emitEvent(
@@ -59,6 +60,8 @@ class Rec {
           timestamp: DateTime.now(),
         ),
       );
+      feedback('record deleted', type: FeedbackType.success);
+      return true;
     } catch (e) {
       throw Exception('record delete failed: $e');
     }

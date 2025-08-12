@@ -99,7 +99,6 @@ class DailyScreen extends StatelessWidget {
                                     ItemBox(
                                       key: UniqueKey(),
                                       item: item,
-                                      screenTitle: item.model!.name,
                                     ),
                                   ],
                                 ),

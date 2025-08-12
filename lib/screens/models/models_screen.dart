@@ -47,8 +47,12 @@ class ModelsScreen extends StatelessWidget {
                     (m) => ListTile(
                       key: Key(m.value.name),
                       title: Text(m.value.name),
-                      onTap: () =>
-                          navPush(screen: ModelScreen(model: m.value)),
+                      onTap: () => navPush(
+                        screen: ModelScreen(
+                          // necessary deep copy
+                          model: Model.fromMap(map: m.value.serialize()),
+                        ),
+                      ),
                     ),
                   ),
                 ],

@@ -3,8 +3,8 @@ import 'package:logize/features/feature_switch.dart';
 import 'package:logize/pools/models/model_class.dart';
 import 'package:logize/pools/models/model_edit_pool.dart';
 import 'package:logize/pools/pools.dart';
-import 'package:logize/utils/feedback.dart';
 import 'package:logize/utils/nav.dart';
+import 'package:logize/utils/warn_dialogs.dart';
 import 'package:logize/widgets/design/exp.dart';
 import 'package:logize/widgets/design/menu_button.dart';
 import 'package:logize/widgets/design/none.dart';
@@ -31,39 +31,42 @@ List<Widget> makeModelTitle({bool? isNew}) => [
   ),
 
   if (isNew != true)
-    MenuButton(
-      onSelected: (val) async {
-        switch (val) {
-          case 'delete':
-            try {
-              await modelEditPool.data.delete();
-              feedback('model deleted', type: FeedbackType.success);
-              navPop();
-              break;
-            } catch (e) {
-              feedback('model deletion failed', type: FeedbackType.error);
-            }
-          default:
-            throw Exception('option not implemented');
-        }
-      },
+    Builder(
+      builder: (context) => MenuButton(
+        onSelected: (val) async {
+          switch (val) {
+            case 'delete':
+              try {
+                await warnDelete(
+                  context,
+                  delete: modelEditPool.data.delete,
+                );
+                break;
+              } catch (e) {
+                throw Exception(e);
+              }
+            default:
+              throw Exception('option not implemented');
+          }
+        },
 
-      options: [
-        MenuOption(
-          value: 'archive',
-          widget: ListTile(
-            title: Text('archive'),
-            leading: Icon(Icons.archive),
+        options: [
+          MenuOption(
+            value: 'archive',
+            widget: ListTile(
+              title: Text('archive'),
+              leading: Icon(Icons.archive),
+            ),
           ),
-        ),
-        MenuOption(
-          value: 'delete',
-          widget: ListTile(
-            title: Text('delete'),
-            leading: Icon(Icons.delete),
+          MenuOption(
+            value: 'delete',
+            widget: ListTile(
+              title: Text('delete'),
+              leading: Icon(Icons.delete),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     ),
 ];
 

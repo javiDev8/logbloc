@@ -4,6 +4,7 @@ import 'package:logize/features/feature_class.dart';
 import 'package:logize/features/feature_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:logize/pools/tags_pool.dart';
+import 'package:logize/utils/feedback.dart';
 
 // the num represents a priority for sorting, being
 // 0 the default, so "0" means is there, null means is not
@@ -188,7 +189,7 @@ class Model {
     }
   }
 
-  delete() async {
+  Future<bool> delete() async {
     try {
       await db.deleteModel(id);
       eventProcessor.emitEvent(
@@ -199,6 +200,8 @@ class Model {
           timestamp: DateTime.now(),
         ),
       );
+      feedback('model deleted', type: FeedbackType.success);
+      return true;
     } catch (e) {
       throw Exception('models delete error $e');
     }

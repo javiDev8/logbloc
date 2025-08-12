@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:logize/features/feature_class.dart';
 import 'package:logize/features/feature_switch.dart';
 import 'package:logize/pools/models/model_class.dart';
@@ -5,6 +7,7 @@ import 'package:logize/pools/models/models_pool.dart';
 import 'package:logize/pools/records/record_class.dart';
 import 'package:logize/pools/records/records_pool.dart';
 import 'package:flutter/material.dart';
+import 'package:logize/screens/daily/item_screen.dart';
 import 'package:logize/utils/feedback.dart';
 
 class Item {
@@ -57,7 +60,13 @@ class Item {
         [],
   );
 
-  save() async {
+  FutureOr<bool> save() async {
+    if (!itemFormKey.currentState!.validate()) {
+      feedback('check your inputs!', type: FeedbackType.error);
+      return false;
+    }
+    dirtItemFlagPool.data = false;
+
     final serializedFeatures = Map.fromEntries(
       stagedFeatures.entries.map(
         (e) => MapEntry(e.key, e.value.makeRec()),
@@ -82,8 +91,8 @@ class Item {
       }
 
       feedback('record saved', type: FeedbackType.success);
-
       stagedFeatures = {};
+      return true;
     } catch (e) {
       throw Exception('Item save failed: $e');
     }

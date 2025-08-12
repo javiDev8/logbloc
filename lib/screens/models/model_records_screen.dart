@@ -3,7 +3,6 @@ import 'package:logize/pools/models/model_class.dart';
 import 'package:logize/pools/pools.dart';
 import 'package:logize/pools/records/record_class.dart';
 import 'package:logize/pools/records/records_pool.dart';
-import 'package:logize/utils/fmt_date.dart';
 import 'package:logize/widgets/design/topbar_wrap.dart';
 import 'package:logize/widgets/design/txt.dart';
 import 'package:logize/widgets/item_box.dart';
@@ -39,13 +38,12 @@ class ModelRecordsScreen extends StatelessWidget {
                       children: [
                         ItemBox(
                           key: UniqueKey(),
+                          fromRecords: true,
                           item: Item(
                             modelId: model.id,
                             recordId: r.id,
                             schedule: r.schedule,
-                          ),
-                          screenTitle: hdate(
-                            DateTime.parse(r.schedule.day),
+			    date: r.schedule.day
                           ),
                         ),
                       ],

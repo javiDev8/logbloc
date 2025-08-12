@@ -5,6 +5,7 @@ import 'package:logize/screens/root_screen_switch.dart';
 PreferredSize wrapBar({
   required bool backable,
   required List<Widget> children,
+  Future<bool> Function()? onBack,
 }) {
   final rootIndex = screenIndexPool.data;
   return PreferredSize(
@@ -13,7 +14,7 @@ PreferredSize wrapBar({
       padding: EdgeInsetsGeometry.only(
         left: 15,
         right: 15,
-        top: 30,
+        top: 35,
         bottom: 5,
       ),
       child: DefaultTextStyle(
@@ -24,7 +25,8 @@ PreferredSize wrapBar({
           children: [
             if (backable)
               IconButton(
-                onPressed: () {
+                onPressed: () async {
+                  if (onBack != null && !(await onBack())) return;
                   rootScreens[rootIndex].nav.currentState!.pop();
                 },
                 icon: Icon(Icons.arrow_back),

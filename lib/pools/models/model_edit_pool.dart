@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:logize/features/feature_class.dart';
 import 'package:logize/pools/models/model_class.dart';
 import 'package:logize/pools/pools.dart';
@@ -20,17 +22,17 @@ class ModelEditPool extends Pool<Model> {
     controller.sink.add('dirty');
   }
 
-  save() async {
+  FutureOr<bool> save() async {
     if (!editModelFormKey.currentState!.validate() ||
         modelEditPool.data.name.isEmpty ||
         data.features.values.firstWhereOrNull((f) => f.title.isEmpty) !=
             null) {
       feedback('check your inputs', type: FeedbackType.error);
-      return;
+      return false;
     }
     if (modelEditPool.data.features.isEmpty) {
       feedback('add at least one feature', type: FeedbackType.error);
-      return;
+      return false;
     }
     final saveType = await data.save();
     feedback('model saved', type: FeedbackType.success);
@@ -38,6 +40,7 @@ class ModelEditPool extends Pool<Model> {
     if (saveType == 'add') {
       navPop();
     }
+    return true;
   }
 
   editExistingModel(Model model) {

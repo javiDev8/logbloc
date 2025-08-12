@@ -9,10 +9,12 @@ navPush({required Widget screen}) => rootScreens[screenIndexPool.data]
 
 navPop() => rootScreens[screenIndexPool.data].nav.currentState!.pop();
 
-navLink({
-  required int rootIndex,
-  required Widget screen,
-}) {
+navLink({required int rootIndex, required Widget screen}) {
+  if (rootIndex == screenIndexPool.data) {
+    navPush(screen: screen);
+    return;
+  }
+
   if (rootScreens[rootIndex].nav.currentState!.canPop()) {
     rootScreens[rootIndex].nav.currentState!.popUntil((r) => r.isFirst);
   }

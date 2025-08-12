@@ -1,8 +1,10 @@
 import 'package:logize/features/feature_switch.dart';
 import 'package:logize/features/feature_widget.dart';
 import 'package:logize/pools/items/item_class.dart';
+import 'package:logize/pools/screen_index_pool.dart';
 import 'package:logize/pools/theme_mode_pool.dart';
 import 'package:logize/screens/daily/item_screen.dart';
+import 'package:logize/screens/root_screen_switch.dart';
 import 'package:logize/utils/color_convert.dart';
 import 'package:logize/utils/fmt_date.dart';
 import 'package:logize/utils/nav.dart';
@@ -11,12 +13,8 @@ import 'package:flutter/material.dart';
 
 class ItemBox extends StatelessWidget {
   final Item item;
-  final String screenTitle;
-  const ItemBox({
-    super.key,
-    required this.item,
-    required this.screenTitle,
-  });
+  final bool fromRecords;
+  const ItemBox({super.key, required this.item, this.fromRecords = false});
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +26,19 @@ class ItemBox extends StatelessWidget {
         child: Material(
           child: InkWell(
             borderRadius: BorderRadius.circular(10),
-            onTap: () {
-              navPush(screen: ItemScreen(item: item));
+            onTap: () async {
+              // avoid duplicated item screen
+              if (itemScreenKey.currentState != null) {
+                if (screenIndexPool.data == 0) {
+                  rootScreens[1].nav.currentState!.pop();
+                } else if (screenIndexPool.data == 1) {
+                  rootScreens[0].nav.currentState!.pop();
+                }
+                // yes flutter cant handle it
+                await Future.delayed(Duration(milliseconds: 150));
+              }
+              globalItem = item;
+              navPush(screen: ItemScreen());
             },
             child: DecoratedBox(
               decoration: BoxDecoration(
@@ -51,7 +60,7 @@ class ItemBox extends StatelessWidget {
                     padding: EdgeInsets.all(20),
                     child: Row(
                       children: [
-                        if (item.date != null)
+                        if (!fromRecords)
                           Padding(
                             padding: EdgeInsets.only(right: 10),
                             child: item.recordId == null
@@ -59,7 +68,7 @@ class ItemBox extends StatelessWidget {
                                 : Icon(Icons.circle),
                           ),
 
-                        item.date == null && item.record != null
+                        fromRecords
                             ? Text(
                                 hdate(
                                   DateTime.parse(
@@ -76,7 +85,7 @@ class ItemBox extends StatelessWidget {
 
                         Exp(),
 
-                        if (item.date != null)
+                        if (!fromRecords)
                           ...sortedFts
                               .where((f) => !f.pinned)
                               .map<Widget>(

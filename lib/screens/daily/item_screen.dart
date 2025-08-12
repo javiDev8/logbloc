@@ -6,6 +6,7 @@ import 'package:logize/pools/pools.dart';
 import 'package:logize/screens/models/model_screen/model_screen.dart';
 import 'package:logize/utils/fmt_date.dart';
 import 'package:logize/utils/nav.dart';
+import 'package:logize/utils/warn_dialogs.dart';
 import 'package:logize/widgets/design/exp.dart';
 import 'package:logize/widgets/design/menu_button.dart';
 import 'package:logize/widgets/design/none.dart';
@@ -13,12 +14,18 @@ import 'package:logize/widgets/design/topbar_wrap.dart';
 import 'package:logize/widgets/design/txt.dart';
 import 'package:flutter/material.dart';
 
+final itemScreenKey = GlobalKey();
+final dirtItemFlagPool = Pool<bool>(false);
+final itemFormKey = GlobalKey<FormState>();
+
+Item? globalItem;
+
 class ItemScreen extends StatelessWidget {
-  final Item item;
-  const ItemScreen({super.key, required this.item});
+  const ItemScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final item = globalItem!;
     // create deep copies of features
     item.stagedFeatures = Map.fromEntries(
       item.features.entries.map(
@@ -35,8 +42,6 @@ class ItemScreen extends StatelessWidget {
 
     final sortedFts = item.getSortedFts(staged: true);
 
-    final dirtItemFlagPool = Pool<bool>(false);
-
     paintFt(Feature ft) => FeatureWidget(
       key: UniqueKey(),
       lock: FeatureLock(model: true, record: false),
@@ -45,11 +50,20 @@ class ItemScreen extends StatelessWidget {
         if (!dirtItemFlagPool.data) dirtItemFlagPool.set((_) => true);
       },
     );
-    final itemFormKey = GlobalKey<FormState>();
 
     return Scaffold(
+      key: itemScreenKey,
       appBar: wrapBar(
         backable: true,
+        onBack: () async {
+          if (!dirtItemFlagPool.data) return true;
+          final res = await warnUnsavedChanges(
+            context,
+            save: globalItem!.save,
+          );
+          if (res == true) dirtItemFlagPool.data = false;
+          return res ?? false;
+        },
         children: [
           Txt(item.model!.name),
           Exp(),
@@ -60,8 +74,12 @@ class ItemScreen extends StatelessWidget {
                 ? IconButton(
                     onPressed: () async {
                       if (itemFormKey.currentState!.validate()) {
-                        await item.save();
-                        navPop();
+                        final res = await item.save();
+                        if (res) {
+                          // set method somehow doesnt work here
+                          dirtItemFlagPool.data = false;
+                          dirtItemFlagPool.controller.sink.add(false);
+                        }
                       }
                     },
                     icon: Icon(Icons.check_circle_outline),
@@ -73,8 +91,7 @@ class ItemScreen extends StatelessWidget {
             onSelected: (val) async {
               switch (val) {
                 case 'clean':
-                  await item.record!.delete();
-                  navPop();
+                  await warnDelete(context, delete: item.record!.delete);
                   break;
 
                 case 'go-to-model':
