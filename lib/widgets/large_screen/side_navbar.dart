@@ -1,6 +1,5 @@
 import 'package:logize/config/locales.dart';
 import 'package:logize/pools/screen_index_pool.dart';
-import 'package:logize/pools/topbar_pool.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 
@@ -34,7 +33,6 @@ class SideNavbar extends StatelessWidget {
                     leading: destEntry.value.icon,
                     title: Text(destEntry.value.label),
                     onTap: () {
-                      topbarPool.setRootIndex(destEntry.key);
                       screenIndexPool.set((_) => destEntry.key);
                     },
                   ),

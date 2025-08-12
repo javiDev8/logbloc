@@ -12,11 +12,7 @@ import 'package:logize/features/text/text_ft_stats.dart';
 import 'package:logize/features/text/text_ft_widget.dart';
 import 'package:flutter/material.dart';
 
-final List<String> availableFtTypes = [
-  'number',
-  'text',
-  'task_list',
-];
+final List<String> availableFtTypes = ['number', 'text', 'task_list'];
 
 dynamic featureSwitch({
   required String parseType,
@@ -28,6 +24,7 @@ dynamic featureSwitch({
   MapEntry<String, dynamic>? entry,
   Map<String, dynamic>? recordFt,
   List<Map<String, dynamic>>? ftRecs,
+  void Function()? dirt,
 }) {
   final type =
       ftType ?? (entry == null ? ft!.type : entry.key.split('-')[0]);
@@ -43,6 +40,7 @@ dynamic featureSwitch({
             lock: lock!,
             ft: ft as NumberFt,
             detailed: detailed!,
+            dirt: dirt!,
           );
         case 'stats':
           return NumberFtStatsWidget(ftRecs: ftRecs!, ft: ft as NumberFt);
@@ -63,6 +61,7 @@ dynamic featureSwitch({
             lock: lock!,
             ft: ft as TextFt,
             detailed: detailed!,
+            dirt: dirt!,
           );
         case 'stats':
           return TextFtStatsWidget(ftRecs: ftRecs!, ft: ft as TextFt);
@@ -83,6 +82,7 @@ dynamic featureSwitch({
             lock: lock!,
             ft: ft as TaskListFt,
             detailed: detailed!,
+            dirt: dirt!,
           );
         case 'stats':
           return TaskListFtStatsWidget(

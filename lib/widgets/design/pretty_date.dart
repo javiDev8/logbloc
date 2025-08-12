@@ -1,5 +1,4 @@
 import 'package:logize/pools/items/items_by_day_pool.dart';
-import 'package:logize/pools/topbar_pool.dart';
 import 'package:logize/screens/daily/daily_screen.dart';
 import 'package:logize/utils/fmt_date.dart';
 import 'package:logize/widgets/design/exp.dart';
@@ -39,15 +38,14 @@ class PrettyDate extends StatelessWidget {
           IconButton(
             onPressed: () async {
               final pickedDate = await showDatePicker(
-                currentDate: currentDate,
+                currentDate: currentDatePool.data,
                 context: context,
                 firstDate: DateTime(2020),
                 lastDate: DateTime(9999),
               );
               if (pickedDate == null) return;
-              topbarPool.setCurrentTitle(PrettyDate(date: pickedDate));
               initDate = pickedDate;
-              currentDate = pickedDate;
+              currentDatePool.set((_) => pickedDate);
               itemsByDayPool.clean();
             },
             icon: Icon(Icons.calendar_month),

@@ -3,15 +3,11 @@ import 'package:logize/features/feature_widget.dart';
 import 'package:logize/pools/items/item_class.dart';
 import 'package:logize/pools/theme_mode_pool.dart';
 import 'package:logize/screens/daily/item_screen.dart';
-import 'package:logize/screens/models/model_screen/model_screen.dart';
 import 'package:logize/utils/color_convert.dart';
 import 'package:logize/utils/fmt_date.dart';
 import 'package:logize/utils/nav.dart';
 import 'package:logize/widgets/design/exp.dart';
-import 'package:logize/widgets/design/menu_button.dart';
-
 import 'package:flutter/material.dart';
-import 'package:logize/widgets/model_title.dart';
 
 class ItemBox extends StatelessWidget {
   final Item item;
@@ -24,8 +20,6 @@ class ItemBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final itemFormKey = GlobalKey<FormState>();
-
     final sortedFts = item.getSortedFts();
 
     return Expanded(
@@ -35,62 +29,7 @@ class ItemBox extends StatelessWidget {
           child: InkWell(
             borderRadius: BorderRadius.circular(10),
             onTap: () {
-              navPush(
-                context: context,
-                screen: ItemScreen(item: item, formKey: itemFormKey),
-                title: Row(
-                  children: [
-                    Text(screenTitle),
-                    Exp(),
-                    IconButton(
-                      onPressed: () async {
-                        if (itemFormKey.currentState!.validate()) {
-                          await item.save();
-                          navPop();
-                        }
-                      },
-                      icon: Icon(Icons.check_circle_outline),
-                    ),
-
-                    MenuButton(
-                      onSelected: (val) async {
-                        switch (val) {
-                          case 'clean':
-                            await item.record!.delete();
-                            navPop();
-                            break;
-
-                          case 'go-to-model':
-                            navLink(
-                              rootIndex: 0,
-                              screen: ModelScreen(model: item.model!),
-                              title: ModelTitle(),
-                            );
-
-                            break;
-                        }
-                      },
-                      options: [
-                        MenuOption(
-                          value: 'go-to-model',
-                          widget: ListTile(
-                            title: Text('go to model'),
-                            leading: Icon(Icons.arrow_forward),
-                          ),
-                        ),
-                        if (item.recordId != null)
-                          MenuOption(
-                            value: 'clean',
-                            widget: ListTile(
-                              title: Text('clean'),
-                              leading: Icon(Icons.close),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ],
-                ),
-              );
+              navPush(screen: ItemScreen(item: item));
             },
             child: DecoratedBox(
               decoration: BoxDecoration(

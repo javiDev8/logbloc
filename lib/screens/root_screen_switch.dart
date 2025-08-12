@@ -1,7 +1,6 @@
 import 'package:logize/pools/models/model_edit_pool.dart';
 import 'package:logize/pools/pools.dart';
 import 'package:logize/pools/screen_index_pool.dart';
-import 'package:logize/pools/topbar_pool.dart';
 import 'package:logize/screens/daily/daily_screen.dart';
 import 'package:logize/screens/models/models_screen.dart';
 import 'package:logize/screens/settings/settings_screen.dart';
@@ -14,11 +13,13 @@ class RootScreen {
   RootScreen({required this.screen, required this.nav});
 }
 
-final List<RootScreen> rootScreens = [
-  RootScreen(screen: ModelsScreen(), nav: GlobalKey<NavigatorState>()),
-  RootScreen(screen: DailyScreen(), nav: GlobalKey<NavigatorState>()),
-  RootScreen(screen: SettingsScreen(), nav: GlobalKey<NavigatorState>()),
-];
+final List<RootScreen> rootScreens =
+    [ModelsScreen(), DailyScreen(), SettingsScreen()]
+        .map<RootScreen>(
+          (screen) =>
+              RootScreen(screen: screen, nav: GlobalKey<NavigatorState>()),
+        )
+        .toList();
 
 class RootScreenSwitch extends StatelessWidget {
   const RootScreenSwitch({super.key});
@@ -33,7 +34,6 @@ class RootScreenSwitch extends StatelessWidget {
           final currentRootState =
               rootScreens[screenIndexPool.data].nav.currentState;
           if (currentRootState != null && currentRootState.canPop()) {
-            topbarPool.popTitle();
             currentRootState.pop();
             if (screenIndexPool.data == 0 && !currentRootState.canPop()) {
               modelEditPool.dirty = false;

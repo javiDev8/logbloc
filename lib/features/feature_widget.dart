@@ -41,11 +41,7 @@ class ReadOnlyFtWidget extends StatelessWidget {
           Expanded(
             child: InkWell(
               onTap: () {
-                navPush(
-                  context: context,
-                  screen: FeatureStatsScreen(ftKey: feature.key),
-                  title: Txt('${feature.title} stats'),
-                );
+                navPush(screen: FeatureStatsScreen(ftKey: feature.key));
               },
               child: Padding(
                 padding: EdgeInsetsGeometry.all(10),
@@ -97,7 +93,13 @@ class ReadOnlyFtWidget extends StatelessWidget {
 class FtWid extends StatelessWidget {
   final Feature feature;
   final FeatureLock lock;
-  const FtWid({super.key, required this.feature, required this.lock});
+  final void Function()? dirt;
+  const FtWid({
+    super.key,
+    required this.feature,
+    required this.lock,
+    this.dirt,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +108,7 @@ class FtWid extends StatelessWidget {
     return Swimmer<bool>(
       pool: editingPool,
       builder: (context, editing) => editing
-          ? FeatureWidget(lock: lock, feature: feature)
+          ? FeatureWidget(lock: lock, feature: feature, dirt: dirt!)
           : ReadOnlyFtWidget(
               feature: feature,
               setEditing: editingPool.set,
@@ -120,6 +122,7 @@ class FeatureWidget extends StatelessWidget {
   final Feature feature;
   final bool detailed;
   final bool compact;
+  final void Function()? dirt;
 
   const FeatureWidget({
     super.key,
@@ -127,6 +130,7 @@ class FeatureWidget extends StatelessWidget {
     required this.feature,
     this.detailed = false,
     this.compact = false,
+    this.dirt,
   });
 
   @override
@@ -206,6 +210,7 @@ class FeatureWidget extends StatelessWidget {
                 ft: feature,
                 lock: lock,
                 detailed: detailed,
+                dirt: dirt,
               )
               as Widget,
         ],

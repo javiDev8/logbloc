@@ -7,7 +7,6 @@ import 'package:flutter_localization/flutter_localization.dart';
 import 'package:logize/widgets/crash_box.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:logize/pools/pools.dart';
-import 'package:logize/pools/topbar_pool.dart';
 import 'package:logize/screens/root_screen_switch.dart';
 import 'package:logize/widgets/large_screen/side_navbar.dart';
 import 'package:logize/widgets/navbar.dart';
@@ -90,12 +89,6 @@ class Logize extends StatelessWidget {
           theme: detaTheme,
           darkTheme: detaDarkTheme,
           home: Scaffold(
-            appBar: AppBar(
-              title: Swimmer<Widget>(
-                pool: topbarPool,
-                builder: (context, content) => content,
-              ),
-            ),
             body: screenIsLarge
                 ? Row(
                     children: [

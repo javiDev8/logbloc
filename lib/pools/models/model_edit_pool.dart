@@ -15,6 +15,7 @@ class ModelEditPool extends Pool<Model> {
   ModelEditPool(super.def) : dirty = false;
 
   dirt(bool? d) {
+    if (dirty == (d ?? true)) return;
     dirty = d ?? true;
     controller.sink.add('dirty');
   }

@@ -4,7 +4,6 @@ import 'package:logize/features/feature_widget.dart';
 import 'package:logize/pools/models/model_class.dart';
 import 'package:logize/pools/models/model_edit_pool.dart';
 import 'package:logize/pools/pools.dart';
-import 'package:logize/pools/topbar_pool.dart';
 import 'package:logize/utils/nav.dart';
 import 'package:logize/widgets/design/section_divider.dart';
 
@@ -30,6 +29,11 @@ class ModelFeaturesView extends StatelessWidget {
                   children: features
                       .map(
                         (ft) => FtWid(
+                          dirt: () {
+                            if (!modelEditPool.dirty) {
+                              modelEditPool.dirt(true);
+                            }
+                          },
                           key: Key(ft.key),
                           feature: ft,
                           lock: FeatureLock(model: false, record: true),
@@ -54,7 +58,6 @@ class AddFtButton extends StatelessWidget {
     return IconButton(
       icon: Icon(Icons.add),
       onPressed: () {
-        topbarPool.pushTitle(Text('features'));
         showModalBottomSheet(
           isDismissible: false,
           enableDrag: false,

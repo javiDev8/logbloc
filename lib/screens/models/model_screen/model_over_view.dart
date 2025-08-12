@@ -34,7 +34,10 @@ class ModelOverView extends StatelessWidget {
                   child: TxtField(
                     validator: (str) =>
                         str!.isEmpty ? 'give your model a name' : null,
-                    onChanged: (str) => modelEditPool.setName(str),
+                    onChanged: (str) {
+                      modelEditPool.setName(str);
+                      modelEditPool.dirt(true);
+                    },
                     round: false,
                     label: 'model name',
                     initialValue: modelEditPool.data.name,
@@ -45,7 +48,6 @@ class ModelOverView extends StatelessWidget {
                   IconButton(
                     onPressed: () {
                       editingNamePool.set((_) => true);
-                      modelEditPool.dirt(true);
                     },
                     icon: Icon(Icons.edit),
                   ),
@@ -81,17 +83,14 @@ class ModelOverView extends StatelessWidget {
                     filled: false,
                     lead: Icons.arrow_forward,
                     onPressed: () => navPush(
-                      context: context,
                       screen: ModelRecordsScreen(
                         model: modelEditPool.data,
                       ),
-                      title: Text('${modelEditPool.data.name} records'),
                     ),
                   ),
                 ),
               ],
             ),
-
         ],
       ),
     );

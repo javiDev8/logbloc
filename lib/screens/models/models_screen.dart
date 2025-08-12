@@ -7,62 +7,61 @@ import 'package:logize/utils/nav.dart';
 import 'package:logize/widgets/design/act_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
-import 'package:logize/widgets/model_title.dart';
+import 'package:logize/widgets/design/topbar_wrap.dart';
+import 'package:logize/widgets/design/txt.dart';
 
 class ModelsScreen extends StatelessWidget {
   const ModelsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Swimmer<Map<String, Model>?>(
-          pool: modelsPool,
-          builder: (context, models) {
-            if (models == null) {
-              modelsPool.retrieve();
-              return Center(child: CircularProgressIndicator());
-            }
+    return Scaffold(
+      appBar: wrapBar(children: [Txt('models')], backable: false),
+      body: Stack(
+        children: [
+          Swimmer<Map<String, Model>?>(
+            pool: modelsPool,
+            builder: (context, models) {
+              if (models == null) {
+                modelsPool.retrieve();
+                return Center(child: CircularProgressIndicator());
+              }
 
-            if (models.isEmpty) {
-              return Center(child: Text(Tr.noModels.getString(context)));
-            }
+              if (models.isEmpty) {
+                return Center(child: Text(Tr.noModels.getString(context)));
+              }
 
-            return ListView(
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 30),
-                  child: Row(
-                    children: [
-                      Expanded(child: Divider(indent: 20, endIndent: 20)),
-                    ],
-                  ),
-                ),
-                ...models.entries.map<Widget>(
-                  (m) => ListTile(
-                    key: Key(m.value.name),
-                    title: Text(m.value.name),
-                    onTap: () => navPush(
-                      context: context,
-                      screen: ModelScreen(model: m.value),
-                      title: ModelTitle(),
+              return ListView(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 30),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Divider(indent: 20, endIndent: 20),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-              ],
-            );
-          },
-        ),
-
-        ActButton(
-          icon: Icon(Icons.layers, size: 30),
-          onPressed: () => navPush(
-            context: context,
-            screen: ModelScreen(),
-            title: ModelTitle(isNew: true),
+                  ...models.entries.map<Widget>(
+                    (m) => ListTile(
+                      key: Key(m.value.name),
+                      title: Text(m.value.name),
+                      onTap: () =>
+                          navPush(screen: ModelScreen(model: m.value)),
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
-        ),
-      ],
+
+          ActButton(
+            icon: Icon(Icons.layers, size: 30),
+            onPressed: () => navPush(screen: ModelScreen()),
+          ),
+        ],
+      ),
     );
   }
 }

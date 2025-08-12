@@ -4,7 +4,6 @@ import 'package:logize/pools/models/model_class.dart';
 import 'package:logize/pools/models/model_edit_pool.dart';
 import 'package:logize/pools/pools.dart';
 import 'package:logize/pools/theme_mode_pool.dart';
-import 'package:logize/pools/topbar_pool.dart';
 import 'package:logize/utils/color_convert.dart';
 import 'package:logize/utils/fmt_date.dart';
 import 'package:logize/utils/nav.dart';
@@ -176,7 +175,6 @@ class AddSchRuleButton extends StatelessWidget {
     return IconButton(
       icon: Icon(Icons.add),
       onPressed: () {
-        topbarPool.pushTitle(Text('rules'));
         showModalBottomSheet(
           enableDrag: false,
           isDismissible: false,

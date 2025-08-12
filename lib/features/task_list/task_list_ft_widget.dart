@@ -6,6 +6,98 @@ import 'package:logize/widgets/design/txt.dart';
 import 'package:logize/widgets/design/txt_field.dart';
 import 'package:flutter/material.dart';
 
+class TaskListFtWidget extends StatelessWidget {
+  final FeatureLock lock;
+  final TaskListFt ft;
+  final bool detailed;
+  final void Function() dirt;
+
+  const TaskListFtWidget({
+    super.key,
+    required this.lock,
+    required this.ft,
+    required this.detailed,
+    required this.dirt,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return StatefulBuilder(
+      builder: (ctx, setState) {
+        updateList({required String action, required payload}) {
+          dirt();
+          setState(() {
+            switch (action) {
+              case 'add':
+                ft.addTask(parentId: payload);
+                break;
+
+              case 'update':
+                ft.updateTask(payload);
+                break;
+
+              case 'check':
+                ft.checkTask(payload);
+                break;
+
+              case 'delete':
+                ft.deleteTask(payload);
+                break;
+            }
+          });
+        }
+
+        return InheritedTaskList(
+          detailed: detailed,
+          ftLock: lock,
+          tasks: ft.tasks,
+          updateList: updateList,
+          child: StatefulBuilder(
+            builder: (context, setState) => Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: lock.model
+                          ? Txt(ft.title, w: 8)
+                          : TxtField(
+                              round: true,
+                              label: 'list title',
+                              initialValue: ft.title,
+                              onChanged: (str) {
+                                ft.setTitle(str);
+                                dirt();
+                              },
+                            ),
+                    ),
+                    Expanded(
+                      child: Txt(
+                        '(${ft.getRoots().length} / ${ft.getRoots(done: true).length})',
+                        w: 8,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        final newRootTask = Task.empty(isRoot: true);
+                        ft.tasks[newRootTask.id] = newRootTask;
+                        setState(() => {});
+                      },
+                      icon: Icon(Icons.add),
+                    ),
+                  ],
+                ),
+                ...ft.tasks.values
+                    .where((task) => task.isRoot)
+                    .map((t) => TaskWidget(task: t)),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
 class TaskWidget extends StatelessWidget {
   final Task task;
   const TaskWidget({super.key, required this.task});
@@ -116,91 +208,6 @@ class TaskWidget extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class TaskListFtWidget extends StatelessWidget {
-  final FeatureLock lock;
-  final TaskListFt ft;
-  final bool detailed;
-  const TaskListFtWidget({
-    super.key,
-    required this.lock,
-    required this.ft,
-    required this.detailed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return StatefulBuilder(
-      builder: (ctx, setState) {
-        updateList({required String action, required payload}) {
-          setState(() {
-            switch (action) {
-              case 'add':
-                ft.addTask(parentId: payload);
-                break;
-
-              case 'update':
-                ft.updateTask(payload);
-                break;
-
-              case 'check':
-                ft.checkTask(payload);
-                break;
-
-              case 'delete':
-                ft.deleteTask(payload);
-                break;
-            }
-          });
-        }
-
-        return InheritedTaskList(
-          detailed: detailed,
-          ftLock: lock,
-          tasks: ft.tasks,
-          updateList: updateList,
-          child: StatefulBuilder(
-            builder: (context, setState) => Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: lock.model
-                          ? Txt(ft.title, w: 8)
-                          : TxtField(
-                              round: true,
-                              label: 'list title',
-                              initialValue: ft.title,
-                              onChanged: (str) => ft.setTitle(str),
-                            ),
-                    ),
-                    Expanded(
-                      child: Txt(
-                        '(${ft.getRoots().length} / ${ft.getRoots(done: true).length})',
-                        w: 8,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        final newRootTask = Task.empty(isRoot: true);
-                        ft.tasks[newRootTask.id] = newRootTask;
-                        setState(() => {});
-                      },
-                      icon: Icon(Icons.add),
-                    ),
-                  ],
-                ),
-                ...ft.tasks.values
-                    .where((task) => task.isRoot)
-                    .map((t) => TaskWidget(task: t)),
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 }

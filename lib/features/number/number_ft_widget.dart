@@ -8,11 +8,14 @@ class NumberFtWidget extends StatelessWidget {
   final NumberFt ft;
   final FeatureLock lock;
   final bool detailed;
+  final void Function() dirt;
+
   const NumberFtWidget({
     super.key,
     required this.lock,
     required this.ft,
     required this.detailed,
+    required this.dirt,
   });
 
   @override
@@ -22,62 +25,67 @@ class NumberFtWidget extends StatelessWidget {
         if (detailed) Expanded(child: Text('title:')),
 
         Expanded(
-          child:
-              lock.model
-                  ? Txt(ft.title, w: 8,)
-                  : TxtField(
-                    hint: "title",
-                    round: true,
-                    initialValue: ft.title,
-                    onChanged: (txt) => ft.setTitle(txt),
-                    validator:
-                        (str) => str!.isEmpty ? 'write a title' : null,
-                  ),
+          child: lock.model
+              ? Txt(ft.title, w: 8)
+              : TxtField(
+                  hint: "title",
+                  round: true,
+                  initialValue: ft.title,
+                  onChanged: (txt) {
+                    ft.setTitle(txt);
+                    dirt();
+                  },
+                  validator: (str) =>
+                      str!.isEmpty ? 'write a title' : null,
+                ),
         ),
 
         if (!detailed && lock.model && lock.record)
-          Text(ft.value?.toString() ?? '', style: TextStyle(fontWeight: FontWeight.w800),),
+          Text(
+            ft.value?.toString() ?? '',
+            style: TextStyle(fontWeight: FontWeight.w800),
+          ),
 
         if (!lock.record)
           Expanded(
             child: TxtField(
               hint: lock.model ? '' : "value",
               round: true,
-              initialValue:
-                  ft.value.toString() == 'null' ? '' : ft.value.toString(),
+              initialValue: ft.value.toString() == 'null'
+                  ? ''
+                  : ft.value.toString(),
               onChanged: (str) {
+                dirt();
                 final parsedNum = double.tryParse(str);
                 if (parsedNum != null) {
                   ft.setValue(parsedNum);
                 }
               },
-              validator:
-                  ft.isRequired
-                      ? (str) {
-                        if (str!.isEmpty) {
-                          return 'empty';
-                        }
-                        if (double.tryParse(str) == null) {
-                          return 'invalid';
-                        }
-                        return null;
+              validator: ft.isRequired
+                  ? (str) {
+                      if (str!.isEmpty) {
+                        return 'empty';
                       }
-                      : null,
+                      if (double.tryParse(str) == null) {
+                        return 'invalid';
+                      }
+                      return null;
+                    }
+                  : null,
             ),
           ),
 
         if (detailed) Expanded(child: Text('unit:')),
 
         Expanded(
-          child:
-              lock.model
-                  ? Text(' ${ft.unit}')
-                  : TxtField(
-                    hint: 'unit',
-                    round: true,
-                    initialValue: ft.unit,
-                    onChanged: (txt) => ft.setUnit(txt),
-                  ),
+          child: lock.model
+              ? Text(' ${ft.unit}')
+              : TxtField(
+                  hint: 'unit',
+                  round: true,
+                  initialValue: ft.unit,
+                  onChanged: (txt) => ft.setUnit(txt),
+                ),
         ),
       ],
     );
