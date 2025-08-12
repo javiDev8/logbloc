@@ -24,6 +24,11 @@ class TagsPool extends Pool<Map<String, Tag>?> {
       throw Exception('tags retrieve exception: $e');
     }
   }
+
+  clean() {
+    data = null;
+    emit();
+  }
 }
 
 final tagsPool = TagsPool(null);

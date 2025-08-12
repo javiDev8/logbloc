@@ -99,6 +99,14 @@ class ModelEditPool extends Pool<Model> {
     controller.sink.add('features');
     dirt(true);
   }
+
+  addTag(Tag tag) {
+    if (data.tags?.containsKey(tag.id) == true) return;
+    data.tags ??= {};
+    data.tags![tag.id] = tag;
+    controller.sink.add('tags');
+    dirt(true);
+  }
 }
 
 final modelEditPool = ModelEditPool(Model.empty());

@@ -76,7 +76,10 @@ class Tag {
     if (color != null) 'color': color!.toARGB32().toString(),
   };
 
-  save() async {}
+  save() async {
+    await db.saveTag(this);
+    tagsPool.clean();
+  }
 }
 
 class Model {

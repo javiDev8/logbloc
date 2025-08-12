@@ -97,7 +97,7 @@ class HiveDB {
 
   // tags
 
-  setTag(Tag tag) async => await tags!.put(tag.id, tag.serialize());
+  saveTag(Tag tag) async => await tags!.put(tag.id, tag.serialize());
 }
 
 final db = HiveDB();

@@ -4,6 +4,7 @@ import 'package:logize/pools/models/model_edit_pool.dart';
 import 'package:logize/pools/models/models_pool.dart';
 import 'package:logize/pools/pools.dart';
 import 'package:logize/screens/models/model_records_screen.dart';
+import 'package:logize/screens/models/model_screen/add_tag_button.dart';
 import 'package:logize/utils/nav.dart';
 import 'package:logize/widgets/design/button.dart';
 import 'package:logize/widgets/design/exp.dart';
@@ -59,17 +60,21 @@ class ModelOverView extends StatelessWidget {
             ),
           ),
 
-          Wrap(
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              IconButton(onPressed: () {}, icon: Icon(Icons.add)),
-              if (modelEditPool.data.tags?.isNotEmpty == true)
-                ...modelEditPool.data.tags!.values.map<Widget>(
-                  (t) => Txt(t.name),
-                )
-              else
-                Txt('add tags'),
-            ],
+          LazySwimmer<Model>(
+            pool: modelEditPool,
+            listenedEvents: ['tags'],
+            builder: (context, model) => Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                AddTagButton(),
+                if (modelEditPool.data.tags?.isNotEmpty == true)
+                  ...(model.tags?.values ?? []).map<Widget>(
+                    (t) => Txt('#${t.name}', w: 7, color: t.color,),
+                  )
+                else
+                  Txt('add tags'),
+              ],
+            ),
           ),
 
           if (!isNew)

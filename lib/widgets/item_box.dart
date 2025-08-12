@@ -45,7 +45,9 @@ class ItemBox extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
                 color: themeModePool.data == ThemeMode.dark
                     ? (item.model?.tags?.values.first.color != null
-                          ? item.model!.tags?.values.first.color
+                          ? endarkColor(
+                              (item.model!.tags?.values.first.color)!,
+                            )
                           : Color.fromRGBO(100, 100, 100, 1))
                     : (item.model?.tags?.values.first.color != null
                           ? enbrightColor(
