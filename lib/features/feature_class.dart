@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Feature {
   String id;
   String type;
@@ -58,5 +60,8 @@ class Feature {
     };
   }
 
-  Map<String, dynamic> makeRec() => {};
+  Map<String, dynamic> makeRec() {
+    final now = TimeOfDay.now();
+    return {'time': '${now.hour}:${now.minute}'};
+  }
 }

@@ -51,7 +51,7 @@ class TextFt extends Feature {
   };
 
   @override
-  makeRec() => {'content': content};
+  makeRec() => {...super.makeRec(), 'content': content};
 
   setContent(String newContent) => content = newContent;
 }

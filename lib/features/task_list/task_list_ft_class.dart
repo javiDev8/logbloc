@@ -60,6 +60,7 @@ class TaskListFt extends Feature {
 
   @override
   Map<String, dynamic> makeRec() => {
+    ...super.makeRec(),
     'tasks': Map.fromEntries(tasks.values.map((task) => task.serialize())),
   };
 

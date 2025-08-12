@@ -37,11 +37,8 @@ class NumberFt extends Feature {
   }
 
   @override
-  factory NumberFt.empty() => NumberFt.fromBareFt(
-    Feature.empty('number'),
-    value: null,
-    unit: '',
-  );
+  factory NumberFt.empty() =>
+      NumberFt.fromBareFt(Feature.empty('number'), value: null, unit: '');
 
   @override
   factory NumberFt.fromEntry(
@@ -63,7 +60,7 @@ class NumberFt extends Feature {
   };
 
   @override
-  Map<String, dynamic> makeRec() => {'value': value};
+  Map<String, dynamic> makeRec() => {...super.makeRec(), 'value': value};
 
   setUnit(String newUnit) => unit = newUnit;
   setValue(double newValue) => value = newValue;
