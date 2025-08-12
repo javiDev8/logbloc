@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:logize/pools/models/model_class.dart';
 import 'package:logize/pools/models/model_edit_pool.dart';
@@ -7,7 +6,7 @@ import 'package:logize/pools/pools.dart';
 import 'package:logize/screens/models/model_screen/model_features_view.dart';
 import 'package:logize/screens/models/model_screen/model_over_view.dart';
 import 'package:logize/screens/models/model_screen/model_schedules_view.dart';
-import 'package:logize/widgets/design/button.dart';
+import 'package:logize/utils/warn_dialogs.dart';
 import 'package:logize/widgets/design/topbar_wrap.dart';
 import 'package:logize/widgets/design/txt.dart';
 import 'package:logize/widgets/model_title.dart';
@@ -15,35 +14,6 @@ import 'package:logize/widgets/model_title.dart';
 final editModelFormKey = GlobalKey<FormState>();
 
 final modelScreenKey = GlobalKey();
-
-FutureOr<bool?> warnUnsavedChanges(
-  BuildContext context, {
-  required FutureOr<bool> Function() save,
-}) async => await showDialog(
-  context: context,
-  builder: (context) => Builder(
-    builder: (context) => AlertDialog(
-      content: Txt('you have unsaved changes!'),
-      actionsAlignment: MainAxisAlignment.spaceEvenly,
-      actions: [
-        Button(
-          'discard',
-          lead: Icons.close,
-          filled: false,
-          onPressed: () => Navigator.of(context).pop(true),
-        ),
-        Button(
-          'save',
-          lead: Icons.check_circle_outline,
-          onPressed: () async {
-            // ignore: use_build_context_synchronously
-            Navigator.of(context).pop(await save());
-          },
-        ),
-      ],
-    ),
-  ),
-);
 
 class ModelScreen extends StatefulWidget {
   final Model? model;

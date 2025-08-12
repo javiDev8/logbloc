@@ -8,6 +8,7 @@ import 'package:logize/screens/models/models_screen.dart';
 import 'package:logize/screens/settings/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:logize/utils/warn_dialogs.dart';
 
 class RootScreen {
   final Widget screen;
