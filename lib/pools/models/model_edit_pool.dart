@@ -66,6 +66,13 @@ class ModelEditPool extends Pool<Model> {
   addSchedule(Schedule sch) {
     data.addSchedule(sch);
     controller.sink.add('schedules');
+    dirt(true);
+  }
+
+  removeSchedule(String id) {
+    data.schedules!.remove(id);
+    controller.sink.add('schedules');
+    dirt(true);
   }
 
   reorderFeature(int index, String ftKey) {

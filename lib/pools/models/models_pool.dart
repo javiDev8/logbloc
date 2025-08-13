@@ -65,7 +65,7 @@ class ModelsPool extends Pool<Models?> {
 
       for (final model in data!.values) {
         if (model.schedules?.isNotEmpty == true) {
-          final schMatches = model.schedules!.where(
+          final schMatches = model.schedules!.values.where(
             (sch) => sch.period == period && sch.day == day,
           );
           items.addAll(

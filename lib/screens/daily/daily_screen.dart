@@ -6,7 +6,6 @@ import 'package:logize/utils/fmt_date.dart';
 import 'package:logize/utils/nav.dart';
 import 'package:logize/widgets/design/act_button.dart';
 import 'package:logize/widgets/design/button.dart';
-import 'package:logize/widgets/design/exp.dart';
 import 'package:logize/widgets/design/pretty_date.dart';
 import 'package:logize/widgets/design/topbar_wrap.dart';
 import 'package:logize/widgets/design/txt.dart';
@@ -121,15 +120,6 @@ class DailyScreen extends StatelessWidget {
                           child: modelsPool.data!.values.isEmpty
                               ? Column(
                                   children: [
-                                    Row(
-                                      children: [
-                                        Exp(),
-                                        IconButton(
-                                          onPressed: () => navPop(),
-                                          icon: Icon(Icons.close),
-                                        ),
-                                      ],
-                                    ),
                                     Expanded(
                                       child: Column(
                                         mainAxisAlignment:

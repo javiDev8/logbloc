@@ -111,14 +111,7 @@ class ItemsByDayPool extends Pool<ItemsByDay> {
 
     if (item.recordId == null) {
       if (item.schedule.period == null) {
-        final match = item.model!.schedules!.firstWhere(
-          (s) => s.id == item.schedule.id,
-        );
-        item
-                .model!
-                .schedules![item.model!.schedules!.indexOf(match)]
-                .place =
-            newPlace;
+        item.model!.schedules![item.schedule.id]?.place = newPlace;
       } else {
         final sch = Schedule.empty(day: item.date!);
         sch.place = newPlace;

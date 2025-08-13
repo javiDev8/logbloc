@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:logize/features/feature_switch.dart';
 import 'package:logize/pools/models/model_class.dart';
 import 'package:logize/pools/models/model_edit_pool.dart';
+import 'package:logize/pools/models/models_pool.dart';
 import 'package:logize/pools/pools.dart';
 import 'package:logize/pools/theme_mode_pool.dart';
 import 'package:logize/utils/color_convert.dart';
 import 'package:logize/utils/fmt_date.dart';
 import 'package:logize/utils/nav.dart';
 import 'package:logize/widgets/design/exp.dart';
+import 'package:logize/widgets/design/menu_button.dart';
 import 'package:logize/widgets/design/section_divider.dart';
 import 'package:logize/widgets/design/txt.dart';
 
@@ -25,13 +27,16 @@ class ModelSchedulesView extends StatelessWidget {
           children: [
             SectionDivider(lead: AddSchRuleButton()),
             Expanded(
-              child: ListView(
-                children: [
-                  ...(model.schedules ?? []).map(
-                    (sch) => ScheduleWidget(schedule: sch, locked: true),
-                  ),
-                ],
-              ),
+              child: model.schedules?.isNotEmpty == true
+                  ? ListView(
+                      children: [
+                        ...(model.schedules!.values).map(
+                          (sch) =>
+                              ScheduleWidget(schedule: sch, locked: true),
+                        ),
+                      ],
+                    )
+                  : Center(child: Txt('no schedules')),
             ),
           ],
         ),
@@ -62,7 +67,8 @@ class ScheduleWidget extends StatelessWidget {
         break;
     }
 
-    bool expanded = false;
+    bool editing =
+        modelsPool.data?.containsKey(modelEditPool.data.id) == false;
 
     return Card(
       shape: RoundedRectangleBorder(
@@ -80,42 +86,65 @@ class ScheduleWidget extends StatelessWidget {
               Row(
                 children: [
                   Expanded(child: Txt(day, w: 8)),
-                  IconButton(
-                    onPressed: () => setState(() => expanded = !expanded),
-                    icon: Icon(
-                      expanded
-                          ? Icons.arrow_drop_up_outlined
-                          : Icons.arrow_drop_down_outlined,
-                    ),
+                  MenuButton(
+                    onSelected: (val) {
+                      switch (val) {
+                        case 'edit':
+                          setState(() => editing = true);
+                          break;
+                        case 'delete':
+                          modelEditPool.removeSchedule(schedule.id);
+                          break;
+                      }
+                    },
+
+                    options: [
+                      MenuOption(
+                        value: 'delete',
+                        widget: ListTile(
+                          title: Txt('delete'),
+                          leading: Icon(Icons.delete),
+                        ),
+                      ),
+                      if (!editing &&
+                          modelEditPool.data.features.length > 1)
+                        MenuOption(
+                          value: 'edit',
+                          widget: ListTile(
+                            title: Txt('edit'),
+                            leading: Icon(Icons.edit),
+                          ),
+                        ),
+                    ],
                   ),
                 ],
               ),
-              if (expanded)
+              if (editing)
                 Column(
                   children: [
-                    Row(
-                      children: [
-                        Txt('include all features', w: 7),
-                        Checkbox(
-                          value: schedule.includedFts == null,
-                          onChanged: (val) {
-                            if (val == true) {
-                              schedule.includedFts = null;
-                            } else if (val == false) {
-                              schedule.includedFts = List<String>.from(
-                                modelEditPool.data.features.keys,
-                              );
-                            }
-                            setState(() => {});
-                          },
-                        ),
-                      ],
-                    ),
+                    if (modelEditPool.data.features.length > 1)
+                      Row(
+                        children: [
+                          Txt('include all features', w: 7),
+                          Checkbox(
+                            value: schedule.includedFts == null,
+                            onChanged: (val) {
+                              if (val == true) {
+                                schedule.includedFts = null;
+                              } else if (val == false) {
+                                schedule.includedFts = List<String>.from(
+                                  modelEditPool.data.features.keys,
+                                );
+                              }
+                              setState(() => {});
+                            },
+                          ),
+                        ],
+                      ),
                     if (schedule.includedFts != null)
                       ...modelEditPool.data.features.values.map<Widget>((
                         ft,
                       ) {
-                        //bool expanded = false;
                         return Row(
                           children: [
                             StatefulBuilder(

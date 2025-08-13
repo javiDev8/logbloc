@@ -43,7 +43,7 @@ class ModelScreenState extends State<ModelScreen>
   Widget build(BuildContext context) {
     final isNew = widget.model == null;
     modelEditPool.data = widget.model ?? Model.empty();
-    modelEditPool.dirty = isNew;
+    //modelEditPool.dirty = isNew;
     return Scaffold(
       key: modelScreenKey,
       appBar: PreferredSize(
@@ -67,9 +67,15 @@ class ModelScreenState extends State<ModelScreen>
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5),
-        child: Swimmer(
+        child: Swimmer<Map<String, Model>?>(
           pool: modelsPool,
           builder: (context, models) {
+            if (modelsPool.data?.containsKey(modelEditPool.data.id) ==
+                true) {
+              modelEditPool.data = Model.fromMap(
+                map: modelsPool.data![modelEditPool.data.id]!.serialize(),
+              );
+            }
             return Column(
               children: [
                 Row(

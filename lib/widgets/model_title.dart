@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:logize/features/feature_switch.dart';
 import 'package:logize/pools/models/model_class.dart';
 import 'package:logize/pools/models/model_edit_pool.dart';
+import 'package:logize/pools/models/models_pool.dart';
 import 'package:logize/pools/pools.dart';
 import 'package:logize/utils/nav.dart';
 import 'package:logize/utils/warn_dialogs.dart';
@@ -22,8 +23,13 @@ List<Widget> makeModelTitle({bool? isNew}) => [
     listenedEvents: ['dirty'],
     builder: (context, model) => modelEditPool.dirty
         ? IconButton(
-            onPressed: () {
-              modelEditPool.save();
+            onPressed: () async {
+              if (await modelEditPool.save() &&
+                  modelsPool.data?.containsKey(modelEditPool.data.id) ==
+                      false) {
+                // ignore: use_build_context_synchronously
+                Navigator.of(context).pop();
+              }
             },
             icon: Icon(Icons.check_circle_outlined),
           )

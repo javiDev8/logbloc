@@ -45,7 +45,7 @@ class Schedule {
         place: DateTime.now().millisecondsSinceEpoch.toDouble(),
       );
 
-  Map<String, dynamic> serialize() => {
+  serialize() => {
     'id': id,
     'day': day,
     'place': place,
@@ -60,7 +60,7 @@ class Model {
   Features features;
   int recordCount;
   DateTime createdAt;
-  List<Schedule>? schedules;
+  Map<String, Schedule>? schedules;
   Map<String, String>? cancelledSchedules;
   Color? color;
   Map<String, Tag>? tags;
@@ -106,9 +106,12 @@ class Model {
 
     schedules: map['schedules'] == null
         ? null
-        : List<Schedule>.from(
-            map['schedules']?.map<Schedule>(
-              (e) => Schedule.fromMap(Map<String, dynamic>.from(e)),
+        : Map.fromEntries(
+            (map['schedules'] as Map<String, dynamic>).entries.map(
+              (e) => MapEntry(
+                e.key,
+                Schedule.fromMap(Map<String, dynamic>.from(e.value)),
+              ),
             ),
           ),
 
@@ -139,7 +142,7 @@ class Model {
       (key, value) => MapEntry(key, value.serialize()),
     ),
     if (schedules != null)
-      'schedules': schedules!.map((s) => s.serialize()).toList(),
+      'schedules': schedules!.map((k, s) => MapEntry(k, s.serialize())),
     if (cancelledSchedules != null)
       'cancelled-schedules': cancelledSchedules,
     if (color != null) 'color': color!.toARGB32(),
@@ -183,8 +186,8 @@ class Model {
   }
 
   addSchedule(Schedule sch) {
-    schedules ??= [];
-    schedules!.add(sch);
+    schedules ??= {};
+    schedules![sch.id] = sch;
   }
 
   List<Feature> getSortedFeatureList() {
