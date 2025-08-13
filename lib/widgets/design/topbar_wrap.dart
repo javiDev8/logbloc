@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:logize/pools/pools.dart';
 import 'package:logize/pools/screen_index_pool.dart';
+import 'package:logize/pools/theme_mode_pool.dart';
 import 'package:logize/screens/root_screen_switch.dart';
 
 PreferredSize wrapBar({
@@ -17,22 +19,28 @@ PreferredSize wrapBar({
         top: 35,
         bottom: 5,
       ),
-      child: DefaultTextStyle(
-        style: TextStyle(fontSize: 20),
+      child: Swimmer<ThemeMode>(
+        pool: themeModePool,
+        builder: (context, theme) => DefaultTextStyle(
+          style: TextStyle(
+            fontSize: 20,
+            color: theme == ThemeMode.light ? Colors.black : Colors.white,
+          ),
 
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            if (backable)
-              IconButton(
-                onPressed: () async {
-                  if (onBack != null && !(await onBack())) return;
-                  rootScreens[rootIndex].nav.currentState!.pop();
-                },
-                icon: Icon(Icons.arrow_back),
-              ),
-            ...children,
-          ],
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              if (backable)
+                IconButton(
+                  onPressed: () async {
+                    if (onBack != null && !(await onBack())) return;
+                    rootScreens[rootIndex].nav.currentState!.pop();
+                  },
+                  icon: Icon(Icons.arrow_back),
+                ),
+              ...children,
+            ],
+          ),
         ),
       ),
     ),

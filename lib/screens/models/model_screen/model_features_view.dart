@@ -6,6 +6,7 @@ import 'package:logize/pools/models/model_edit_pool.dart';
 import 'package:logize/pools/pools.dart';
 import 'package:logize/utils/nav.dart';
 import 'package:logize/widgets/design/section_divider.dart';
+import 'package:logize/widgets/design/txt.dart';
 
 class ModelFeaturesView extends StatelessWidget {
   const ModelFeaturesView({super.key});
@@ -60,7 +61,7 @@ class AddFtButton extends StatelessWidget {
       onPressed: () {
         showModalBottomSheet(
           isDismissible: false,
-          enableDrag: false,
+          showDragHandle: true,
           context: context,
           builder: (context) => SizedBox(
             height: availableFtTypes.length * 50 + 100,
@@ -74,16 +75,7 @@ class AddFtButton extends StatelessWidget {
                       child: Row(
                         children: [
                           Expanded(
-                            child: Text(
-                              'Select a feature',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () => navPop(),
-                            icon: Icon(Icons.close),
+                            child: Txt('Pick a feature', w: 7, s: 16),
                           ),
                         ],
                       ),

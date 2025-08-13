@@ -8,14 +8,14 @@ class TextFtWidget extends StatelessWidget {
   final TextFt ft;
   final FeatureLock lock;
   final bool detailed;
-  final void Function() dirt;
+  final void Function()? dirt;
 
   const TextFtWidget({
     super.key,
     required this.lock,
     required this.ft,
     required this.detailed,
-    required this.dirt,
+     this.dirt,
   });
 
   @override
@@ -36,7 +36,7 @@ class TextFtWidget extends StatelessWidget {
                 round: true,
                 onChanged: (txt) {
                   ft.setTitle(txt);
-                  dirt();
+                  dirt!();
                 },
                 validator: (str) => str!.isEmpty ? 'write a title' : null,
               ),
@@ -47,7 +47,7 @@ class TextFtWidget extends StatelessWidget {
             hint: 'content',
             onChanged: (str) {
               ft.setContent(str);
-              dirt();
+              dirt!();
             },
             validator: ft.isRequired
                 ? (str) => str!.isEmpty ? 'empty' : null

@@ -8,14 +8,14 @@ class NumberFtWidget extends StatelessWidget {
   final NumberFt ft;
   final FeatureLock lock;
   final bool detailed;
-  final void Function() dirt;
+  final void Function()? dirt;
 
   const NumberFtWidget({
     super.key,
     required this.lock,
     required this.ft,
     required this.detailed,
-    required this.dirt,
+    this.dirt,
   });
 
   @override
@@ -33,7 +33,7 @@ class NumberFtWidget extends StatelessWidget {
                   initialValue: ft.title,
                   onChanged: (txt) {
                     ft.setTitle(txt);
-                    dirt();
+                    dirt!();
                   },
                   validator: (str) =>
                       str!.isEmpty ? 'write a title' : null,
@@ -55,7 +55,7 @@ class NumberFtWidget extends StatelessWidget {
                   ? ''
                   : ft.value.toString(),
               onChanged: (str) {
-                dirt();
+                dirt!();
                 final parsedNum = double.tryParse(str);
                 if (parsedNum != null) {
                   ft.setValue(parsedNum);

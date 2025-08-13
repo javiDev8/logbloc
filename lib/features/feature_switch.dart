@@ -40,7 +40,7 @@ dynamic featureSwitch({
             lock: lock!,
             ft: ft as NumberFt,
             detailed: detailed!,
-            dirt: dirt!,
+            dirt: dirt,
           );
         case 'stats':
           return NumberFtStatsWidget(ftRecs: ftRecs!, ft: ft as NumberFt);
@@ -61,7 +61,7 @@ dynamic featureSwitch({
             lock: lock!,
             ft: ft as TextFt,
             detailed: detailed!,
-            dirt: dirt!,
+            dirt: dirt,
           );
         case 'stats':
           return TextFtStatsWidget(ftRecs: ftRecs!, ft: ft as TextFt);
@@ -82,7 +82,7 @@ dynamic featureSwitch({
             lock: lock!,
             ft: ft as TaskListFt,
             detailed: detailed!,
-            dirt: dirt!,
+            dirt: dirt,
           );
         case 'stats':
           return TaskListFtStatsWidget(

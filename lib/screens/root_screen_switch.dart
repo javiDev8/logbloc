@@ -46,10 +46,12 @@ class RootScreenSwitch extends StatelessWidget {
                 // models root
                 if (modelScreenKey.currentContext != null &&
                     modelEditPool.dirty) {
-                  await warnUnsavedChanges(
+                  final res = await warnUnsavedChanges(
                     context,
                     save: modelEditPool.save,
                   );
+
+                  if (res != true) return;
                 }
 
                 currentRootState.pop();

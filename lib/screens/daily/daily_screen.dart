@@ -96,10 +96,7 @@ class DailyScreen extends StatelessWidget {
                                 (item) => Row(
                                   key: Key(item.id),
                                   children: [
-                                    ItemBox(
-                                      key: UniqueKey(),
-                                      item: item,
-                                    ),
+                                    ItemBox(key: UniqueKey(), item: item),
                                   ],
                                 ),
                               )
@@ -114,7 +111,7 @@ class DailyScreen extends StatelessWidget {
                 onPressed: () {
                   showModalBottomSheet(
                     isDismissible: false,
-                    enableDrag: false,
+                    showDragHandle: true,
                     context: context,
                     builder: (context) => SizedBox(
                       height: MediaQuery.of(context).size.height / 2,
@@ -156,14 +153,11 @@ class DailyScreen extends StatelessWidget {
                                     Row(
                                       children: [
                                         Expanded(
-                                          child: Text(
-                                            'Select an available model',
-                                            textAlign: TextAlign.center,
+                                          child: Txt(
+                                            'Pick a model',
+                                            w: 7,
+                                            s: 16,
                                           ),
-                                        ),
-                                        IconButton(
-                                          onPressed: () => navPop(),
-                                          icon: Icon(Icons.close),
                                         ),
                                       ],
                                     ),

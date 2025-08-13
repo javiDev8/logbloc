@@ -176,7 +176,7 @@ class AddSchRuleButton extends StatelessWidget {
       icon: Icon(Icons.add),
       onPressed: () {
         showModalBottomSheet(
-          enableDrag: false,
+          showDragHandle: true,
           isDismissible: false,
           context: context,
           builder: (context) => SizedBox(
@@ -189,15 +189,8 @@ class AddSchRuleButton extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     child: Row(
                       children: [
-                        Text(
-                          'Select a scheduling type',
-                          style: TextStyle(fontWeight: FontWeight.w600),
-                        ),
+                        Txt('Pick a schedule period', w: 7, s: 16),
                         Exp(),
-                        IconButton(
-                          onPressed: () => navPop(),
-                          icon: Icon(Icons.close),
-                        ),
                       ],
                     ),
                   ),

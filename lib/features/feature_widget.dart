@@ -108,7 +108,7 @@ class FtWid extends StatelessWidget {
     return Swimmer<bool>(
       pool: editingPool,
       builder: (context, editing) => editing
-          ? FeatureWidget(lock: lock, feature: feature, dirt: dirt!)
+          ? FeatureWidget(lock: lock, feature: feature, dirt: dirt)
           : ReadOnlyFtWidget(
               feature: feature,
               setEditing: editingPool.set,

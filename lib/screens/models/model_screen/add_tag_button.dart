@@ -17,8 +17,9 @@ class AddTagButton extends StatelessWidget {
     Tag tag = Tag.empty();
 
     return IconButton(
-      onPressed: () => showBottomSheet(
+      onPressed: () => showModalBottomSheet(
         showDragHandle: true,
+        isDismissible: false,
         context: context,
         builder: (context) => SizedBox(
           height: 250,
@@ -41,7 +42,9 @@ class AddTagButton extends StatelessWidget {
                         ),
                         child: Row(
                           children: [
-                            Expanded(child: Txt('Tags', w: 7)),
+                            Expanded(
+                              child: Txt('Pick a tag', w: 7, s: 16),
+                            ),
                             IconButton(
                               onPressed: () => showDialog(
                                 context: context,

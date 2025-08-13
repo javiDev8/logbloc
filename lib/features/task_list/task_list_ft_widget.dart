@@ -10,14 +10,14 @@ class TaskListFtWidget extends StatelessWidget {
   final FeatureLock lock;
   final TaskListFt ft;
   final bool detailed;
-  final void Function() dirt;
+  final void Function()? dirt;
 
   const TaskListFtWidget({
     super.key,
     required this.lock,
     required this.ft,
     required this.detailed,
-    required this.dirt,
+    this.dirt,
   });
 
   @override
@@ -25,7 +25,7 @@ class TaskListFtWidget extends StatelessWidget {
     return StatefulBuilder(
       builder: (ctx, setState) {
         updateList({required String action, required payload}) {
-          dirt();
+          dirt!();
           setState(() {
             switch (action) {
               case 'add':
@@ -66,7 +66,7 @@ class TaskListFtWidget extends StatelessWidget {
                               initialValue: ft.title,
                               onChanged: (str) {
                                 ft.setTitle(str);
-                                dirt();
+                                dirt!();
                               },
                             ),
                     ),
