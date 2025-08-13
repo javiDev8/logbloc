@@ -34,12 +34,9 @@ class ModelEditPool extends Pool<Model> {
       feedback('add at least one feature', type: FeedbackType.error);
       return false;
     }
-    final saveType = await data.save();
+    await data.save();
     feedback('model saved', type: FeedbackType.success);
     dirt(false);
-    if (saveType == 'add') {
-      navPop();
-    }
     return true;
   }
 
