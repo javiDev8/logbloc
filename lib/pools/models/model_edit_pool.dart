@@ -1,11 +1,10 @@
 import 'dart:async';
-
 import 'package:logize/features/feature_class.dart';
 import 'package:logize/pools/models/model_class.dart';
 import 'package:logize/pools/pools.dart';
+import 'package:logize/pools/tags/tag_class.dart';
 import 'package:logize/screens/models/model_screen/model_screen.dart';
 import 'package:logize/utils/feedback.dart';
-import 'package:logize/utils/nav.dart';
 
 // needed for average
 // ignore:depend_on_referenced_packages
@@ -103,6 +102,15 @@ class ModelEditPool extends Pool<Model> {
     data.tags![tag.id] = tag;
     controller.sink.add('tags');
     dirt(true);
+  }
+
+  void removeTag(String key) {
+    if (data.tags?.containsKey(key) == true) {
+      data.tags!.remove(key);
+      if (data.tags!.isEmpty) data.tags = null;
+      controller.sink.add('tags');
+      dirt(true);
+    }
   }
 }
 

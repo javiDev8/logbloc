@@ -23,6 +23,8 @@ class ModelOverView extends StatelessWidget {
 
     final editingNamePool = Pool<bool>(isNew);
 
+    bool editingTags = isNew;
+
     return Padding(
       padding: EdgeInsetsGeometry.symmetric(horizontal: 7, vertical: 20),
       child: ListView(
@@ -63,17 +65,58 @@ class ModelOverView extends StatelessWidget {
           LazySwimmer<Model>(
             pool: modelEditPool,
             listenedEvents: ['tags'],
-            builder: (context, model) => Wrap(
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: [
-                AddTagButton(),
-                if (modelEditPool.data.tags?.isNotEmpty == true)
-                  ...(model.tags?.values ?? []).map<Widget>(
-                    (t) => Txt('#${t.name}', w: 7, color: t.color,),
-                  )
-                else
-                  Txt('add tags'),
-              ],
+            builder: (context, model) => StatefulBuilder(
+              builder: (context, setSate) {
+                return Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    AddTagButton(),
+                    if (modelEditPool.data.tags?.isNotEmpty == true) ...[
+                      ...(model.tags?.values ?? []).map<Widget>(
+                        (t) => editingTags
+                            ? Container(
+                                margin: EdgeInsets.all(5),
+                                padding: EdgeInsets.all(1),
+                                decoration: BoxDecoration(
+                                  color: t.color,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(20),
+                                  ),
+                                ),
+                                child: Wrap(
+                                  crossAxisAlignment:
+                                      WrapCrossAlignment.center,
+                                  alignment: WrapAlignment.spaceEvenly,
+                                  children: [
+                                    IconButton(
+                                      onPressed: () =>
+                                          modelEditPool.removeTag(t.id),
+                                      icon: Icon(Icons.close, size: 17),
+                                    ),
+                                    Text(
+                                      '#${t.name}',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                    SizedBox(width: 20),
+                                  ],
+                                ),
+                              )
+                            : Txt('#${t.name}', w: 7, color: t.color),
+                      ),
+
+                      if (!editingTags)
+                        IconButton(
+                          onPressed: () =>
+                              setSate(() => editingTags = true),
+                          icon: Icon(Icons.edit),
+                        ),
+                    ] else
+                      Txt('add tags'),
+                  ],
+                );
+              },
             ),
           ),
 

@@ -25,7 +25,7 @@ class Button extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final p = lg == null || !lg! ? 10.0 : 50.0;
+    final p = 10.0;
 
     final color = themeModePool.data == ThemeMode.light
         ? Colors.black
@@ -59,7 +59,11 @@ class Button extends StatelessWidget {
           onPressed: onPressed,
           label: Padding(
             padding: EdgeInsets.only(top: 10, bottom: 10, right: p),
-            child: Text(text!, style: txtStyle),
+            child: Text(
+              text!,
+              style: txtStyle,
+              textAlign: TextAlign.center,
+            ),
           ),
           icon: Padding(
             padding: EdgeInsets.only(left: 10),
@@ -82,7 +86,11 @@ class Button extends StatelessWidget {
               top: 10,
               bottom: 10,
             ),
-            child: Text(text!, style: txtStyle),
+            child: Text(
+              text!,
+              style: txtStyle,
+              textAlign: TextAlign.center,
+            ),
           ),
         ),
       );

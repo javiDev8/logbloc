@@ -1,5 +1,7 @@
 import 'package:logize/pools/models/model_class.dart';
+import 'package:logize/pools/models/models_pool.dart';
 import 'package:logize/pools/records/record_class.dart';
+import 'package:logize/pools/tags/tag_class.dart';
 import 'package:logize/utils/feedback.dart';
 import 'package:logize/utils/parse_map.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
@@ -98,6 +100,17 @@ class HiveDB {
   // tags
 
   saveTag(Tag tag) async => await tags!.put(tag.id, tag.serialize());
+
+  deleteTag(String key) async {
+    await tags!.delete(key);
+
+    final taggedModelIds = modelsPool.data!.values
+        .where((model) => model.tags?.containsKey(key) == true)
+        .map((model) => model.id)
+        .toList();
+
+    await models!.deleteAll(taggedModelIds);
+  }
 }
 
 final db = HiveDB();

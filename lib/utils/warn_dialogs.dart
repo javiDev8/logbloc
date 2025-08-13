@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:logize/utils/nav.dart';
 import 'package:logize/widgets/design/button.dart';
-import 'package:logize/widgets/design/txt.dart';
 
 FutureOr<bool?> warnUnsavedChanges(
   BuildContext context, {
@@ -11,8 +10,20 @@ FutureOr<bool?> warnUnsavedChanges(
   context: context,
   builder: (context) => Builder(
     builder: (context) => AlertDialog(
-      content: Txt('you have unsaved changes!'),
+      content: Padding(
+        padding: EdgeInsetsGeometry.only(top: 10),
+        child: Text(
+          'you have unsaved changes!',
+          style: TextStyle(fontWeight: FontWeight.w700),
+        ),
+      ),
       actionsAlignment: MainAxisAlignment.spaceEvenly,
+      actionsPadding: EdgeInsets.only(
+        left: 10,
+        right: 10,
+        bottom: 20,
+        top: 0,
+      ),
       actions: [
         Button(
           'discard',
@@ -36,13 +47,25 @@ FutureOr<bool?> warnUnsavedChanges(
 Future warnDelete(
   BuildContext context, {
   required Future<bool> Function() delete,
+  required String msg,
 }) async => await showDialog(
   context: context,
   builder: (context) => AlertDialog(
-    content: Txt('are you sure?'),
+    content: Padding(
+      padding: EdgeInsetsGeometry.only(top: 10),
+      child: Text(msg, style: TextStyle(fontWeight: FontWeight.w700)),
+    ),
+    actionsAlignment: MainAxisAlignment.spaceEvenly,
+    actionsPadding: EdgeInsets.only(
+      left: 10,
+      right: 10,
+      bottom: 20,
+      top: 0,
+    ),
     actions: [
       Button(
         'cancel',
+        lead: Icons.close,
         filled: false,
         onPressed: () => Navigator.of(context).pop(),
       ),

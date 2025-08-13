@@ -4,6 +4,7 @@ import 'package:logize/main.dart';
 import 'package:logize/pools/items/items_by_day_pool.dart';
 import 'package:logize/pools/models/models_pool.dart';
 import 'package:logize/pools/records/records_pool.dart';
+import 'package:logize/pools/tags/tags_pool.dart';
 
 class Event {
   String? id;
@@ -35,10 +36,9 @@ class EventProcessor {
   EventProcessor();
 
   init() async {
-    lastBurntEvents =
-        jsonDecode(
-          await sharedPrefs.getString('events') ?? '[]',
-        ).map<String>((e) => e.toString()).toList();
+    lastBurntEvents = jsonDecode(
+      await sharedPrefs.getString('events') ?? '[]',
+    ).map<String>((e) => e.toString()).toList();
   }
 
   processEvent(Event event) {
@@ -74,6 +74,18 @@ class EventProcessor {
             recordsPool.clean();
             modelsPool.clean();
             itemsByDayPool.clean();
+        }
+        break;
+
+      case 'tag':
+        switch (event.type) {
+          case 'save':
+            tagsPool.clean();
+            break;
+          case 'delete':
+            tagsPool.clean();
+            modelsPool.clean();
+            break;
         }
         break;
     }

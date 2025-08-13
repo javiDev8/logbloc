@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:logize/pools/models/model_class.dart';
 import 'package:logize/pools/models/model_edit_pool.dart';
 import 'package:logize/pools/pools.dart';
-import 'package:logize/pools/tags_pool.dart';
+import 'package:logize/pools/tags/tag_class.dart';
+import 'package:logize/pools/tags/tags_pool.dart';
+import 'package:logize/utils/warn_dialogs.dart';
 import 'package:logize/widgets/design/button.dart';
 import 'package:logize/widgets/design/menu_button.dart';
 import 'package:logize/widgets/design/txt.dart';
@@ -34,6 +35,7 @@ class AddTagButton extends StatelessWidget {
                     return CircularProgressIndicator();
                   }
 
+                  final formKey = GlobalKey<FormState>();
                   return ListView(
                     children: [
                       Padding(
@@ -52,62 +54,82 @@ class AddTagButton extends StatelessWidget {
                                   content: SizedBox(
                                     height: 240,
                                     child: Center(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          TxtField(
-                                            onChanged: (str) =>
-                                                tag.name = str,
-                                            round: true,
-                                            label: 'tag name',
-                                          ),
-                                          ColorPicker(
-                                            pickerAreaBorderRadius:
-                                                BorderRadius.all(
-                                                  Radius.circular(20),
-                                                ),
-                                            pickerAreaHeightPercent: 0.0,
-                                            paletteType: PaletteType.hsl,
-                                            enableAlpha: false,
-                                            labelTypes: [],
-                                            pickerColor: Color.fromRGBO(
-                                              200,
-                                              50,
-                                              50,
-                                              1,
+                                      child: Form(
+                                        key: formKey,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceEvenly,
+                                          children: [
+                                            TxtField(
+                                              validator: (str) {
+                                                if (str!.isEmpty) {
+                                                  return 'give your tag a name!';
+                                                }
+                                                if (tagsPool.data?.values
+                                                        .where(
+                                                          (t) =>
+                                                              t.name ==
+                                                              str,
+                                                        )
+                                                        .isNotEmpty ==
+                                                    true) {
+                                                  return 'that name is already taken!';
+                                                }
+                                                return null;
+                                              },
+                                              onChanged: (str) =>
+                                                  tag.name = str,
+                                              round: true,
+                                              label: 'tag name',
                                             ),
-                                            onColorChanged: (color) =>
-                                                tag.color = color,
-                                          ),
-                                          Row(
-                                            children: [
-                                              Button(
-                                                'cancel',
-                                                filled: false,
-                                                onPressed: () =>
-                                                    Navigator.of(
-                                                      context,
-                                                    ).pop(),
-                                              ),
-                                              Expanded(
-                                                child: Button(
-                                                  'save',
-                                                  lead: Icons
-                                                      .check_circle_outline,
-                                                  lg: true,
-                                                  onPressed: () async {
-                                                    await tag.save();
-                                                    Navigator.of(
-                                                      // ignore: use_build_context_synchronously
-                                                      context,
-                                                    ).pop();
-                                                  },
+                                            ColorPicker(
+                                              pickerAreaBorderRadius:
+                                                  BorderRadius.all(
+                                                    Radius.circular(20),
+                                                  ),
+                                              pickerAreaHeightPercent: 0.0,
+                                              paletteType: PaletteType.hsl,
+                                              enableAlpha: false,
+                                              labelTypes: [],
+                                              pickerColor: Tag.initColor,
+                                              onColorChanged: (color) =>
+                                                  tag.color = color,
+                                            ),
+                                            Row(
+                                              children: [
+                                                Button(
+                                                  'cancel',
+                                                  filled: false,
+                                                  onPressed: () =>
+                                                      Navigator.of(
+                                                        context,
+                                                      ).pop(),
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
+                                                Expanded(
+                                                  child: Button(
+                                                    'save',
+                                                    lead: Icons
+                                                        .check_circle_outline,
+                                                    lg: true,
+                                                    onPressed: () async {
+                                                      if (!formKey
+                                                          .currentState!
+                                                          .validate()) {
+                                                        return;
+                                                      }
+                                                      await tag.save();
+                                                      Navigator.of(
+                                                        // ignore: use_build_context_synchronously
+                                                        context,
+                                                      ).pop();
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -134,7 +156,37 @@ class AddTagButton extends StatelessWidget {
                                 color: tagEntry.value.color,
                               ),
                               Expanded(child: Txt(tagEntry.value.name)),
-                              MenuButton(options: []),
+                              MenuButton(
+                                onSelected: (val) async {
+                                  switch (val) {
+                                    case 'delete':
+                                      await warnDelete(
+                                        context,
+                                        delete: () async {
+                                          modelEditPool.removeTag(
+                                            tagEntry.key,
+                                          );
+                                          await tagEntry.value.delete();
+                                          return false;
+                                        },
+                                        msg:
+                                            'The tag "${tagEntry.value.name}" will be '
+                                            'removed in all models, do you want to delete it?',
+                                      );
+
+                                      break;
+                                  }
+                                },
+                                options: [
+                                  MenuOption(
+                                    value: 'delete',
+                                    widget: ListTile(
+                                      title: Txt('delete'),
+                                      leading: Icon(Icons.delete),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
                         ),

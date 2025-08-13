@@ -3,7 +3,8 @@ import 'package:logize/event_processor.dart';
 import 'package:logize/features/feature_class.dart';
 import 'package:logize/features/feature_switch.dart';
 import 'package:flutter/material.dart';
-import 'package:logize/pools/tags_pool.dart';
+import 'package:logize/pools/tags/tag_class.dart';
+import 'package:logize/pools/tags/tags_pool.dart';
 import 'package:logize/utils/feedback.dart';
 
 // the num represents a priority for sorting, being
@@ -51,35 +52,6 @@ class Schedule {
     if (period != null) 'period': period,
     if (includedFts != null) 'includedFts': includedFts,
   };
-}
-
-class Tag {
-  String id;
-  String name;
-  Color? color;
-
-  Tag({required this.id, required this.name, this.color});
-
-  factory Tag.empty() => Tag(id: UniqueKey().toString(), name: '');
-
-  factory Tag.fromMap(Map<String, dynamic> map) => Tag(
-    id: map['id'] as String,
-    name: map['name'] as String,
-    color: map.containsKey('color')
-        ? Color(int.parse(map['color'] as String))
-        : null,
-  );
-
-  serialize() => {
-    'id': id,
-    'name': name,
-    if (color != null) 'color': color!.toARGB32().toString(),
-  };
-
-  save() async {
-    await db.saveTag(this);
-    tagsPool.clean();
-  }
 }
 
 class Model {

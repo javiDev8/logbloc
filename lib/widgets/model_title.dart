@@ -40,6 +40,10 @@ List<Widget> makeModelTitle({bool? isNew}) => [
                 await warnDelete(
                   context,
                   delete: modelEditPool.data.delete,
+                  msg: modelEditPool.data.recordCount > 0
+                      ? '${modelEditPool.data.recordCount} records will be deleted,'
+                            ' do you still want to delete the model "${modelEditPool.data.name}"?'
+                      : 'Are yoy sure you want to delete this model?',
                 );
                 break;
               } catch (e) {

@@ -91,7 +91,12 @@ class ItemScreen extends StatelessWidget {
             onSelected: (val) async {
               switch (val) {
                 case 'clean':
-                  await warnDelete(context, delete: item.record!.delete);
+                  await warnDelete(
+                    context,
+                    delete: item.record!.delete,
+                    msg:
+                        'Are you sure you want this record to be deleted?',
+                  );
                   break;
 
                 case 'go-to-model':
