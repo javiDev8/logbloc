@@ -119,6 +119,11 @@ class ModelEditPool extends Pool<Model> {
       dirt(true);
     }
   }
+
+  setAdvanced(bool advanced) {
+    modelEditPool.data.simpleScheduling = !advanced;
+    controller.sink.add('schedules');
+  }
 }
 
 final modelEditPool = ModelEditPool(Model.empty());

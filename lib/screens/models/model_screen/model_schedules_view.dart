@@ -23,23 +23,124 @@ class ModelSchedulesView extends StatelessWidget {
       child: LazySwimmer<Model>(
         pool: modelEditPool,
         listenedEvents: ['schedules'],
-        builder: (context, model) => Column(
-          children: [
-            SectionDivider(lead: AddSchRuleButton()),
-            Expanded(
-              child: model.schedules?.isNotEmpty == true
-                  ? ListView(
-                      children: [
-                        ...(model.schedules!.values).map(
-                          (sch) =>
-                              ScheduleWidget(schedule: sch, locked: true),
+        builder: (context, model) {
+          final puntualSchedules = model.schedules?.values.where(
+            (sch) => sch.period == null,
+          );
+          final weeklySchedules = model.schedules?.values.where(
+            (sch) => sch.period == 'week',
+          );
+
+          return Column(
+            children: [
+              Padding(
+                padding: EdgeInsetsGeometry.only(top: 10),
+                child: Row(
+                  children: [
+                    Exp(),
+                    Padding(
+                      padding: EdgeInsetsGeometry.symmetric(
+                        horizontal: 15,
+                      ),
+                      child: Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
+                          Txt('advanced'),
+                          Switch(
+                            value: model.simpleScheduling != true,
+                            onChanged: (val) =>
+                                modelEditPool.setAdvanced(val),
+                          ),
+                        ],
+                      ),
+                    ),
+                    AddSchRuleButton(),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: ListView(
+                  children: [
+                    if (model.simpleScheduling == true ||
+                        weeklySchedules?.isNotEmpty == true)
+                      SectionDivider(string: 'Weekly'),
+                    if (model.simpleScheduling == true)
+                      ScheduleWrap(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: ['m', 't', 'w', 't', 'f', 's', 's']
+                              .asMap()
+                              .entries
+                              .map<Widget>((e) {
+                                final weekDay = (e.key + 1).toString();
+                                final selected =
+                                    weeklySchedules
+                                        ?.where((s) => s.day == weekDay)
+                                        .isNotEmpty ==
+                                    true;
+                                return SizedBox(
+                                  width: 45,
+                                  child: TextButton(
+                                    onPressed: () {
+                                      if (selected) {
+                                        modelEditPool.data.schedules
+                                            ?.removeWhere(
+                                              (k, s) =>
+                                                  s.period == 'week' &&
+                                                  s.day == weekDay,
+                                            );
+                                        modelEditPool.controller.sink.add(
+                                          'schedules',
+                                        );
+                                      } else {
+                                        modelEditPool.addSchedule(
+                                          Schedule.empty(
+                                            day: (e.key + 1).toString(),
+                                            period: 'week',
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    child: Text(
+                                      e.value,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w900,
+                                        color: selected
+                                            ? null
+                                            : Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              })
+                              .toList(),
                         ),
-                      ],
-                    )
-                  : Center(child: Txt('no schedules')),
-            ),
-          ],
-        ),
+                      ),
+
+                    if (model.simpleScheduling != true &&
+                        weeklySchedules?.isNotEmpty == true)
+                      ...weeklySchedules!.map(
+                        (sch) =>
+                            ScheduleWidget(schedule: sch, locked: true),
+                      ),
+
+                    if (puntualSchedules?.isNotEmpty == true) ...[
+                      SectionDivider(string: 'Puntual'),
+                      ...(model.schedules!.values)
+                          .where((sch) => sch.period == null)
+                          .map(
+                            (sch) => ScheduleWidget(
+                              schedule: sch,
+                              locked: true,
+                            ),
+                          ),
+                    ],
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -56,7 +157,6 @@ class ScheduleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme.tertiaryContainer;
     late final String day;
     switch (schedule.period) {
       case null:
@@ -70,126 +170,113 @@ class ScheduleWidget extends StatelessWidget {
     bool editing =
         modelsPool.data?.containsKey(modelEditPool.data.id) == false;
 
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadiusGeometry.all(Radius.circular(20)),
-      ),
-      color: themeModePool.data == ThemeMode.dark
-          ? endarkColor(color)
-          : enbrightColor(color),
+    return ScheduleWrap(
+      child: StatefulBuilder(
+        builder: (context, setState) => Column(
+          children: [
+            Row(
+              children: [
+                Expanded(child: Txt(day, w: 8)),
+                MenuButton(
+                  onSelected: (val) {
+                    switch (val) {
+                      case 'edit':
+                        setState(() => editing = true);
+                        break;
+                      case 'delete':
+                        modelEditPool.removeSchedule(schedule.id);
+                        break;
+                    }
+                  },
 
-      child: Padding(
-        padding: EdgeInsetsGeometry.all(10),
-        child: StatefulBuilder(
-          builder: (context, setState) => Column(
-            children: [
-              Row(
-                children: [
-                  Expanded(child: Txt(day, w: 8)),
-                  MenuButton(
-                    onSelected: (val) {
-                      switch (val) {
-                        case 'edit':
-                          setState(() => editing = true);
-                          break;
-                        case 'delete':
-                          modelEditPool.removeSchedule(schedule.id);
-                          break;
-                      }
-                    },
-
-                    options: [
+                  options: [
+                    MenuOption(
+                      value: 'delete',
+                      widget: ListTile(
+                        title: Txt('delete'),
+                        leading: Icon(Icons.delete),
+                      ),
+                    ),
+                    if (!editing && modelEditPool.data.features.length > 1)
                       MenuOption(
-                        value: 'delete',
+                        value: 'edit',
                         widget: ListTile(
-                          title: Txt('delete'),
-                          leading: Icon(Icons.delete),
+                          title: Txt('edit'),
+                          leading: Icon(Icons.edit),
                         ),
                       ),
-                      if (!editing &&
-                          modelEditPool.data.features.length > 1)
-                        MenuOption(
-                          value: 'edit',
-                          widget: ListTile(
-                            title: Txt('edit'),
-                            leading: Icon(Icons.edit),
-                          ),
-                        ),
-                    ],
-                  ),
-                ],
-              ),
-              if (editing)
-                Column(
-                  children: [
-                    if (modelEditPool.data.features.length > 1)
-                      Row(
-                        children: [
-                          Txt('include all features', w: 7),
-                          Checkbox(
-                            value: schedule.includedFts == null,
-                            onChanged: (val) {
-                              if (val == true) {
-                                schedule.includedFts = null;
-                              } else if (val == false) {
-                                schedule.includedFts = List<String>.from(
-                                  modelEditPool.data.features.keys,
-                                );
-                              }
-                              setState(() => {});
-                            },
-                          ),
-                        ],
-                      ),
-                    if (schedule.includedFts != null)
-                      ...modelEditPool.data.features.values.map<Widget>((
-                        ft,
-                      ) {
-                        return Row(
-                          children: [
-                            StatefulBuilder(
-                              builder: (context, setState) => Checkbox(
-                                value:
-                                    schedule.includedFts?.contains(
-                                      ft.key,
-                                    ) ==
-                                    true,
-                                onChanged: (val) {
-                                  modelEditPool.dirt(true);
-                                  if (val == true &&
-                                      schedule.includedFts?.contains(
-                                            ft.key,
-                                          ) !=
-                                          true) {
-                                    schedule.includedFts ??= [];
-                                    schedule.includedFts!.add(ft.key);
-                                  } else if (val == false &&
-                                      schedule.includedFts?.contains(
-                                            ft.key,
-                                          ) ==
-                                          true) {
-                                    schedule.includedFts!.removeWhere(
-                                      (ftKey) => ftKey == ft.key,
-                                    );
-                                  }
-                                  setState(() => {});
-                                },
-                              ),
-                            ),
-                            Icon(
-                              featureSwitch(
-                                parseType: 'icon',
-                                ftType: ft.type,
-                              ),
-                            ),
-                            Txt(ft.title, w: 7),
-                          ],
-                        );
-                      }),
                   ],
                 ),
-            ],
-          ),
+              ],
+            ),
+            if (editing)
+              Column(
+                children: [
+                  if (modelEditPool.data.features.length > 1)
+                    Row(
+                      children: [
+                        Txt('include all features', w: 7),
+                        Checkbox(
+                          value: schedule.includedFts == null,
+                          onChanged: (val) {
+                            if (val == true) {
+                              schedule.includedFts = null;
+                            } else if (val == false) {
+                              schedule.includedFts = List<String>.from(
+                                modelEditPool.data.features.keys,
+                              );
+                            }
+                            setState(() => {});
+                          },
+                        ),
+                      ],
+                    ),
+                  if (schedule.includedFts != null)
+                    ...modelEditPool.data.features.values.map<Widget>((
+                      ft,
+                    ) {
+                      return Row(
+                        children: [
+                          StatefulBuilder(
+                            builder: (context, setState) => Checkbox(
+                              value:
+                                  schedule.includedFts?.contains(ft.key) ==
+                                  true,
+                              onChanged: (val) {
+                                modelEditPool.dirt(true);
+                                if (val == true &&
+                                    schedule.includedFts?.contains(
+                                          ft.key,
+                                        ) !=
+                                        true) {
+                                  schedule.includedFts ??= [];
+                                  schedule.includedFts!.add(ft.key);
+                                } else if (val == false &&
+                                    schedule.includedFts?.contains(
+                                          ft.key,
+                                        ) ==
+                                        true) {
+                                  schedule.includedFts!.removeWhere(
+                                    (ftKey) => ftKey == ft.key,
+                                  );
+                                }
+                                setState(() => {});
+                              },
+                            ),
+                          ),
+                          Icon(
+                            featureSwitch(
+                              parseType: 'icon',
+                              ftType: ft.type,
+                            ),
+                          ),
+                          Txt(ft.title, w: 7),
+                        ],
+                      );
+                    }),
+                ],
+              ),
+          ],
         ),
       ),
     );
@@ -238,49 +325,70 @@ class AddSchRuleButton extends StatelessWidget {
                       navPop();
                     },
                   ),
-                  ListTile(
-                    title: Text('weekly'),
-                    onTap: () async {
-                      await showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: Text('pick a week day'),
-                          content: SizedBox(
-                            height: 500,
-                            child: Column(
-                              children: weekdays
-                                  .asMap()
-                                  .entries
-                                  .map(
-                                    (wd) => ListTile(
-                                      title: Text(wd.value),
-                                      onTap: () {
-                                        modelEditPool.addSchedule(
-                                          Schedule.empty(
-                                            day: wd.key.toString(),
-                                            period: 'week',
-                                          ),
-                                        );
-                                        modelEditPool.dirt(true);
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  )
-                                  .toList(),
+                  if (modelEditPool.data.simpleScheduling != true) ...[
+                    ListTile(
+                      title: Text('weekly'),
+                      onTap: () async {
+                        await showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text('pick a week day'),
+                            content: SizedBox(
+                              height: 500,
+                              child: Column(
+                                children: weekdays
+                                    .asMap()
+                                    .entries
+                                    .map(
+                                      (wd) => ListTile(
+                                        title: Text(wd.value),
+                                        onTap: () {
+                                          modelEditPool.addSchedule(
+                                            Schedule.empty(
+                                              day: wd.key.toString(),
+                                              period: 'week',
+                                            ),
+                                          );
+                                          modelEditPool.dirt(true);
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    )
+                                    .toList(),
+                              ),
                             ),
                           ),
-                        ),
-                      );
+                        );
 
-                      navPop();
-                    },
-                  ),
+                        navPop();
+                      },
+                    ),
+                  ],
                 ],
               ),
             ),
           ),
         );
       },
+    );
+  }
+}
+
+class ScheduleWrap extends StatelessWidget {
+  final Widget child;
+  const ScheduleWrap({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    final color = Theme.of(context).colorScheme.tertiaryContainer;
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadiusGeometry.all(Radius.circular(20)),
+      ),
+      color: themeModePool.data == ThemeMode.dark
+          ? endarkColor(color)
+          : enbrightColor(color),
+      child: Padding(padding: EdgeInsetsGeometry.all(10), child: child),
     );
   }
 }

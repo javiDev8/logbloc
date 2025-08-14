@@ -61,6 +61,7 @@ class Model {
   int recordCount;
   DateTime createdAt;
   Map<String, Schedule>? schedules;
+  bool? simpleScheduling;
   Map<String, String>? cancelledSchedules;
   Color? color;
   Map<String, Tag>? tags;
@@ -75,6 +76,7 @@ class Model {
     this.cancelledSchedules,
     this.color,
     this.tags,
+    this.simpleScheduling,
   });
 
   factory Model.empty() => Model(
@@ -83,12 +85,14 @@ class Model {
     recordCount: 0,
     id: UniqueKey().toString(),
     createdAt: DateTime.now(),
+    simpleScheduling: true,
   );
 
   factory Model.fromMap({required Map<String, dynamic> map}) => Model(
     id: map['id'],
     name: map['name'],
     recordCount: map['record-count'] as int,
+    simpleScheduling: map['simple-scheduling'],
 
     createdAt: DateTime.fromMillisecondsSinceEpoch(
       map['created-at'] as int,
@@ -138,6 +142,7 @@ class Model {
     'name': name,
     'record-count': recordCount,
     'created-at': createdAt.millisecondsSinceEpoch,
+    if (simpleScheduling == true) 'simple-scheduling': simpleScheduling,
     'features': features.map(
       (key, value) => MapEntry(key, value.serialize()),
     ),
