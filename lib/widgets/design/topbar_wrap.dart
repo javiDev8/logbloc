@@ -16,7 +16,7 @@ PreferredSize wrapBar({
       padding: EdgeInsetsGeometry.only(
         left: 15,
         right: 15,
-        top: 35,
+        top: 50,
         bottom: 5,
       ),
       child: Swimmer<ThemeMode>(

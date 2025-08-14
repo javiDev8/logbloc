@@ -14,7 +14,8 @@ class PrettyDate extends StatelessWidget {
     final String dayOfWeek = weekdays[date.weekday];
     final String dayOfMonth = date.day.toString().padLeft(2, '0');
     final String month = months[date.month];
-    final String year = date.year.toString();
+    final y = date.year.toString().split('');
+    final year = '${y[2]}${y[3]}';
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10),
@@ -23,12 +24,12 @@ class PrettyDate extends StatelessWidget {
         children: <Widget>[
           Text(
             dayOfWeek,
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(fontWeight: FontWeight.normal),
           ),
           Exp(),
           Text(
             dayOfMonth,
-            style: const TextStyle(fontWeight: FontWeight.normal),
+            style: const TextStyle(fontWeight: FontWeight.w900),
           ),
           Text(
             month,
