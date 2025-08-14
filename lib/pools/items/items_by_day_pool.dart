@@ -31,7 +31,6 @@ class ItemsByDayPool extends Pool<ItemsByDay> {
 
       items.addAll(recordItems);
 
-      // swallow
       items.addAll(
         modelItems.where((mi) {
           if (mi.model!.cancelledSchedules?[strDay]?.contains(
@@ -114,13 +113,14 @@ class ItemsByDayPool extends Pool<ItemsByDay> {
       if (item.schedule.period == null) {
         item.model!.schedules![item.schedule.id]?.place = newPlace;
       } else {
-        final sch = Schedule.empty(day: item.schedule.day);
+        final sch = Schedule.empty(day: item.date);
         sch.place = newPlace;
         sch.includedFts = item.schedule.includedFts;
+
         item.model!.addSchedule(sch);
         item.model!.cancelSchedule(
-          day: item.schedule.day,
-          id: item.schedule.id,
+          date: item.date,
+          schedule: item.schedule,
         );
       }
     } else {

@@ -205,10 +205,19 @@ class Model {
     schedules![sch.id] = sch;
   }
 
-  cancelSchedule({required String day, required String id}) {
-    cancelledSchedules ??= {};
-    cancelledSchedules![day] ??= [];
-    cancelledSchedules![day]!.add(id);
+  cancelSchedule({
+    required String date,
+    required Schedule schedule,
+  }) async {
+    if (schedule.period == null) {
+      schedules!.remove(schedule.id);
+    } else {
+      cancelledSchedules ??= {};
+      cancelledSchedules![date] ??= [];
+      cancelledSchedules![date]!.add(schedule.id);
+    }
+
+    await save();
   }
 
   List<Feature> getSortedFeatureList() {

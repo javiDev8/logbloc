@@ -4,6 +4,7 @@ import 'package:logize/features/feature_widget.dart';
 import 'package:logize/pools/items/item_class.dart';
 import 'package:logize/pools/pools.dart';
 import 'package:logize/screens/models/model_screen/model_screen.dart';
+import 'package:logize/utils/feedback.dart';
 import 'package:logize/utils/fmt_date.dart';
 import 'package:logize/utils/nav.dart';
 import 'package:logize/utils/warn_dialogs.dart';
@@ -90,6 +91,23 @@ class ItemScreen extends StatelessWidget {
           MenuButton(
             onSelected: (val) async {
               switch (val) {
+                case 'go-to-model':
+                  navLink(
+                    rootIndex: 0,
+                    screen: ModelScreen(model: item.model!),
+                  );
+                  break;
+
+                case 'cancel':
+                  await item.model!.cancelSchedule(
+                    date: item.date,
+                    schedule: item.schedule,
+                  );
+                  feedback('Entry cancelled', type: FeedbackType.success);
+                  // ignore: use_build_context_synchronously
+                  Navigator.of(context).pop();
+                  break;
+
                 case 'clean':
                   await warnDelete(
                     context,
@@ -97,14 +115,6 @@ class ItemScreen extends StatelessWidget {
                     msg:
                         'Are you sure you want this record to be deleted?',
                   );
-                  break;
-
-                case 'go-to-model':
-                  navLink(
-                    rootIndex: 0,
-                    screen: ModelScreen(model: item.model!),
-                  );
-
                   break;
               }
             },
@@ -116,7 +126,15 @@ class ItemScreen extends StatelessWidget {
                   leading: Icon(Icons.arrow_forward),
                 ),
               ),
-              if (item.recordId != null)
+              if (item.recordId == null)
+                MenuOption(
+                  value: 'cancel',
+                  widget: ListTile(
+                    title: Text('cancel for this date'),
+                    leading: Icon(Icons.cancel_presentation),
+                  ),
+                )
+              else
                 MenuOption(
                   value: 'clean',
                   widget: ListTile(
@@ -132,13 +150,12 @@ class ItemScreen extends StatelessWidget {
         key: itemFormKey,
         child: ListView(
           children: [
-            if (item.date != null)
-              Txt(
-                hdate(DateTime.parse(item.date!)),
-                s: 17,
-                w: 6,
-                a: TextAlign.center,
-              ),
+            Txt(
+              hdate(DateTime.parse(item.date)),
+              s: 17,
+              w: 6,
+              a: TextAlign.center,
+            ),
 
             // pinned
             ...sortedFts.where((f) => f.pinned).map<Widget>(paintFt),

@@ -14,7 +14,7 @@ class Item {
   final String id;
   final String modelId;
   String? recordId;
-  String? date;
+  String date;
   Features stagedFeatures;
   Schedule schedule;
 
@@ -22,7 +22,7 @@ class Item {
     required this.modelId,
     required this.schedule,
     this.recordId,
-    this.date,
+    required this.date,
   }) : stagedFeatures = {},
        id = UniqueKey().toString();
 
@@ -77,7 +77,7 @@ class Item {
         await Rec(
           schedule: Schedule(
             id: schedule.id,
-            day: date!,
+            day: date,
             includedFts: schedule.includedFts,
             place: schedule.place,
           ),
