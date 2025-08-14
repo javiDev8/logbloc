@@ -34,9 +34,10 @@ class ItemsByDayPool extends Pool<ItemsByDay> {
       // swallow
       items.addAll(
         modelItems.where((mi) {
-          if (mi.model!.cancelledSchedules?.keys.contains(strDay) ==
-                  true &&
-              mi.model!.cancelledSchedules![strDay]! == mi.schedule.id) {
+          if (mi.model!.cancelledSchedules?[strDay]?.contains(
+                mi.schedule.id,
+              ) ==
+              true) {
             return false;
           }
 
@@ -113,10 +114,14 @@ class ItemsByDayPool extends Pool<ItemsByDay> {
       if (item.schedule.period == null) {
         item.model!.schedules![item.schedule.id]?.place = newPlace;
       } else {
-        final sch = Schedule.empty(day: item.date!);
+        final sch = Schedule.empty(day: item.schedule.day);
         sch.place = newPlace;
         sch.includedFts = item.schedule.includedFts;
         item.model!.addSchedule(sch);
+        item.model!.cancelSchedule(
+          day: item.schedule.day,
+          id: item.schedule.id,
+        );
       }
     } else {
       item.record!.schedule.place = newPlace;

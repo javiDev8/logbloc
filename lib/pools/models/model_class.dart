@@ -62,7 +62,7 @@ class Model {
   DateTime createdAt;
   Map<String, Schedule>? schedules;
   bool? simpleScheduling;
-  Map<String, String>? cancelledSchedules;
+  Map<String, List<String>>? cancelledSchedules;
   Color? color;
   Map<String, Tag>? tags;
 
@@ -119,7 +119,17 @@ class Model {
             ),
           ),
 
-    cancelledSchedules: map['cancelled-schedules'],
+    cancelledSchedules: map['cancelled-schedules'] == null
+        ? null
+        : Map.fromEntries(
+            (map['cancelled-schedules'] as Map<String, dynamic>).entries
+                .map(
+                  (e) => MapEntry(
+                    e.key,
+                    List<String>.from(e.value as List<dynamic>),
+                  ),
+                ),
+          ),
 
     color: map.containsKey('color')
         ? Color(int.parse(map['color'] as String))
@@ -193,6 +203,12 @@ class Model {
   addSchedule(Schedule sch) {
     schedules ??= {};
     schedules![sch.id] = sch;
+  }
+
+  cancelSchedule({required String day, required String id}) {
+    cancelledSchedules ??= {};
+    cancelledSchedules![day] ??= [];
+    cancelledSchedules![day]!.add(id);
   }
 
   List<Feature> getSortedFeatureList() {
