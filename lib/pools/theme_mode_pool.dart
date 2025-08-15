@@ -2,7 +2,7 @@ import 'package:logize/main.dart';
 import 'package:logize/pools/pools.dart';
 import 'package:flutter/material.dart';
 
-const seedColor = Color.fromARGB(1, 230, 173, 83);
+const seedColor = Color.fromARGB(255, 230, 173, 83);
 
 ColorScheme genColorScheme(Brightness brightness) => ColorScheme.fromSeed(
   seedColor: seedColor,

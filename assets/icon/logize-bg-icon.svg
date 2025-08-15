@@ -32,7 +32,7 @@
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg1" />
+     inkscape:current-layer="layer2" />
   <defs
      id="defs1">
     <linearGradient
@@ -58,19 +58,6 @@
        gradientUnits="userSpaceOnUse"
        gradientTransform="matrix(0.80902777,0,0,0.85290148,17.785207,11.599498)" />
   </defs>
-  <g
-     id="g3">
-    <path
-       style="fill:#ffcb8f;fill-opacity:1;stroke-width:0.170204"
-       d="m 103.04348,31.717 c 0,0 -55.78974,63.662702 -43.453004,85.50109 8.565599,15.16276 42.685754,18.78635 45.420454,16.77385 C 93.609459,113.28299 103.04348,31.717 103.04348,31.717 Z"
-       id="path2-3"
-       sodipodi:nodetypes="cscc" />
-    <path
-       style="fill:#f5aa3d;fill-opacity:1;stroke-width:0.240787"
-       d="m 168.09492,136.98538 c -22.55956,8.48341 -48.56823,11.10464 -67.28492,8.91464 -17.380447,-2.03366 -44.045573,-6.99352 -52.632681,-29.07725 -0.49927,-1.28398 -27.749224,51.7807 22.589717,51.50359 24.305361,-0.13379 43.551264,0.092 82.412514,0.24669 33.83857,0.13467 14.91537,-31.58766 14.91537,-31.58766 z"
-       id="path3"
-       sodipodi:nodetypes="csssscc" />
-  </g>
   <rect
      style="fill:url(#linearGradient4);fill-rule:nonzero;stroke:none;stroke-width:1.63228;stroke-opacity:0.732613"
      id="rect3"
@@ -87,5 +74,19 @@
   <g
      inkscape:groupmode="layer"
      id="layer2"
-     inkscape:label="Layer 2" />
+     inkscape:label="Layer 2">
+    <g
+       id="g3">
+      <path
+         style="fill:#ffcb8f;fill-opacity:1;stroke-width:0.170204"
+         d="m 103.04348,31.717 c 0,0 -55.78974,63.662702 -43.453004,85.50109 8.565599,15.16276 42.685754,18.78635 45.420454,16.77385 C 93.609459,113.28299 103.04348,31.717 103.04348,31.717 Z"
+         id="path2-3"
+         sodipodi:nodetypes="cscc" />
+      <path
+         style="fill:#f5aa3d;fill-opacity:1;stroke-width:0.240787"
+         d="m 168.09492,136.98538 c -22.55956,8.48341 -48.56823,11.10464 -67.28492,8.91464 -17.380447,-2.03366 -44.045573,-6.99352 -52.632681,-29.07725 -0.49927,-1.28398 -27.749224,51.7807 22.589717,51.50359 24.305361,-0.13379 43.551264,0.092 82.412514,0.24669 33.83857,0.13467 14.91537,-31.58766 14.91537,-31.58766 z"
+         id="path3"
+         sodipodi:nodetypes="csssscc" />
+    </g>
+  </g>
 </svg>

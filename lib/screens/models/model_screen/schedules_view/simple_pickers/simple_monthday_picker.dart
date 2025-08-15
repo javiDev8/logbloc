@@ -19,8 +19,9 @@ class SimpleMonthdayPicker extends StatelessWidget {
                 final matches = modelEditPool.getScheduleMatches(sch);
                 final selected = matches?.isNotEmpty == true;
                 return SizedBox(
-                  width: 43,
+                  width: 44,
                   child: PickButton(
+                    isToday: DateTime.now().day.toString() == day,
                     onPressed: () {
                       modelEditPool.toggleSimpleSchedule(
                         sch,

@@ -18,6 +18,7 @@ class ModelSchedulesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String showing = 'all';
     return Padding(
       padding: EdgeInsetsGeometry.symmetric(horizontal: 5),
       child: LazySwimmer<Model>(
@@ -30,8 +31,6 @@ class ModelSchedulesView extends StatelessWidget {
           final monthlySchedules = model.schedules?.values.where(
             (sch) => sch.period == 'month',
           );
-
-          String showing = 'all';
 
           return StatefulBuilder(
             builder: (context, setState) => Column(

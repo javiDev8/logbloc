@@ -13,7 +13,7 @@ class SimpleWeekdayPicker extends StatelessWidget {
     return ScheduleWrap(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: ['m', 't', 'w', 't', 'f', 's', 's']
+        children: ['M', 'T', 'W', 'T', 'F', 'S', 'S']
             .asMap()
             .entries
             .map<Widget>((e) {
@@ -26,6 +26,7 @@ class SimpleWeekdayPicker extends StatelessWidget {
               return SizedBox(
                 width: 40,
                 child: PickButton(
+                  isToday: DateTime.now().weekday.toString() == sch.day,
                   onPressed: () {
                     modelEditPool.toggleSimpleSchedule(
                       sch,

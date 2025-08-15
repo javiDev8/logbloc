@@ -1,3 +1,4 @@
+import 'package:logize/pools/theme_mode_pool.dart';
 import 'package:logize/utils/fmt_date.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -138,13 +139,24 @@ class WeeklyChart extends StatelessWidget {
                               final day = targetMonday.add(
                                 Duration(days: dayIndex),
                               );
+                              final color =
+                                  day.toString().split(' ')[0] ==
+                                      DateTime.now().toString().split(
+                                        ' ',
+                                      )[0]
+                                  ? seedColor
+                                  : null;
                               return SideTitleWidget(
                                 space: 4,
                                 meta: meta,
                                 child: Column(
                                   children: [
-                                    Text(_formatDayOfWeek(day)),
+                                    Text(
+                                      _formatDayOfWeek(day),
+                                      style: TextStyle(color: color),
+                                    ),
                                     Txt(
+                                      color: color,
                                       day
                                           .toString()
                                           .split(' ')[0]

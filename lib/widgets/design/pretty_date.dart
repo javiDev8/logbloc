@@ -1,4 +1,5 @@
 import 'package:logize/pools/items/items_by_day_pool.dart';
+import 'package:logize/pools/theme_mode_pool.dart';
 import 'package:logize/screens/daily/daily_screen.dart';
 import 'package:logize/utils/fmt_date.dart';
 import 'package:logize/widgets/design/exp.dart';
@@ -17,6 +18,14 @@ class PrettyDate extends StatelessWidget {
     final y = date.year.toString().split('');
     final year = '${y[2]}${y[3]}';
 
+    final color =
+        DateTime.now().toString().split(' ')[0] ==
+            date.toString().split(' ')[0]
+        ? seedColor
+        : themeModePool.data == ThemeMode.light
+        ? Colors.black
+        : Colors.white;
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10),
       child: Row(
@@ -24,22 +33,26 @@ class PrettyDate extends StatelessWidget {
         children: <Widget>[
           Text(
             dayOfWeek,
-            style: const TextStyle(fontWeight: FontWeight.normal),
+            style: TextStyle(fontWeight: FontWeight.normal, color: color),
           ),
           Exp(),
           Text(
             dayOfMonth,
-            style: const TextStyle(fontWeight: FontWeight.w900),
+            style: TextStyle(fontWeight: FontWeight.w900, color: color),
           ),
           Text(
             month,
-            style: const TextStyle(fontWeight: FontWeight.normal),
+            style: TextStyle(fontWeight: FontWeight.normal, color: color),
           ),
-          Text(year, style: const TextStyle(fontWeight: FontWeight.w200)),
+          Text(
+            year,
+            style: TextStyle(fontWeight: FontWeight.w200, color: color),
+          ),
           IconButton(
             onPressed: () async {
               final pickedDate = await showDatePicker(
-                currentDate: currentDatePool.data,
+                //currentDate: currentDatePool.data,
+                currentDate: DateTime.now(),
                 context: context,
                 firstDate: DateTime(2020),
                 lastDate: DateTime(9999),

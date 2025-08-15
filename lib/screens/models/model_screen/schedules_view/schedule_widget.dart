@@ -43,27 +43,33 @@ class ScheduleWidget extends StatelessWidget {
             Row(
               children: [
                 Expanded(child: Txt(day, w: 8)),
-                MenuButton(
-                  onSelected: (val) {
-                    switch (val) {
-                      case 'edit':
-                        setState(() => editing = true);
-                        break;
-                      case 'delete':
-                        modelEditPool.removeSchedule(schedule.id);
-                        break;
-                    }
-                  },
+                if (editing)
+                  IconButton(
+                    onPressed: () =>
+                        modelEditPool.removeSchedule(schedule.id),
+                    icon: Icon(Icons.close),
+                  )
+                else
+                  MenuButton(
+                    onSelected: (val) {
+                      switch (val) {
+                        case 'edit':
+                          setState(() => editing = true);
+                          break;
+                        case 'delete':
+                          modelEditPool.removeSchedule(schedule.id);
+                          break;
+                      }
+                    },
 
-                  options: [
-                    MenuOption(
-                      value: 'delete',
-                      widget: ListTile(
-                        title: Txt('delete'),
-                        leading: Icon(Icons.delete),
+                    options: [
+                      MenuOption(
+                        value: 'delete',
+                        widget: ListTile(
+                          title: Txt('delete'),
+                          leading: Icon(Icons.delete),
+                        ),
                       ),
-                    ),
-                    if (!editing)
                       MenuOption(
                         value: 'edit',
                         widget: ListTile(
@@ -71,27 +77,28 @@ class ScheduleWidget extends StatelessWidget {
                           leading: Icon(Icons.edit),
                         ),
                       ),
-                  ],
-                ),
+                    ],
+                  ),
               ],
             ),
             if (editing)
               Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Txt('skip matches', w: 7),
-                      Switch(
-                        onChanged: (val) {
-                          schedule.skipMatch = val;
-                          setState(() => {});
-                          modelEditPool.dirt(true);
-                        },
-                        value: schedule.skipMatch == true,
-                      ),
-                    ],
-                  ),
+                  if (schedule.period != null)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Txt('skip matches', w: 7),
+                        Switch(
+                          onChanged: (val) {
+                            schedule.skipMatch = val;
+                            setState(() => {});
+                            modelEditPool.dirt(true);
+                          },
+                          value: schedule.skipMatch == true,
+                        ),
+                      ],
+                    ),
                   if (modelEditPool.data.features.length > 1)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
