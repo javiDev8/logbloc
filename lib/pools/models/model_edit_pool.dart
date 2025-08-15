@@ -69,6 +69,23 @@ class ModelEditPool extends Pool<Model> {
     dirt(true);
   }
 
+  List<Schedule>? getScheduleMatches(Schedule sch) => data
+      .schedules
+      ?.values
+      .where((s) => s.period == sch.period && s.day == sch.day)
+      .toList();
+
+  toggleSimpleSchedule(Schedule sch, {required List<Schedule>? matches}) {
+    if (matches?.isNotEmpty == true) {
+      for (final match in matches!) {
+        data.schedules?.remove(match.id);
+      }
+      controller.sink.add('schedules');
+    } else {
+      addSchedule(sch);
+    }
+  }
+
   removeSchedule(String id) {
     data.schedules!.remove(id);
     controller.sink.add('schedules');

@@ -5,7 +5,7 @@ import 'package:logize/pools/models/models_pool.dart';
 import 'package:logize/pools/pools.dart';
 import 'package:logize/screens/models/model_screen/model_features_view.dart';
 import 'package:logize/screens/models/model_screen/model_over_view.dart';
-import 'package:logize/screens/models/model_screen/model_schedules_view.dart';
+import 'package:logize/screens/models/model_screen/schedules_view/model_schedules_view.dart';
 import 'package:logize/utils/warn_dialogs.dart';
 import 'package:logize/widgets/design/topbar_wrap.dart';
 import 'package:logize/widgets/design/txt.dart';

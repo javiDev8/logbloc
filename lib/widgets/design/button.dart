@@ -58,7 +58,7 @@ class Button extends StatelessWidget {
           style: style,
           onPressed: onPressed,
           label: Padding(
-            padding: EdgeInsets.only(top: 10, bottom: 10, right: p),
+            padding: EdgeInsets.only(top: 5, bottom: 5, right: p),
             child: Text(
               text!,
               style: txtStyle,
@@ -80,12 +80,7 @@ class Button extends StatelessWidget {
           onPressed: onPressed,
           style: style,
           child: Padding(
-            padding: EdgeInsets.only(
-              left: p,
-              right: p,
-              top: 10,
-              bottom: 10,
-            ),
+            padding: EdgeInsets.only(left: p, right: p, top: 5, bottom: 5),
             child: Text(
               text!,
               style: txtStyle,
@@ -97,15 +92,12 @@ class Button extends StatelessWidget {
     }
 
     if (thereIsLead && text == null) {
-      return Padding(
-        padding: EdgeInsets.all(5),
-        child: IconButton(
-          padding: EdgeInsets.all(15),
-          onPressed: onPressed,
-          style: style,
-          icon: leadi ?? Icon(lead, color: color),
-          color: color,
-        ),
+      return IconButton(
+        padding: EdgeInsets.all(15),
+        onPressed: onPressed,
+        style: style,
+        icon: leadi ?? Icon(lead, color: color),
+        color: color,
       );
     }
 

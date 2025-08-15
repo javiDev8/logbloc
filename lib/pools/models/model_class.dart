@@ -18,6 +18,7 @@ class Schedule {
   double place;
   String? period; // null -> puntual
   List<String>? includedFts; // null -> all
+  bool? skipMatch;
 
   static const periods = [null, 'day', 'week', 'month', 'year'];
 
@@ -27,6 +28,7 @@ class Schedule {
     required this.place,
     this.period,
     this.includedFts,
+    this.skipMatch,
   });
 
   factory Schedule.fromMap(Map<String, dynamic> map) => Schedule(
@@ -35,6 +37,7 @@ class Schedule {
     place: (map['place'] as num).toDouble(),
     period: map['period'] as String?,
     includedFts: map['includedFts'] as List<String>?,
+    skipMatch: map['skip-match'],
   );
 
   factory Schedule.empty({required String day, String? period}) =>
@@ -51,6 +54,7 @@ class Schedule {
     'place': place,
     if (period != null) 'period': period,
     if (includedFts != null) 'includedFts': includedFts,
+    if (skipMatch != null) 'skip-match': skipMatch,
   };
 }
 

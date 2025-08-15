@@ -44,37 +44,53 @@ class ModelsPool extends Pool<Models?> {
       return null;
     }
     final List<Item> items = [];
-
-    for (final period in Schedule.periods) {
-      final date = DateTime.parse(strDay);
-      late final String day;
-      switch (period) {
-        case null:
-          day = strDay;
-          break;
-        case 'week':
-          day = date.weekday.toString();
-          break;
-        case 'month':
-          day = date.day.toString();
-          break;
-        case 'year':
-          date.year.toString();
-          break;
-      }
-
-      for (final model in data!.values) {
+    for (final model in data!.values) {
+      final List<Schedule> dayModelSchedules = [];
+      for (final period in Schedule.periods) {
         if (model.schedules?.isNotEmpty == true) {
-          final schMatches = model.schedules!.values.where(
-            (sch) => sch.period == period && sch.day == day,
-          );
-          items.addAll(
-            schMatches.map(
-              (s) => Item(modelId: model.id, schedule: s, date: strDay),
-            ),
-          );
+          final date = DateTime.parse(strDay);
+          late final String day;
+          switch (period) {
+            case null:
+              day = strDay;
+              break;
+            case 'week':
+              day = date.weekday.toString();
+              break;
+            case 'month':
+              day = date.day.toString();
+              break;
+            case 'year':
+              date.year.toString();
+              break;
+          }
+
+          final schMatches = model.schedules!.values
+              .where((sch) => sch.period == period && sch.day == day)
+              .toList();
+
+          dayModelSchedules.addAll(schMatches);
         }
       }
+      List<Schedule> skipModelSchedules;
+      if (dayModelSchedules.length > 1) {
+        final notSkipMatches = dayModelSchedules
+            .where((s) => s.skipMatch != true)
+            .toList();
+        if (notSkipMatches.isEmpty) {
+          skipModelSchedules = [dayModelSchedules.first];
+        } else {
+          skipModelSchedules = notSkipMatches;
+        }
+      } else {
+        skipModelSchedules = dayModelSchedules;
+      }
+
+      items.addAll(
+        skipModelSchedules.map(
+          (s) => Item(modelId: model.id, schedule: s, date: strDay),
+        ),
+      );
     }
 
     return items;
