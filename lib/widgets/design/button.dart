@@ -93,7 +93,7 @@ class Button extends StatelessWidget {
 
     if (thereIsLead && text == null) {
       return IconButton(
-        padding: EdgeInsets.all(15),
+        padding: EdgeInsets.all(10),
         onPressed: onPressed,
         style: style,
         icon: leadi ?? Icon(lead, color: color),

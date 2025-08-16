@@ -12,52 +12,6 @@ import 'package:logize/utils/feedback.dart';
 
 typedef Features = Map<String, Feature>;
 
-class Schedule {
-  String id;
-  String day;
-  double place;
-  String? period; // null -> puntual
-  List<String>? includedFts; // null -> all
-  bool? skipMatch;
-
-  static const periods = [null, 'day', 'week', 'month', 'year'];
-
-  Schedule({
-    required this.id,
-    required this.day,
-    required this.place,
-    this.period,
-    this.includedFts,
-    this.skipMatch,
-  });
-
-  factory Schedule.fromMap(Map<String, dynamic> map) => Schedule(
-    id: map['id'] as String,
-    day: map['day'] as String,
-    place: (map['place'] as num).toDouble(),
-    period: map['period'] as String?,
-    includedFts: map['includedFts'] as List<String>?,
-    skipMatch: map['skip-match'],
-  );
-
-  factory Schedule.empty({required String day, String? period}) =>
-      Schedule(
-        day: day,
-        period: period,
-        id: UniqueKey().toString(),
-        place: DateTime.now().millisecondsSinceEpoch.toDouble(),
-      );
-
-  serialize() => {
-    'id': id,
-    'day': day,
-    'place': place,
-    if (period != null) 'period': period,
-    if (includedFts != null) 'includedFts': includedFts,
-    if (skipMatch != null) 'skip-match': skipMatch,
-  };
-}
-
 class Model {
   String id;
   String name;
@@ -65,7 +19,7 @@ class Model {
   int recordCount;
   DateTime createdAt;
   Map<String, Schedule>? schedules;
-  bool? simpleScheduling;
+  List<String>? simplePeriods;
   Map<String, List<String>>? cancelledSchedules;
   Color? color;
   Map<String, Tag>? tags;
@@ -80,7 +34,7 @@ class Model {
     this.cancelledSchedules,
     this.color,
     this.tags,
-    this.simpleScheduling,
+    this.simplePeriods,
   });
 
   factory Model.empty() => Model(
@@ -89,14 +43,13 @@ class Model {
     recordCount: 0,
     id: UniqueKey().toString(),
     createdAt: DateTime.now(),
-    simpleScheduling: true,
   );
 
   factory Model.fromMap({required Map<String, dynamic> map}) => Model(
     id: map['id'],
     name: map['name'],
     recordCount: map['record-count'] as int,
-    simpleScheduling: map['simple-scheduling'],
+    simplePeriods: map['simple-periods'],
 
     createdAt: DateTime.fromMillisecondsSinceEpoch(
       map['created-at'] as int,
@@ -156,7 +109,7 @@ class Model {
     'name': name,
     'record-count': recordCount,
     'created-at': createdAt.millisecondsSinceEpoch,
-    if (simpleScheduling == true) 'simple-scheduling': simpleScheduling,
+    if (simplePeriods?.isNotEmpty == true) 'simple-periods': simplePeriods,
     'features': features.map(
       (key, value) => MapEntry(key, value.serialize()),
     ),
@@ -229,4 +182,50 @@ class Model {
     fts.sort((a, b) => a.position.compareTo(b.position));
     return fts;
   }
+}
+
+class Schedule {
+  String id;
+  String day;
+  double place;
+  String? period; // null -> puntual
+  List<String>? includedFts; // null -> all
+  bool? skipMatch;
+
+  static const periods = [null, 'day', 'week', 'bi-week', 'month', 'year'];
+
+  Schedule({
+    required this.id,
+    required this.day,
+    required this.place,
+    this.period,
+    this.includedFts,
+    this.skipMatch,
+  });
+
+  factory Schedule.fromMap(Map<String, dynamic> map) => Schedule(
+    id: map['id'] as String,
+    day: map['day'] as String,
+    place: (map['place'] as num).toDouble(),
+    period: map['period'] as String?,
+    includedFts: map['includedFts'] as List<String>?,
+    skipMatch: map['skip-match'],
+  );
+
+  factory Schedule.empty({required String day, String? period}) =>
+      Schedule(
+        day: day,
+        period: period,
+        id: UniqueKey().toString(),
+        place: DateTime.now().millisecondsSinceEpoch.toDouble(),
+      );
+
+  serialize() => {
+    'id': id,
+    'day': day,
+    'place': place,
+    if (period != null) 'period': period,
+    if (includedFts != null) 'includedFts': includedFts,
+    if (skipMatch != null) 'skip-match': skipMatch,
+  };
 }

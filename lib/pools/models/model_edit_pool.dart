@@ -137,8 +137,13 @@ class ModelEditPool extends Pool<Model> {
     }
   }
 
-  setAdvanced(bool advanced) {
-    modelEditPool.data.simpleScheduling = !advanced;
+  setSchedulePeriod({required String period, required bool simple}) {
+    if (simple) {
+      data.simplePeriods ??= [];
+      data.simplePeriods!.add(period);
+    } else {
+      data.simplePeriods!.removeWhere((p) => p == period);
+    }
     controller.sink.add('schedules');
   }
 }
