@@ -4,6 +4,7 @@ import 'package:logize/pools/models/model_class.dart';
 import 'package:logize/pools/models/model_edit_pool.dart';
 import 'package:logize/pools/models/models_pool.dart';
 import 'package:logize/pools/theme_mode_pool.dart';
+import 'package:logize/screens/models/model_screen/schedules_view/simple_pickers/simple_biweek_picker.dart';
 import 'package:logize/utils/color_convert.dart';
 import 'package:logize/utils/fmt_date.dart';
 import 'package:logize/widgets/design/menu_button.dart';
@@ -30,8 +31,10 @@ class ScheduleWidget extends StatelessWidget {
         break;
       case 'bi-week':
         final sd = int.parse(schedule.day);
+        final nd = int.parse(dateToBiweekDay(DateTime.now()));
+        final isThisWeek = sd > 7 && nd > 7 || sd <= 7 && nd <= 7;
         final d = sd > 7 ? sd - 7 : sd;
-        day = '${sd > 7 ? 'second' : 'first'}  ${weekdays[d]}';
+        day = '${isThisWeek ? 'this' : 'next'} week\'s  ${weekdays[d]}';
         break;
       case 'month':
         day = schedule.day;

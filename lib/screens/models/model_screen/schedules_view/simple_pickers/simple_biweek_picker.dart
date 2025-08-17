@@ -14,14 +14,16 @@ String dateToBiweekDay(DateTime date) {
 }
 
 class SimpleBiweekPicker extends StatelessWidget {
-  final List<Schedule> schedules;
-  const SimpleBiweekPicker({super.key, required this.schedules});
+  final List<Schedule>? schedules;
+  final bool? single;
+  const SimpleBiweekPicker({super.key, this.schedules, this.single});
 
   @override
   Widget build(BuildContext context) {
     return SimplePickerWrap(
       title: 'bi week',
       period: 'bi-week',
+      single: single,
       child: Column(
         children: [
           ...['A', 'B'].map(
@@ -32,13 +34,21 @@ class SimpleBiweekPicker extends StatelessWidget {
                   period: 'bi-week',
                   day: (wdce.key + (w == 'A' ? 1 : 8)).toString(),
                 );
-                final matches = modelEditPool.getScheduleMatches(sch);
+                final matches = single == true
+                    ? null
+                    : modelEditPool.getScheduleMatches(
+                        sch,
+                        schList: schedules,
+                      );
                 final nowBiweekDay = dateToBiweekDay(DateTime.now());
                 return SizedBox(
                   width: 40,
                   child: PickButton(
                     isToday: nowBiweekDay == sch.day,
                     onPressed: () {
+                      if (single == true) {
+                        return Navigator.of(context).pop(sch);
+                      }
                       modelEditPool.toggleSimpleSchedule(
                         sch,
                         matches: matches,

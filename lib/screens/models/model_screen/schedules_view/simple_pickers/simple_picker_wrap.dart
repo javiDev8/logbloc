@@ -7,11 +7,13 @@ class SimplePickerWrap extends StatelessWidget {
   final String title;
   final Widget child;
   final String period;
+  final bool? single;
   const SimplePickerWrap({
     super.key,
     required this.title,
     required this.child,
     required this.period,
+    this.single,
   });
 
   @override
@@ -25,7 +27,7 @@ class SimplePickerWrap extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Txt(title, w: 8),
-                PeriodPickerMenuButton(period: period),
+                if (single != true) PeriodPickerMenuButton(period: period),
               ],
             ),
           ),

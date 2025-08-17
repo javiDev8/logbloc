@@ -155,13 +155,17 @@ final periodPickers = {
 
   'bi-week': PeriodPicker(
     picker: (BuildContext context) async {
-      await showDialog(
+      final sch = await showDialog(
         context: context,
-        builder: (context) =>
-            AlertDialog(content: SimpleBiweekPicker(schedules: [])),
+        builder: (context) => Column(
+          children: [Exp(), SimpleBiweekPicker(single: true), Exp()],
+        ),
       );
+      modelEditPool.addSchedule(sch);
+      // ignore: use_build_context_synchronously
+      Navigator.of(context).pop();
     },
-    simplePicker: (bws) => SimpleBiweekPicker(schedules: []),
+    simplePicker: (bws) => SimpleBiweekPicker(schedules: bws?.toList()),
   ),
 
   'month': PeriodPicker(
