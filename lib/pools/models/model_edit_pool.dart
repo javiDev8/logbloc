@@ -69,10 +69,11 @@ class ModelEditPool extends Pool<Model> {
     dirt(true);
   }
 
-  List<Schedule>? getScheduleMatches(Schedule sch) => data
-      .schedules
-      ?.values
-      .where((s) => s.period == sch.period && s.day == sch.day)
+  List<Schedule>? getScheduleMatches(
+    Schedule sch, {
+    List<Schedule>? schList,
+  }) => (schList ?? data.schedules?.values)
+      ?.where((s) => s.period == sch.period && s.day == sch.day)
       .toList();
 
   toggleSimpleSchedule(Schedule sch, {required List<Schedule>? matches}) {

@@ -3,6 +3,7 @@ import 'package:logize/pools/items/item_class.dart';
 import 'package:logize/pools/models/model_class.dart';
 import 'package:logize/pools/pools.dart';
 import 'package:logize/pools/tags/tags_pool.dart';
+import 'package:logize/screens/models/model_screen/schedules_view/simple_pickers/simple_biweek_picker.dart';
 import 'package:logize/utils/feedback.dart';
 import 'package:logize/utils/parse_map.dart';
 
@@ -57,6 +58,11 @@ class ModelsPool extends Pool<Models?> {
             case 'week':
               day = date.weekday.toString();
               break;
+
+            case 'bi-week':
+              day = dateToBiweekDay(date);
+              break;
+
             case 'month':
               day = date.day.toString();
               break;

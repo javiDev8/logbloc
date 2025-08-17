@@ -28,6 +28,11 @@ class ScheduleWidget extends StatelessWidget {
       case 'week':
         day = weekdays[int.parse(schedule.day)];
         break;
+      case 'bi-week':
+        final sd = int.parse(schedule.day);
+        final d = sd > 7 ? sd - 7 : sd;
+        day = '${sd > 7 ? 'second' : 'first'}  ${weekdays[d]}';
+        break;
       case 'month':
         day = schedule.day;
         break;

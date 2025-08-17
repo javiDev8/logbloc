@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:logize/pools/models/model_class.dart';
 import 'package:logize/pools/models/model_edit_pool.dart';
+import 'package:logize/screens/models/model_screen/schedules_view/simple_pickers/simple_biweek_picker.dart';
 import 'package:logize/screens/models/model_screen/schedules_view/simple_pickers/simple_monthday_picker.dart';
 import 'package:logize/screens/models/model_screen/schedules_view/simple_pickers/simple_weekday_picker.dart';
 import 'package:logize/utils/fmt_date.dart';
@@ -150,6 +151,17 @@ final periodPickers = {
       navPop();
     },
     simplePicker: (ws) => SimpleWeekdayPicker(weeklySchedules: ws),
+  ),
+
+  'bi-week': PeriodPicker(
+    picker: (BuildContext context) async {
+      await showDialog(
+        context: context,
+        builder: (context) =>
+            AlertDialog(content: SimpleBiweekPicker(schedules: [])),
+      );
+    },
+    simplePicker: (bws) => SimpleBiweekPicker(schedules: []),
   ),
 
   'month': PeriodPicker(

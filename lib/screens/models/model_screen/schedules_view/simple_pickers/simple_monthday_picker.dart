@@ -11,7 +11,6 @@ class SimpleMonthdayPicker extends StatelessWidget {
   Widget build(BuildContext context) {
     return SimplePickerWrap(
       period: 'month',
-      schedules: [],
       title: 'monthly',
       child: SizedBox(
         width: 350,
