@@ -75,7 +75,7 @@ class ModelsPool extends Pool<Models?> {
               .where(
                 (sch) =>
                     sch.period == null ||
-                    sch.startDate!.millisecondsSinceEpoch <
+                    sch.startDate!.millisecondsSinceEpoch <=
                         date.millisecondsSinceEpoch,
               )
               .where((sch) => sch.period == period && sch.day == day)

@@ -153,7 +153,7 @@ class ModelEditPool extends Pool<Model> {
   }
 
   removeSimplePeriod({required String period}) {
-    data.simplePeriods!.remove(period);
+    data.simplePeriods?.remove(period);
     data.schedules?.removeWhere((_, s) => s.period == period);
     controller.sink.add('schedules');
   }

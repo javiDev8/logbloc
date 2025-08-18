@@ -34,6 +34,7 @@ class ModelFeaturesView extends StatelessWidget {
                           s,
                           onPressed: () => setState(() => showing = s),
                           filled: s == showing,
+			  variant: 1,
                         ),
                       ),
                       Exp(),

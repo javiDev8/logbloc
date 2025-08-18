@@ -234,7 +234,13 @@ class Schedule {
         period: period,
         id: UniqueKey().toString(),
         place: DateTime.now().millisecondsSinceEpoch.toDouble(),
-        startDate: DateTime.now(),
+        startDate: DateTime.now().copyWith(
+          hour: 0,
+          minute: 0,
+          second: 0,
+          millisecond: 0,
+          microsecond: 0,
+        ),
       );
 
   serialize() => {

@@ -24,8 +24,10 @@ List<Widget> makeModelTitle({bool? isNew}) => [
         ? IconButton(
             onPressed: () async {
               if (await modelEditPool.save()) {
-                // ignore: use_build_context_synchronously
-                Navigator.of(context).pop();
+                if (isNew != false) {
+                  // ignore: use_build_context_synchronously
+                  Navigator.of(context).pop();
+                }
               }
             },
             icon: Icon(Icons.check_circle_outlined),

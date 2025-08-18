@@ -28,9 +28,7 @@ class ReadOnlyFtWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isBright = themeModePool.data == ThemeMode.light;
-    final b = isBright ? 210 : 80;
-    final color = Color.fromRGBO(b, b, b, isBright ? 0.3 : 0.5);
+    final color = Theme.of(context).colorScheme.secondaryContainer;
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadiusGeometry.all(Radius.circular(20)),

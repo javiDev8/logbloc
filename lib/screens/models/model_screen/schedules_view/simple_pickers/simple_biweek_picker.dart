@@ -6,7 +6,7 @@ import 'package:logize/screens/models/model_screen/schedules_view/simple_pickers
 import 'package:logize/screens/models/model_screen/schedules_view/simple_pickers/simple_weekday_picker.dart';
 
 String dateToBiweekDay(DateTime date) {
-  final refDate = DateTime.parse('2025-08-11');
+  final refDate = DateTime.parse('2025-08-04');
   final weekDiff = ((date.difference(refDate).inDays) / 7).round();
   final isFirst = weekDiff % 2 == 0;
   final dateWeekDay = date.weekday;
