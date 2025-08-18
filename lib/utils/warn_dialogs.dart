@@ -46,8 +46,9 @@ FutureOr<bool?> warnUnsavedChanges(
 
 Future warnDelete(
   BuildContext context, {
-  required Future<bool> Function() delete,
+  required FutureOr<bool> Function() delete,
   required String msg,
+  bool? preventPop,
 }) async => await showDialog(
   context: context,
   builder: (context) => AlertDialog(
@@ -75,7 +76,9 @@ Future warnDelete(
         onPressed: () async {
           // ignore: use_build_context_synchronously
           Navigator.of(context).pop(await delete());
-          navPop();
+          if (preventPop != true) {
+            navPop();
+          }
         },
       ),
     ],

@@ -57,6 +57,8 @@ class RootScreenSwitch extends StatelessWidget {
                 currentRootState.pop();
                 if (!currentRootState.canPop()) {
                   modelEditPool.dirty = false;
+		  modelEditPool.editingSchs = [];
+		  modelEditPool.editingFts = [];
                 }
 
                 break;

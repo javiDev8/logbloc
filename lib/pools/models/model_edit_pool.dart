@@ -9,9 +9,13 @@ import 'package:logize/utils/feedback.dart';
 // needed for average
 // ignore:depend_on_referenced_packages
 import 'package:collection/collection.dart';
+import 'package:logize/utils/noticable_print.dart';
 
 class ModelEditPool extends Pool<Model> {
   bool dirty;
+
+  List<String> editingFts = [];
+  List<String> editingSchs = [];
 
   ModelEditPool(super.def) : dirty = false;
 
@@ -34,8 +38,10 @@ class ModelEditPool extends Pool<Model> {
       return false;
     }
     await data.save();
-    feedback('model saved', type: FeedbackType.success);
+    editingFts = [];
+    editingSchs = [];
     dirt(false);
+    feedback('model saved', type: FeedbackType.success);
     return true;
   }
 
@@ -50,9 +56,12 @@ class ModelEditPool extends Pool<Model> {
   }
 
   setFeature(Feature ft) {
+    nPrint('on set feature');
     if (data.features[ft.key] == null && data.features.isNotEmpty) {
+      nPrint('on new');
       // means feature is being added, so ensure appears on top
       ft.position = data.getSortedFeatureList()[0].position - 1;
+      editingFts.add(ft.id);
     }
     data.features[ft.key] = ft;
     controller.sink.add('features');
@@ -60,11 +69,13 @@ class ModelEditPool extends Pool<Model> {
 
   removeFeature(String key) {
     data.features.remove(key);
+    editingFts.remove(key);
     controller.sink.add('features');
   }
 
   addSchedule(Schedule sch) {
     data.addSchedule(sch);
+    editingSchs.add(sch.id);
     controller.sink.add('schedules');
     dirt(true);
   }

@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:logize/features/feature_switch.dart';
 import 'package:logize/pools/models/model_class.dart';
 import 'package:logize/pools/models/model_edit_pool.dart';
-import 'package:logize/pools/models/models_pool.dart';
 import 'package:logize/pools/theme_mode_pool.dart';
 import 'package:logize/screens/models/model_screen/schedules_view/simple_pickers/simple_biweek_picker.dart';
 import 'package:logize/utils/color_convert.dart';
 import 'package:logize/utils/fmt_date.dart';
+import 'package:logize/utils/warn_dialogs.dart';
 import 'package:logize/widgets/design/button.dart';
-import 'package:logize/widgets/design/menu_button.dart';
 import 'package:logize/widgets/design/txt.dart';
 
 class ScheduleWidget extends StatelessWidget {
@@ -42,8 +41,19 @@ class ScheduleWidget extends StatelessWidget {
         break;
     }
 
-    bool editing =
-        modelsPool.data?.containsKey(modelEditPool.data.id) == false;
+    final editing = modelEditPool.editingSchs.contains(schedule.id);
+
+    remove() {
+      warnDelete(
+        context,
+        preventPop: true,
+        delete: () {
+          modelEditPool.removeSchedule(schedule.id);
+          return true;
+        },
+        msg: 'Remove schedule?',
+      );
+    }
 
     return ScheduleWrap(
       child: StatefulBuilder(
@@ -54,40 +64,25 @@ class ScheduleWidget extends StatelessWidget {
                 Expanded(child: Txt(day, w: 8)),
                 if (editing)
                   IconButton(
-                    onPressed: () =>
-                        modelEditPool.removeSchedule(schedule.id),
+                    onPressed: remove,
                     icon: Icon(Icons.close),
-                  )
-                else
-                  MenuButton(
-                    onSelected: (val) {
-                      switch (val) {
-                        case 'edit':
-                          setState(() => editing = true);
-                          break;
-                        case 'delete':
-                          modelEditPool.removeSchedule(schedule.id);
-                          break;
-                      }
-                    },
-
-                    options: [
-                      MenuOption(
-                        value: 'delete',
-                        widget: ListTile(
-                          title: Txt('delete'),
-                          leading: Icon(Icons.delete),
-                        ),
-                      ),
-                      MenuOption(
-                        value: 'edit',
-                        widget: ListTile(
-                          title: Txt('edit'),
-                          leading: Icon(Icons.edit),
-                        ),
-                      ),
-                    ],
+                    key: UniqueKey(),
                   ),
+
+                IconButton(
+                  key: UniqueKey(),
+                  onPressed: () {
+                    if (editing) {
+                      modelEditPool.editingSchs.remove(schedule.id);
+                    } else {
+                      modelEditPool.editingSchs.add(schedule.id);
+                    }
+                    modelEditPool.controller.sink.add('schedules');
+                  },
+                  icon: Icon(
+                    editing ? Icons.expand_less : Icons.expand_more,
+                  ),
+                ),
               ],
             ),
             if (editing)

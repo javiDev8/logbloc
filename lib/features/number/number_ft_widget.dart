@@ -28,7 +28,7 @@ class NumberFtWidget extends StatelessWidget {
           child: lock.model
               ? Txt(ft.title, w: 8)
               : TxtField(
-                  hint: "title",
+                  label: 'title',
                   round: true,
                   initialValue: ft.title,
                   onChanged: (txt) {
@@ -81,7 +81,7 @@ class NumberFtWidget extends StatelessWidget {
           child: lock.model
               ? Text(' ${ft.unit}')
               : TxtField(
-                  hint: 'unit',
+                  label: 'unit',
                   round: true,
                   initialValue: ft.unit,
                   onChanged: (txt) => ft.setUnit(txt),

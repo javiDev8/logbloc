@@ -7,7 +7,6 @@ class Feature {
   bool pinned;
   bool isRequired;
   double position;
-  bool? isNew;
 
   Feature({
     required this.id,
@@ -16,7 +15,6 @@ class Feature {
     required this.pinned,
     required this.isRequired,
     required this.position,
-    this.isNew,
   });
 
   get key => '$type-$id';
@@ -32,7 +30,6 @@ class Feature {
       pinned: false,
       isRequired: false,
       position: 0,
-      isNew: true,
     );
   }
 
@@ -51,7 +48,6 @@ class Feature {
   setTitle(String t) => title = t;
 
   Map<String, dynamic> serialize() {
-    isNew = null; // on save
     return {
       'title': title,
       'pinned': pinned,

@@ -70,11 +70,9 @@ class TaskListFtWidget extends StatelessWidget {
                               },
                             ),
                     ),
-                    Expanded(
-                      child: Txt(
-                        '(${ft.getRoots().length} / ${ft.getRoots(done: true).length})',
-                        w: 8,
-                      ),
+                    Txt(
+                      '(${ft.getRoots().length}${lock.model ? ' / ${ft.getRoots(done: true).length}' : ''})',
+                      w: 8,
                     ),
                     IconButton(
                       onPressed: () {
@@ -136,7 +134,7 @@ class TaskWidget extends StatelessWidget {
                     ? Txt(task.title, w: 8)
                     : TxtField(
                         validator: (str) => str!.isEmpty ? 'empty!' : null,
-                        hint: 'task name',
+                        label: 'task name',
                         onTapOutside: (_) {
                           updateList(action: 'update', payload: task);
                         },
@@ -181,13 +179,15 @@ class TaskWidget extends StatelessWidget {
                       leading: Icon(Icons.add),
                     ),
                   ),
-                  MenuOption(
-                    value: 'edit',
-                    widget: ListTile(
-                      title: Text('rename'),
-                      leading: Icon(Icons.edit),
+
+                  if (ftLock.model)
+                    MenuOption(
+                      value: 'edit',
+                      widget: ListTile(
+                        title: Text('rename'),
+                        leading: Icon(Icons.edit),
+                      ),
                     ),
-                  ),
                   MenuOption(
                     value: 'delete',
                     widget: ListTile(

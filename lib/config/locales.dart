@@ -45,7 +45,7 @@ mixin Tr {
     version: 'version',
     help: 'help',
     preferences: 'preferences',
-    ftNumberLabel: 'measurement',
+    ftNumberLabel: 'measure',
   };
 
   static const Map<String, dynamic> es = {

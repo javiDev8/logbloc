@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logize/pools/models/model_edit_pool.dart';
+import 'package:logize/utils/warn_dialogs.dart';
 import 'package:logize/widgets/design/menu_button.dart';
 
 class PeriodPickerMenuButton extends StatelessWidget {
@@ -12,7 +13,15 @@ class PeriodPickerMenuButton extends StatelessWidget {
       onSelected: (val) {
         switch (val) {
           case 'delete':
-            modelEditPool.removeSimplePeriod(period: period);
+            warnDelete(
+              context,
+              preventPop: true,
+              delete: () {
+                modelEditPool.removeSimplePeriod(period: period);
+                return true;
+              },
+              msg: 'Remove entire period?',
+            );
             break;
         }
       },

@@ -83,6 +83,8 @@ class ModelSchedulesView extends StatelessWidget {
                                   locked: true,
                                 ),
                               ),
+
+                              SizedBox(height: 20),
                             ];
                           } else {
                             return [];

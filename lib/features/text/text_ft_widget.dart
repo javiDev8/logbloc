@@ -31,7 +31,7 @@ class TextFtWidget extends StatelessWidget {
                 ],
               )
             : TxtField(
-                hint: 'title',
+                label: 'title',
                 initialValue: ft.title,
                 round: true,
                 onChanged: (txt) {
@@ -44,7 +44,7 @@ class TextFtWidget extends StatelessWidget {
           TxtField(
             maxLines: null,
             initialValue: ft.content,
-            hint: 'content',
+            label: 'content',
             onChanged: (str) {
               ft.setContent(str);
               dirt!();

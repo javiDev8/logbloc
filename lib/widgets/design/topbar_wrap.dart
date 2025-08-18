@@ -34,7 +34,7 @@ PreferredSize wrapBar({
                 IconButton(
                   onPressed: () async {
                     if (onBack != null && !(await onBack())) return;
-                    rootScreens[rootIndex].nav.currentState!.pop();
+                    rootScreens[rootIndex].nav.currentState?.pop();
                   },
                   icon: Icon(Icons.arrow_back),
                 ),

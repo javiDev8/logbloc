@@ -1,13 +1,12 @@
 import 'package:logize/features/feature_class.dart';
 import 'package:logize/features/feature_switch.dart';
 import 'package:logize/pools/models/model_edit_pool.dart';
-import 'package:logize/pools/pools.dart';
 import 'package:logize/pools/theme_mode_pool.dart';
 import 'package:logize/screens/models/model_screen/feature_stats_screen.dart';
 import 'package:logize/utils/nav.dart';
+import 'package:logize/utils/warn_dialogs.dart';
 import 'package:logize/widgets/design/exp.dart';
 import 'package:flutter/material.dart';
-import 'package:logize/widgets/design/menu_button.dart';
 import 'package:logize/widgets/design/txt.dart';
 
 class FeatureLock {
@@ -19,21 +18,19 @@ class FeatureLock {
 
 class ReadOnlyFtWidget extends StatelessWidget {
   final Feature feature;
-  final Function setEditing;
-  const ReadOnlyFtWidget({
-    super.key,
-    required this.feature,
-    required this.setEditing,
-  });
+  const ReadOnlyFtWidget({super.key, required this.feature});
 
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme.secondaryContainer;
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadiusGeometry.all(Radius.circular(20)),
+    final isBright = themeModePool.data == ThemeMode.light;
+    final b = isBright ? 150 : 80;
+    final color = Color.fromRGBO(b, b, b, isBright ? 0.3 : 0.5);
+    return Container(
+      margin: EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.all(Radius.circular(20)),
       ),
-      color: color,
       child: Row(
         children: [
           Expanded(
@@ -61,25 +58,13 @@ class ReadOnlyFtWidget extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsetsGeometry.only(right: 10),
-            child: MenuButton(
-              onSelected: (val) {
-                switch (val) {
-                  case 'edit':
-                    setEditing((_) => true);
-                    modelEditPool.dirt(true);
-                    break;
-                }
+            padding: EdgeInsetsGeometry.only(right: 15),
+            child: IconButton(
+              onPressed: () {
+                modelEditPool.editingFts.add(feature.id);
+                modelEditPool.controller.sink.add('features');
               },
-              options: [
-                MenuOption(
-                  value: 'edit',
-                  widget: ListTile(
-                    title: Txt('edit'),
-                    leading: Icon(Icons.edit),
-                  ),
-                ),
-              ],
+              icon: Icon(Icons.expand_more),
             ),
           ),
         ],
@@ -101,17 +86,15 @@ class FtWid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final editingPool = Pool<bool>(feature.isNew == true);
-
-    return Swimmer<bool>(
-      pool: editingPool,
-      builder: (context, editing) => editing
-          ? FeatureWidget(lock: lock, feature: feature, dirt: dirt)
-          : ReadOnlyFtWidget(
-              feature: feature,
-              setEditing: editingPool.set,
-            ),
-    );
+    final editing = modelEditPool.editingFts.contains(feature.id);
+    return editing
+        ? FeatureWidget(
+            lock: lock,
+            feature: feature,
+            dirt: dirt,
+            compactable: true,
+          )
+        : ReadOnlyFtWidget(feature: feature);
   }
 }
 
@@ -119,22 +102,22 @@ class FeatureWidget extends StatelessWidget {
   final FeatureLock lock;
   final Feature feature;
   final bool detailed;
-  final bool compact;
   final void Function()? dirt;
+  final bool? compactable;
 
   const FeatureWidget({
     super.key,
     required this.lock,
     required this.feature,
     this.detailed = false,
-    this.compact = false,
     this.dirt,
+    this.compactable,
   });
 
   @override
   Widget build(BuildContext context) {
     final isBright = themeModePool.data == ThemeMode.light;
-    final b = isBright ? 210 : 80;
+    final b = isBright ? 150 : 80;
     final color = Color.fromRGBO(b, b, b, isBright ? 0.3 : 0.5);
     return Container(
       margin: EdgeInsets.all(5),
@@ -198,10 +181,30 @@ class FeatureWidget extends StatelessWidget {
                             ),
                           ),
                           IconButton(
-                            onPressed: () =>
-                                modelEditPool.removeFeature(feature.key),
+                            onPressed: () => warnDelete(
+                              context,
+                              preventPop: true,
+                              delete: () {
+                                modelEditPool.removeFeature(feature.key);
+                                return true;
+                              },
+                              msg: 'Delete feature?',
+                            ),
                             icon: Icon(Icons.close),
                           ),
+
+                          if (compactable == true)
+                            IconButton(
+                              onPressed: () {
+                                modelEditPool.editingFts.remove(
+                                  feature.id,
+                                );
+                                modelEditPool.controller.sink.add(
+                                  'features',
+                                );
+                              },
+                              icon: Icon(Icons.expand_less),
+                            ),
                         ],
                       ),
                     );

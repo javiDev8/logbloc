@@ -80,6 +80,7 @@ class ItemScreen extends StatelessWidget {
                           // set method somehow doesnt work here
                           dirtItemFlagPool.data = false;
                           dirtItemFlagPool.controller.sink.add(false);
+                          navPop();
                         }
                       }
                     },

@@ -54,6 +54,8 @@ class ModelScreenState extends State<ModelScreen>
           builder: (context, model) => wrapBar(
             backable: true,
             onBack: () async {
+              modelEditPool.editingSchs = [];
+              modelEditPool.editingFts = [];
               if (!modelEditPool.dirty) return true;
               return (await warnUnsavedChanges(
                     context,
