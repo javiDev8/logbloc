@@ -29,7 +29,7 @@ class AddScheduleButton extends StatelessWidget {
     if (date == null) return;
     modelEditPool.addSchedule(Schedule.empty(day: strDate(date)));
     // ignore: use_build_context_synchronously
-    Navigator.of(context).pop();
+    //Navigator.of(context).pop();
   }
 
   @override
@@ -218,6 +218,6 @@ final periodPickers = {
       // ignore: use_build_context_synchronously
       Navigator.of(context).pop();
     },
-    simplePicker: (ms) => SimpleMonthdayPicker(),
+    simplePicker: (ms) => SimpleMonthdayPicker(schedules: ms?.toList()),
   ),
 };

@@ -5,11 +5,13 @@ import 'package:logize/screens/models/model_screen/schedules_view/simple_pickers
 import 'package:logize/screens/models/model_screen/schedules_view/simple_pickers/simple_picker_wrap.dart';
 
 class SimpleMonthdayPicker extends StatelessWidget {
-  const SimpleMonthdayPicker({super.key});
+  final List<Schedule>? schedules;
+  const SimpleMonthdayPicker({super.key, required this.schedules});
 
   @override
   Widget build(BuildContext context) {
     return SimplePickerWrap(
+      isEmpty: schedules?.isEmpty != false,
       period: 'month',
       title: 'monthly',
       child: SizedBox(
@@ -18,7 +20,10 @@ class SimpleMonthdayPicker extends StatelessWidget {
           children: List.generate(31, (i) => (i + 1).toString())
               .map<Widget>((day) {
                 final sch = Schedule.empty(period: 'month', day: day);
-                final matches = modelEditPool.getScheduleMatches(sch);
+                final matches = modelEditPool.getScheduleMatches(
+                  sch,
+                  schList: schedules,
+                );
                 final selected = matches?.isNotEmpty == true;
                 return SizedBox(
                   width: 44,

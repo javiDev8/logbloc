@@ -15,6 +15,7 @@ class SimpleWeekdayPicker extends StatelessWidget {
     return SimplePickerWrap(
       period: 'week',
       title: 'weekly',
+      isEmpty: weeklySchedules?.isEmpty != false,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: weekDayChars.asMap().entries.map<Widget>((e) {

@@ -188,6 +188,7 @@ class Schedule {
   String id;
   String day;
   double place;
+  DateTime? startDate; // null for records
   String? period; // null -> puntual
   List<String>? includedFts; // null -> all
   bool? skipMatch;
@@ -198,6 +199,7 @@ class Schedule {
     required this.id,
     required this.day,
     required this.place,
+    this.startDate,
     this.period,
     this.includedFts,
     this.skipMatch,
@@ -207,6 +209,9 @@ class Schedule {
     id: map['id'] as String,
     day: map['day'] as String,
     place: (map['place'] as num).toDouble(),
+    startDate: DateTime.fromMillisecondsSinceEpoch(
+      map['start-date'] as int,
+    ),
     period: map['period'] as String?,
     includedFts: map['includedFts'] as List<String>?,
     skipMatch: map['skip-match'],
@@ -218,12 +223,14 @@ class Schedule {
         period: period,
         id: UniqueKey().toString(),
         place: DateTime.now().millisecondsSinceEpoch.toDouble(),
+        startDate: DateTime.now(),
       );
 
   serialize() => {
     'id': id,
     'day': day,
     'place': place,
+    if (startDate != null) 'start-date': startDate!.millisecondsSinceEpoch,
     if (period != null) 'period': period,
     if (includedFts != null) 'includedFts': includedFts,
     if (skipMatch != null) 'skip-match': skipMatch,

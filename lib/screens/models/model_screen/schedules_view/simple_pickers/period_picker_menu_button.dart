@@ -9,6 +9,13 @@ class PeriodPickerMenuButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MenuButton(
+      onSelected: (val) {
+        switch (val) {
+          case 'delete':
+            modelEditPool.removeSimplePeriod(period: period);
+            break;
+        }
+      },
       options: [
         MenuOption(
           value: 'delete',

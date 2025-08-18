@@ -72,6 +72,11 @@ class ModelsPool extends Pool<Models?> {
           }
 
           final schMatches = model.schedules!.values
+              .where(
+                (sch) =>
+                    sch.startDate!.millisecondsSinceEpoch <
+                    date.millisecondsSinceEpoch,
+              )
               .where((sch) => sch.period == period && sch.day == day)
               .toList();
 

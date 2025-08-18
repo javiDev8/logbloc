@@ -24,6 +24,7 @@ class SimpleBiweekPicker extends StatelessWidget {
       title: 'bi week',
       period: 'bi-week',
       single: single,
+      isEmpty: schedules?.isEmpty != false,
       child: Column(
         children: [
           ...['A', 'B'].map(

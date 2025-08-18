@@ -7,6 +7,7 @@ import 'package:logize/pools/theme_mode_pool.dart';
 import 'package:logize/screens/models/model_screen/schedules_view/simple_pickers/simple_biweek_picker.dart';
 import 'package:logize/utils/color_convert.dart';
 import 'package:logize/utils/fmt_date.dart';
+import 'package:logize/widgets/design/button.dart';
 import 'package:logize/widgets/design/menu_button.dart';
 import 'package:logize/widgets/design/txt.dart';
 
@@ -92,7 +93,30 @@ class ScheduleWidget extends StatelessWidget {
             if (editing)
               Column(
                 children: [
-                  if (schedule.period != null)
+                  if (schedule.period != null) ...[
+                    Row(
+                      children: [
+                        Expanded(child: Txt('start date', w: 7)),
+                        Button(
+                          hdate(schedule.startDate!),
+                          lead: Icons.calendar_month,
+                          filled: false,
+                          onPressed: () async {
+                            final startDate = await showDatePicker(
+                              context: context,
+                              firstDate: DateTime.now(),
+                              lastDate: DateTime.parse('9999-12-31'),
+                            );
+                            if (startDate != null) {
+                              schedule.startDate = startDate;
+                              modelEditPool.dirt(true);
+                              setState(() {});
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -107,6 +131,8 @@ class ScheduleWidget extends StatelessWidget {
                         ),
                       ],
                     ),
+                  ],
+
                   if (modelEditPool.data.features.length > 1)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
