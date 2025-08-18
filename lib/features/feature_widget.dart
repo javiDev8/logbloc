@@ -184,9 +184,15 @@ class FeatureWidget extends StatelessWidget {
                               ),
                             ),
                           IconButton(
-                            onPressed: () => setState(
-                              () => feature.pinned = !feature.pinned,
-                            ),
+                            onPressed: () {
+                              setState(
+                                () => feature.pinned = !feature.pinned,
+                              );
+                              modelEditPool.controller.sink.add(
+                                'features',
+                              );
+                              modelEditPool.dirt(true);
+                            },
                             icon: Icon(
                               feature.pinned
                                   ? Icons.push_pin

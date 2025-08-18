@@ -179,8 +179,19 @@ class Model {
 
   List<Feature> getSortedFeatureList() {
     List<Feature> fts = features.values.toList();
-    fts.sort((a, b) => a.position.compareTo(b.position));
-    return fts;
+
+    List<Feature> pinned = [], unpinned = [];
+    for (final ft in fts) {
+      if (ft.pinned == true) {
+        pinned.add(ft);
+      } else {
+        unpinned.add(ft);
+      }
+    }
+
+    pinned.sort((a, b) => a.position.compareTo(b.position));
+    unpinned.sort((a, b) => a.position.compareTo(b.position));
+    return [...pinned, ...unpinned];
   }
 }
 
@@ -209,9 +220,9 @@ class Schedule {
     id: map['id'] as String,
     day: map['day'] as String,
     place: (map['place'] as num).toDouble(),
-    startDate: DateTime.fromMillisecondsSinceEpoch(
-      map['start-date'] as int,
-    ),
+    startDate: map['start-date'] == null
+        ? null
+        : DateTime.fromMillisecondsSinceEpoch(map['start-date'] as int),
     period: map['period'] as String?,
     includedFts: map['includedFts'] as List<String>?,
     skipMatch: map['skip-match'],

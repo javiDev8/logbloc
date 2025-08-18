@@ -17,7 +17,8 @@ class RecordsPool extends Pool<Map<String, Rec>?> {
           return;
         }
         data = records.map<String, Rec>((key, value) {
-          return MapEntry(key, Rec.fromMap(parseMap(value)));
+          final map = MapEntry(key, Rec.fromMap(parseMap(value)));
+          return map;
         });
       }
       emit();
