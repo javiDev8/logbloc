@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:logize/widgets/design/txt.dart';
 import 'package:logize/widgets/time_stats.dart';
 
-enum ChartOperation { add, average }
-
 class WeeklyChart extends StatelessWidget {
   final ChartOpts opts;
   final PageController pageController = PageController(initialPage: 1000);

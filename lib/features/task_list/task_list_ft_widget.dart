@@ -74,7 +74,8 @@ class TaskListFtWidget extends StatelessWidget {
                             ),
                     ),
                     Txt(
-                      '(${ft.getRoots().length}${lock.model ? ' / ${ft.getRoots(done: true).length}' : ''})',
+                      '(${lock.model ? '${ft.getRoots(done: true).length} / ' : ''}'
+                      '${ft.getRoots().length})',
                       w: 8,
                     ),
                     if (!lock.model || !lock.record)

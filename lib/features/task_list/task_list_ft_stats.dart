@@ -1,6 +1,5 @@
 import 'package:logize/features/task_list/task_list_ft_class.dart';
 import 'package:logize/widgets/design/section_divider.dart';
-import 'package:logize/widgets/design/weekly_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:logize/widgets/time_stats.dart';
 
