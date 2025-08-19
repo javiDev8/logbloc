@@ -84,7 +84,10 @@ class NumberFtWidget extends StatelessWidget {
                   label: 'unit',
                   round: true,
                   initialValue: ft.unit,
-                  onChanged: (txt) => ft.setUnit(txt),
+                  onChanged: (txt) {
+                    ft.setUnit(txt);
+                    dirt!();
+                  },
                 ),
         ),
       ],

@@ -154,10 +154,13 @@ class FeatureWidget extends StatelessWidget {
                             'reminder',
                           ].contains(feature.type))
                             IconButton(
-                              onPressed: () => setState(
-                                () => feature.isRequired =
-                                    !feature.isRequired,
-                              ),
+                              onPressed: () {
+                                setState(
+                                  () => feature.isRequired =
+                                      !feature.isRequired,
+                                );
+                                modelEditPool.dirt(true);
+                              },
                               icon: Icon(
                                 feature.isRequired
                                     ? Icons.error

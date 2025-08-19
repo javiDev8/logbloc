@@ -44,8 +44,12 @@ class ModelFeaturesView extends StatelessWidget {
                 ),
                 Expanded(
                   child: ReorderableListView(
-                    onReorder: (oldIndex, newIndex) => modelEditPool
-                        .reorderFeature(newIndex, features[oldIndex].key),
+                    onReorder: (oldIndex, newIndex) =>
+                        modelEditPool.reorderFeature(
+                          newIndex,
+                          features[oldIndex].key,
+                          features.map<String>((f) => f.key).toList(),
+                        ),
                     children: features
                         .where(
                           (ft) => showing == 'all'

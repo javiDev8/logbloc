@@ -64,6 +64,9 @@ class TaskListFtWidget extends StatelessWidget {
                               round: true,
                               label: 'list title',
                               initialValue: ft.title,
+                              validator: (str) => str?.isNotEmpty != true
+                                  ? 'empty!'
+                                  : null,
                               onChanged: (str) {
                                 ft.setTitle(str);
                                 dirt!();
@@ -74,14 +77,15 @@ class TaskListFtWidget extends StatelessWidget {
                       '(${ft.getRoots().length}${lock.model ? ' / ${ft.getRoots(done: true).length}' : ''})',
                       w: 8,
                     ),
-                    IconButton(
-                      onPressed: () {
-                        final newRootTask = Task.empty(isRoot: true);
-                        ft.tasks[newRootTask.id] = newRootTask;
-                        setState(() => {});
-                      },
-                      icon: Icon(Icons.add),
-                    ),
+                    if (!lock.model || !lock.record)
+                      IconButton(
+                        onPressed: () {
+                          final newRootTask = Task.empty(isRoot: true);
+                          ft.tasks[newRootTask.id] = newRootTask;
+                          setState(() => {});
+                        },
+                        icon: Icon(Icons.add),
+                      ),
                   ],
                 ),
                 ...ft.tasks.values

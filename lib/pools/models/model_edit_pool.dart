@@ -9,7 +9,6 @@ import 'package:logize/utils/feedback.dart';
 // needed for average
 // ignore:depend_on_referenced_packages
 import 'package:collection/collection.dart';
-import 'package:logize/utils/noticable_print.dart';
 
 class ModelEditPool extends Pool<Model> {
   bool dirty;
@@ -56,9 +55,7 @@ class ModelEditPool extends Pool<Model> {
   }
 
   setFeature(Feature ft) {
-    nPrint('on set feature');
     if (data.features[ft.key] == null && data.features.isNotEmpty) {
-      nPrint('on new');
       // means feature is being added, so ensure appears on top
       ft.position = data.getSortedFeatureList()[0].position - 1;
       editingFts.add(ft.id);
@@ -108,17 +105,21 @@ class ModelEditPool extends Pool<Model> {
     dirt(true);
   }
 
-  reorderFeature(int index, String ftKey) {
+  reorderFeature(int index, String ftKey, List<String> currentKeys) {
     final prevIndex = index == 0 ? null : index - 1;
     final nextIndex = index == data.features.length ? null : index;
 
-    if (prevIndex == null) {
+    if (prevIndex == null ||
+        (data.features[currentKeys[prevIndex]]!.pinned &&
+            !data.features[ftKey]!.pinned)) {
       double lowest = double.infinity;
       for (final f in data.features.values) {
         if (f.position < lowest) lowest = f.position;
       }
       data.features[ftKey]!.position = lowest - 1;
-    } else if (nextIndex == null) {
+    } else if (nextIndex == null ||
+        (data.features[ftKey]!.pinned &&
+            !data.features[currentKeys[nextIndex]]!.pinned)) {
       double greatest = 0;
       for (final f in data.features.values) {
         if (f.position > greatest) greatest = f.position;
