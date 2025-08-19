@@ -2,6 +2,7 @@ import 'package:logize/features/number/number_ft_class.dart';
 import 'package:logize/widgets/design/section_divider.dart';
 import 'package:logize/widgets/design/weekly_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:logize/widgets/time_stats.dart';
 
 class NumberFtStatsWidget extends StatelessWidget {
   final List<Map<String, dynamic>> ftRecs;
@@ -22,13 +23,18 @@ class NumberFtStatsWidget extends StatelessWidget {
         ),
         ftRecs.isEmpty
             ? Center(child: Text('no records'))
-            : WeeklyChart(
-                operation: ChartOperation.add,
-                recordFts: ftRecs,
-                getRecordValue: (Map<String, dynamic> rec) {
-                  return rec['value']?.toDouble() ?? 0.0;
-                },
-                unit: ft.unit,
+            : Expanded(
+                child: TimeStats(
+                  chartOpts: ChartOpts(
+		    ft: ft,
+                    operation: ChartOperation.add,
+                    recordFts: ftRecs,
+                    getRecordValue: (Map<String, dynamic> rec) {
+                      return rec['value']?.toDouble() ?? 0.0;
+                    },
+                    unit: ft.unit,
+                  ),
+                ),
               ),
       ],
     );

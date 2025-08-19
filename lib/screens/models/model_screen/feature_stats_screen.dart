@@ -41,21 +41,10 @@ class FeatureStatsScreen extends StatelessWidget {
               )
               .toList();
           ftRecs.sort((a, b) => a['date'].compareTo(b['date']));
-          return Column(
-            children: [
-              Padding(
-                padding: EdgeInsetsGeometry.only(left: 20, top: 20),
-                child: Row(
-                  children: [
-                    Icon(
-                      featureSwitch(parseType: 'icon', ftType: mFt.type),
-                    ),
-                    featureSwitch(parseType: 'label', ftType: mFt.type),
-                  ],
-                ),
-              ),
-              featureSwitch(parseType: 'stats', ft: mFt, ftRecs: ftRecs),
-            ],
+          return featureSwitch(
+            parseType: 'stats',
+            ft: mFt,
+            ftRecs: ftRecs,
           );
         },
       ),

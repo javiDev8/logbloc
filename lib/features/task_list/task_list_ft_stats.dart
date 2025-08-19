@@ -2,6 +2,7 @@ import 'package:logize/features/task_list/task_list_ft_class.dart';
 import 'package:logize/widgets/design/section_divider.dart';
 import 'package:logize/widgets/design/weekly_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:logize/widgets/time_stats.dart';
 
 class TaskListFtStatsWidget extends StatelessWidget {
   final List<Map<String, dynamic>> ftRecs;
@@ -35,14 +36,19 @@ class TaskListFtStatsWidget extends StatelessWidget {
         ),
         ftRecs.isEmpty
             ? Center(child: Text('no records'))
-            : WeeklyChart(
-                operation: ChartOperation.average,
-                integer: true,
-                recordFts: ftRecs,
+            : Expanded(
+                child: TimeStats(
+                  chartOpts: ChartOpts(
+		    ft: ft,
+                    operation: ChartOperation.average,
+                    integer: true,
+                    recordFts: ftRecs,
 
-                getRecordValue: (Map<String, dynamic> rec) =>
-                    getDoneRate(rec),
-                unit: '%',
+                    getRecordValue: (Map<String, dynamic> rec) =>
+                        getDoneRate(rec),
+                    unit: '%',
+                  ),
+                ),
               ),
       ],
     );

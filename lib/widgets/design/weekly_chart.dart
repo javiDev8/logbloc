@@ -3,25 +3,15 @@ import 'package:logize/utils/fmt_date.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:logize/widgets/design/txt.dart';
+import 'package:logize/widgets/time_stats.dart';
 
 enum ChartOperation { add, average }
 
 class WeeklyChart extends StatelessWidget {
+  final ChartOpts opts;
   final PageController pageController = PageController(initialPage: 1000);
-  final double Function(Map<String, dynamic>) getRecordValue;
-  final List<Map<String, dynamic>> recordFts;
-  final String? unit;
-  final bool? integer;
-  final ChartOperation operation;
 
-  WeeklyChart({
-    super.key,
-    required this.recordFts,
-    required this.getRecordValue,
-    required this.operation,
-    this.unit,
-    this.integer,
-  });
+  WeeklyChart({super.key, required this.opts});
 
   DateTime _getMondayOfWeek(DateTime date) {
     int daysToSubtract = date.weekday == 1 ? 0 : date.weekday - 1;
@@ -42,8 +32,14 @@ class WeeklyChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final recordFts = opts.recordFts;
+    final getRecordValue = opts.getRecordValue;
+    final String? unit = opts.unit;
+    final ChartOperation operation = opts.operation;
+    final bool? integer = opts.integer;
+
     return SizedBox(
-      height: MediaQuery.of(context).size.height / 3,
+      height: 350,
       child: PageView.builder(
         controller: pageController,
         onPageChanged: (index) {},
@@ -121,8 +117,8 @@ class WeeklyChart extends StatelessWidget {
                               color: Theme.of(
                                 context,
                               ).colorScheme.tertiaryContainer,
-                              width: 30,
-                              borderRadius: BorderRadius.circular(4),
+                              width: 40,
+                              borderRadius: BorderRadius.circular(10),
                             ),
                           ],
                           showingTooltipIndicators: [],
@@ -188,7 +184,7 @@ class WeeklyChart extends StatelessWidget {
                           getTooltipItem:
                               (group, groupIndex, rod, rodIndex) {
                                 String val = rod.toY.toStringAsFixed(1);
-                                if (integer != null && integer!) {
+                                if (integer != null && integer) {
                                   val = val.split('.')[0];
                                 }
                                 return BarTooltipItem(
@@ -200,7 +196,11 @@ class WeeklyChart extends StatelessWidget {
                       ),
                       alignment: BarChartAlignment.spaceAround,
                       // set maxY to greatest value
-                      maxY: weekData.reduce((a, b) => a > b ? a : b) * 1.2,
+                      maxY:
+                          (recordFts.map(
+                            (r) => getRecordValue(r),
+                          )).reduce((a, b) => a > b ? a : b) *
+                          1.2,
                     ),
                   ),
                 ),

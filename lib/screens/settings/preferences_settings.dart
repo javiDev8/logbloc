@@ -45,20 +45,15 @@ class PreferencesSettings extends StatelessWidget {
           children: [
             Text(Tr.language.getString(context)),
             Expanded(child: SizedBox()),
-            Padding(
-              padding: EdgeInsets.only(left: 10, top: 10),
-              child: Dropdown(
-                entries: [
-                  DropdownMenuEntry(value: 'en', label: 'english'),
-                  DropdownMenuEntry(value: 'es', label: 'español'),
-                ],
-                init: FlutterLocalization
-                    .instance
-                    .currentLocale!
-                    .languageCode,
-                onSelect: (val) =>
-                    FlutterLocalization.instance.translate(val!),
-              ),
+            Dropdown(
+              entries: [
+                DropdownMenuEntry(value: 'en', label: 'english'),
+                DropdownMenuEntry(value: 'es', label: 'español'),
+              ],
+              init:
+                  FlutterLocalization.instance.currentLocale!.languageCode,
+              onSelect: (val) =>
+                  FlutterLocalization.instance.translate(val!),
             ),
           ],
         ),
