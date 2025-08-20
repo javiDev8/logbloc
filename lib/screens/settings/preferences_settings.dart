@@ -47,8 +47,8 @@ class PreferencesSettings extends StatelessWidget {
             Expanded(child: SizedBox()),
             Dropdown(
               entries: [
-                DropdownMenuEntry(value: 'en', label: 'english'),
-                DropdownMenuEntry(value: 'es', label: 'español'),
+                DropdownMenuEntry(value: 'en', label: 'english       '),
+                DropdownMenuEntry(value: 'es', label: 'español       '),
               ],
               init:
                   FlutterLocalization.instance.currentLocale!.languageCode,

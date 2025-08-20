@@ -23,7 +23,7 @@ class ReadOnlyFtWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isBright = themeModePool.data == ThemeMode.light;
-    final b = isBright ? 150 : 100;
+    final b = 130;
     final color = Color.fromRGBO(b, b, b, isBright ? 0.3 : 0.5);
     return Container(
       margin: EdgeInsets.all(5),

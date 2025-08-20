@@ -24,7 +24,7 @@ class Navbar extends StatelessWidget {
                 label: Tr.models.getString(context),
               ),
               NavigationDestination(
-                icon: Icon(Icons.calendar_today),
+                icon: Icon(MdiIcons.calendarText),
                 label: Tr.agenda.getString(context),
               ),
               NavigationDestination(

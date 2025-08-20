@@ -1,3 +1,4 @@
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:logize/pools/items/items_by_day_pool.dart';
 import 'package:logize/pools/theme_mode_pool.dart';
 import 'package:logize/screens/daily/daily_screen.dart';
@@ -62,7 +63,7 @@ class PrettyDate extends StatelessWidget {
               currentDatePool.set((_) => pickedDate);
               itemsByDayPool.clean();
             },
-            icon: Icon(Icons.calendar_month),
+            icon: Icon(MdiIcons.calendarSearch),
           ),
         ],
       ),

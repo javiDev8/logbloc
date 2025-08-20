@@ -119,88 +119,93 @@ class TaskWidget extends StatelessWidget {
 
     return Column(
       children: [
-        Row(
-          children: [
-            Checkbox(
-              value: task.done,
-              onChanged: (!ftLock.model || (ftLock.model && ftLock.record))
-                  ? null
-                  : (val) {
-                      task.done = val ?? false;
-                      updateList(action: 'check', payload: task);
-                    },
-            ),
-            Swimmer<bool>(
-              pool: renameTogglePool,
-              builder: (ctx, renaming) => Expanded(
-                child: ftLock.model && !renaming && task.title != ''
-                    ? Txt(task.title, w: 8)
-                    : TxtField(
-                        validator: (str) => str!.isEmpty ? 'empty!' : null,
-                        label: 'task name',
-                        onTapOutside: (_) {
-                          updateList(action: 'update', payload: task);
+        Swimmer<bool>(
+          pool: renameTogglePool,
+          builder: (context, renaming) => SizedBox(
+            height: renaming || !ftLock.model ? null : 45,
+            child: Row(
+              children: [
+                Checkbox(
+                  value: task.done,
+                  onChanged:
+                      (!ftLock.model || (ftLock.model && ftLock.record))
+                      ? null
+                      : (val) {
+                          task.done = val ?? false;
+                          updateList(action: 'check', payload: task);
                         },
-                        onChanged: (text) {
-                          task.title = text;
-                        },
-                        initialValue: task.title,
-                      ),
-              ),
-            ),
+                ),
+                Expanded(
+                  child: ftLock.model && !renaming && task.title != ''
+                      ? Txt(task.title, w: 6)
+                      : TxtField(
+                          validator: (str) =>
+                              str!.isEmpty ? 'empty!' : null,
+                          label: 'task name',
+                          onTapOutside: (_) {
+                            updateList(action: 'update', payload: task);
+                          },
+                          onChanged: (text) {
+                            task.title = text;
+                          },
+                          initialValue: task.title,
+                        ),
+                ),
 
-            if (task.childrenIds.isNotEmpty)
-              Text(
-                '(${ftLock.model && !detailed ? '${task.doneSubTasks}/' : ''}${task.childrenIds.length})',
-              ),
+                if (task.childrenIds.isNotEmpty)
+                  Text(
+                    '(${ftLock.model && !detailed ? '${task.doneSubTasks}/' : ''}${task.childrenIds.length})',
+                  ),
 
-            if (ftLock.model != ftLock.record)
-              MenuButton(
-                onSelected: (value) {
-                  switch (value) {
-                    case 'add':
-                      updateList(action: 'add', payload: task.id);
-                      if (ftLock.model) {
-                        renameTogglePool.set((_) => true);
+                if (ftLock.model != ftLock.record)
+                  MenuButton(
+                    onSelected: (value) {
+                      switch (value) {
+                        case 'add':
+                          updateList(action: 'add', payload: task.id);
+                          if (ftLock.model) {
+                            renameTogglePool.set((_) => true);
+                          }
+                          break;
+                        case 'delete':
+                          updateList(action: 'delete', payload: task);
+                          break;
+                        case 'edit':
+                          renameTogglePool.set((_) => true);
+                          break;
+                        default:
+                          break;
                       }
-                      break;
-                    case 'delete':
-                      updateList(action: 'delete', payload: task);
-                      break;
-                    case 'edit':
-                      renameTogglePool.set((_) => true);
-                      break;
-                    default:
-                      break;
-                  }
-                },
-                options: [
-                  MenuOption(
-                    value: 'add',
-                    widget: ListTile(
-                      title: Text('add subtask'),
-                      leading: Icon(Icons.add),
-                    ),
-                  ),
-
-                  if (ftLock.model)
-                    MenuOption(
-                      value: 'edit',
-                      widget: ListTile(
-                        title: Text('rename'),
-                        leading: Icon(Icons.edit),
+                    },
+                    options: [
+                      MenuOption(
+                        value: 'add',
+                        widget: ListTile(
+                          title: Text('add subtask'),
+                          leading: Icon(Icons.add),
+                        ),
                       ),
-                    ),
-                  MenuOption(
-                    value: 'delete',
-                    widget: ListTile(
-                      title: Text('remove'),
-                      leading: Icon(Icons.close),
-                    ),
+
+                      if (ftLock.model)
+                        MenuOption(
+                          value: 'edit',
+                          widget: ListTile(
+                            title: Text('rename'),
+                            leading: Icon(Icons.edit),
+                          ),
+                        ),
+                      MenuOption(
+                        value: 'delete',
+                        widget: ListTile(
+                          title: Text('remove'),
+                          leading: Icon(Icons.close),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-          ],
+              ],
+            ),
+          ),
         ),
         Padding(
           padding: EdgeInsets.only(left: 30),

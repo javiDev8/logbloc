@@ -17,7 +17,15 @@ class ModelsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: wrapBar(children: [TrText(Tr.models)], backable: false),
+      appBar: wrapBar(
+        children: [
+          Padding(
+            padding: EdgeInsetsGeometry.all(10),
+            child: TrText(Tr.models),
+          ),
+        ],
+        backable: false,
+      ),
       body: Stack(
         children: [
           Swimmer<Map<String, Model>?>(
