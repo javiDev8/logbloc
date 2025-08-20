@@ -15,7 +15,7 @@ class TextFtWidget extends StatelessWidget {
     required this.lock,
     required this.ft,
     required this.detailed,
-     this.dirt,
+    this.dirt,
   });
 
   @override
@@ -23,23 +23,17 @@ class TextFtWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        lock.model
-            ? Row(
-                children: [
-                  if (detailed) Expanded(child: Text('title:')),
-                  Expanded(child: Txt(ft.title, w: 8)),
-                ],
-              )
-            : TxtField(
-                label: 'title',
-                initialValue: ft.title,
-                round: true,
-                onChanged: (txt) {
-                  ft.setTitle(txt);
-                  dirt!();
-                },
-                validator: (str) => str!.isEmpty ? 'write a title' : null,
-              ),
+        if (!lock.model)
+          TxtField(
+            label: 'title',
+            initialValue: ft.title,
+            round: true,
+            onChanged: (txt) {
+              ft.setTitle(txt);
+              dirt!();
+            },
+            validator: (str) => str!.isEmpty ? 'write a title' : null,
+          ),
         if (!lock.record)
           TxtField(
             maxLines: null,

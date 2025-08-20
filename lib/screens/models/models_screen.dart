@@ -1,3 +1,4 @@
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:logize/config/locales.dart';
 import 'package:logize/pools/models/model_class.dart';
 import 'package:logize/pools/models/models_pool.dart';
@@ -7,8 +8,8 @@ import 'package:logize/utils/nav.dart';
 import 'package:logize/widgets/design/act_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
+import 'package:logize/widgets/design/section_divider.dart';
 import 'package:logize/widgets/design/topbar_wrap.dart';
-import 'package:logize/widgets/design/txt.dart';
 
 class ModelsScreen extends StatelessWidget {
   const ModelsScreen({super.key});
@@ -16,7 +17,7 @@ class ModelsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: wrapBar(children: [Txt('models')], backable: false),
+      appBar: wrapBar(children: [TrText(Tr.models)], backable: false),
       body: Stack(
         children: [
           Swimmer<Map<String, Model>?>(
@@ -33,16 +34,7 @@ class ModelsScreen extends StatelessWidget {
 
               return ListView(
                 children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 30),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Divider(indent: 20, endIndent: 20),
-                        ),
-                      ],
-                    ),
-                  ),
+                  SectionDivider(),
                   ...models.entries.map<Widget>(
                     (m) => ListTile(
                       key: Key(m.value.name),
@@ -61,7 +53,7 @@ class ModelsScreen extends StatelessWidget {
           ),
 
           ActButton(
-            icon: Icon(Icons.layers, size: 30),
+            icon: Icon(MdiIcons.notebookPlusOutline, size: 30),
             onPressed: () => navPush(screen: ModelScreen()),
           ),
         ],

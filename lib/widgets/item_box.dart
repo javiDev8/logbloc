@@ -1,3 +1,4 @@
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:logize/features/feature_switch.dart';
 import 'package:logize/features/feature_widget.dart';
 import 'package:logize/pools/items/item_class.dart';
@@ -66,8 +67,8 @@ class ItemBox extends StatelessWidget {
                           Padding(
                             padding: EdgeInsets.only(right: 10),
                             child: item.recordId == null
-                                ? Icon(Icons.circle_outlined)
-                                : Icon(Icons.circle),
+                                ? Icon(MdiIcons.noteOutline)
+                                : Icon(MdiIcons.note),
                           ),
 
                         fromRecords
@@ -78,10 +79,13 @@ class ItemBox extends StatelessWidget {
                                   ),
                                 ),
                               )
-                            : Text(
-                                item.modelName ?? '',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w800,
+                            : SizedBox(
+                                width: 250,
+                                child: Text(
+                                  item.model!.name,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                  ),
                                 ),
                               ),
 
@@ -96,6 +100,7 @@ class ItemBox extends StatelessWidget {
                                     horizontal: 5,
                                   ),
                                   child: Icon(
+                                    size: 20,
                                     featureSwitch(
                                           parseType: 'icon',
                                           ft: ft,

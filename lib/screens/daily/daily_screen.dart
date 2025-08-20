@@ -1,3 +1,6 @@
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
+import 'package:logize/config/locales.dart';
 import 'package:logize/pools/items/items_by_day_pool.dart';
 import 'package:logize/pools/models/models_pool.dart';
 import 'package:logize/pools/pools.dart';
@@ -144,7 +147,7 @@ class DailyScreen extends StatelessWidget {
                                       children: [
                                         Expanded(
                                           child: Txt(
-                                            'Pick a model',
+                                            'Pick a ${ Tr.model.getString(context) }',
                                             w: 7,
                                             s: 16,
                                           ),
@@ -171,7 +174,7 @@ class DailyScreen extends StatelessWidget {
                     ),
                   );
                 },
-                icon: Icon(Icons.article, size: 30),
+                icon: Icon(MdiIcons.notePlusOutline, size: 30),
               ),
             ],
           );

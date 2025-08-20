@@ -131,14 +131,17 @@ class FeatureWidget extends StatelessWidget {
           Row(
             children: [
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8),
+                padding: EdgeInsets.only(left: 20),
                 child: Icon(
-                  size: 25,
+                  size: 20,
                   featureSwitch(parseType: 'icon', ft: feature)
                       as IconData,
                 ),
               ),
-              featureSwitch(parseType: 'label', ft: feature) as Widget,
+              SizedBox(
+                width: lock.model ? null : 110,
+                child: Txt(feature.title, w: 8),
+              ),
               Exp(),
               if (!lock.record && feature.pinned)
                 Icon(Icons.push_pin)

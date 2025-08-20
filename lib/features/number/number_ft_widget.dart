@@ -22,28 +22,25 @@ class NumberFtWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        if (detailed) Expanded(child: Text('title:')),
-
-        Expanded(
-          child: lock.model
-              ? Txt(ft.title, w: 8)
-              : TxtField(
-                  label: 'title',
-                  round: true,
-                  initialValue: ft.title,
-                  onChanged: (txt) {
-                    ft.setTitle(txt);
-                    dirt!();
-                  },
-                  validator: (str) =>
-                      str!.isEmpty ? 'write a title' : null,
-                ),
-        ),
+        //if (detailed) Expanded(child: Text('title:')),
+        if (!lock.model)
+          Expanded(
+            child: TxtField(
+              label: 'title',
+              round: true,
+              initialValue: ft.title,
+              onChanged: (txt) {
+                ft.setTitle(txt);
+                dirt!();
+              },
+              validator: (str) => str!.isEmpty ? 'write a title' : null,
+            ),
+          ),
 
         if (!detailed && lock.model && lock.record)
-          Text(
+          Txt(
             ft.value?.toString() ?? '',
-            style: TextStyle(fontWeight: FontWeight.w800),
+	    w: 8
           ),
 
         if (!lock.record)

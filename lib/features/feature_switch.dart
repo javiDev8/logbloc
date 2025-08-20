@@ -1,3 +1,4 @@
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:logize/config/locales.dart';
 import 'package:logize/features/feature_class.dart';
 import 'package:logize/features/feature_widget.dart';
@@ -115,7 +116,7 @@ dynamic featureSwitch({
         case 'label':
           return Text('picture');
         case 'icon':
-          return Icons.camera;
+          return MdiIcons.cameraOutline;
       }
 
     default:

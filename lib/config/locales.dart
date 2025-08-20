@@ -15,6 +15,7 @@ mixin Tr {
   static const String reportBug = 'report-bug';
   static const String version = 'version';
   static const String help = 'help';
+  static const String model = 'model';
   static const String models = 'models';
   static const String noModels = 'no-models';
   static const String newModel = 'new-model';
@@ -25,7 +26,8 @@ mixin Tr {
   static const String ftNumberLabel = 'ft-number-label';
 
   static const Map<String, dynamic> en = {
-    models: 'models',
+    model: 'logbook',
+    models: 'logbooks',
     noModels: 'no models to show',
     newModel: 'new model',
     newModelNameHint: 'model name',
@@ -49,7 +51,8 @@ mixin Tr {
   };
 
   static const Map<String, dynamic> es = {
-    models: 'modelos',
+    model: 'bitácora',
+    models: 'bitácoras',
     noModels: 'no hay ningún modelo',
     newModel: 'nuevo modelo',
     newModelNameHint: 'nombre del modelo',

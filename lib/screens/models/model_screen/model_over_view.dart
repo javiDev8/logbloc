@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:logize/pools/models/model_class.dart';
 import 'package:logize/pools/models/model_edit_pool.dart';
 import 'package:logize/pools/models/models_pool.dart';
@@ -129,7 +130,7 @@ class ModelOverView extends StatelessWidget {
                   builder: (context, allModels) => Button(
                     'records (${allModels?[modelEditPool.data.id]?.recordCount ?? ''})',
                     filled: false,
-                    lead: Icons.arrow_forward,
+                    lead: MdiIcons.noteMultiple,
                     onPressed: () => navPush(
                       screen: ModelRecordsScreen(
                         model: modelEditPool.data,

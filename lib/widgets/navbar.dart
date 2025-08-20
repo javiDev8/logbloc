@@ -1,3 +1,4 @@
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:logize/config/locales.dart';
 import 'package:logize/pools/pools.dart';
 import 'package:logize/pools/screen_index_pool.dart';
@@ -19,7 +20,7 @@ class Navbar extends StatelessWidget {
             }),
             destinations: [
               NavigationDestination(
-                icon: Icon(Icons.layers),
+                icon: Icon(MdiIcons.notebookOutline),
                 label: Tr.models.getString(context),
               ),
               NavigationDestination(

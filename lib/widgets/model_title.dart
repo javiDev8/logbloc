@@ -11,10 +11,13 @@ import 'package:logize/widgets/design/none.dart';
 import 'package:logize/widgets/design/txt.dart';
 
 List<Widget> makeModelTitle({bool? isNew}) => [
-  LazySwimmer<Model>(
-    pool: modelEditPool,
-    listenedEvents: ['name'],
-    builder: (context, model) => Txt(model.name),
+  SizedBox(
+    width: 200,
+    child: LazySwimmer<Model>(
+      pool: modelEditPool,
+      listenedEvents: ['name'],
+      builder: (context, model) => Txt(model.name),
+    ),
   ),
   Exp(),
   LazySwimmer<Model>(

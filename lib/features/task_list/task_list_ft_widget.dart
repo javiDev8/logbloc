@@ -57,22 +57,20 @@ class TaskListFtWidget extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Expanded(
-                      child: lock.model
-                          ? Txt(ft.title, w: 8)
-                          : TxtField(
-                              round: true,
-                              label: 'list title',
-                              initialValue: ft.title,
-                              validator: (str) => str?.isNotEmpty != true
-                                  ? 'empty!'
-                                  : null,
-                              onChanged: (str) {
-                                ft.setTitle(str);
-                                dirt!();
-                              },
-                            ),
-                    ),
+                    if (!lock.model)
+                      Expanded(
+                        child: TxtField(
+                          round: true,
+                          label: 'list title',
+                          initialValue: ft.title,
+                          validator: (str) =>
+                              str?.isNotEmpty != true ? 'empty!' : null,
+                          onChanged: (str) {
+                            ft.setTitle(str);
+                            dirt!();
+                          },
+                        ),
+                      ),
                     Txt(
                       '(${lock.model ? '${ft.getRoots(done: true).length} / ' : ''}'
                       '${ft.getRoots().length})',
