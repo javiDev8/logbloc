@@ -23,7 +23,7 @@ class ReadOnlyFtWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isBright = themeModePool.data == ThemeMode.light;
-    final b = isBright ? 150 : 80;
+    final b = isBright ? 150 : 100;
     final color = Color.fromRGBO(b, b, b, isBright ? 0.3 : 0.5);
     return Container(
       margin: EdgeInsets.all(5),
@@ -117,11 +117,11 @@ class FeatureWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isBright = themeModePool.data == ThemeMode.light;
-    final b = isBright ? 150 : 80;
+    final b = 130;
     final color = Color.fromRGBO(b, b, b, isBright ? 0.3 : 0.5);
     return Container(
       margin: EdgeInsets.all(5),
-      padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+      padding: EdgeInsets.only(left: 5, right: 5, top: 10, bottom: 10),
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.all(Radius.circular(20)),

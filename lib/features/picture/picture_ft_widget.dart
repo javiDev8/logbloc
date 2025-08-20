@@ -46,7 +46,19 @@ class PictureFtWidget extends StatelessWidget {
               ),
 
             if (ft.tmpFile != null || ft.path != null)
-              Image.file(File(ft.tmpFile?.path ?? ft.path!))
+              Padding(
+                padding: EdgeInsetsGeometry.only(top: 10),
+                child: ClipRRect(
+		  borderRadius: BorderRadiusGeometry.circular(20),
+                  child: Image.file(
+                    File(ft.tmpFile?.path ?? ft.path!),
+                    fit: BoxFit.cover,
+                    alignment: Alignment.center,
+                    width: double.infinity,
+                    height: lock.record ? 200 : null,
+                  ),
+                ),
+              )
             else
               Txt('no pic'),
 
