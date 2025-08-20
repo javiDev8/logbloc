@@ -68,7 +68,7 @@ class ItemScreen extends StatelessWidget {
           return res ?? false;
         },
         children: [
-          SizedBox(width: 220, child: Txt(item.model!.name)),
+          SizedBox(width: 150, child: Txt(item.model!.name)),
           Exp(),
 
           Swimmer<bool>(

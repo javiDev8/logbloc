@@ -80,7 +80,7 @@ class ItemBox extends StatelessWidget {
                                 ),
                               )
                             : SizedBox(
-                                width: 250,
+                                width: 120,
                                 child: Text(
                                   item.model!.name,
                                   style: TextStyle(
