@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 class Feature {
@@ -18,6 +20,9 @@ class Feature {
   });
 
   get key => '$type-$id';
+
+  FutureOr<bool> onSave() async => true;
+  FutureOr<bool> onDelete() async => true;
 
   static String genId() =>
       DateTime.now().millisecondsSinceEpoch.toString();

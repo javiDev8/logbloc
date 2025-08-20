@@ -45,16 +45,16 @@ class Item {
                 entry.key,
                 entry.value.serialize(),
               );
+              final parsedFt =
+                  featureSwitch(
+                        parseType: 'class',
+                        entry: serializedEntry,
+                        recordFt: record?.features[entry.key],
+                      )
+                      as Feature;
               return MapEntry(
                 entry.key,
-                record?.features[entry.key] != null
-                    ? featureSwitch(
-                            parseType: 'class',
-                            entry: serializedEntry,
-                            recordFt: record?.features[entry.key],
-                          )
-                          as Feature
-                    : modelFt,
+                record?.features[entry.key] != null ? parsedFt : modelFt,
               );
             }) ??
         [],
@@ -66,6 +66,14 @@ class Item {
       return false;
     }
     dirtItemFlagPool.data = false;
+
+    // run save hooks
+    for (final ft in stagedFeatures.values) {
+      final res = await ft.onSave();
+      if (res != true) {
+        return false;
+      }
+    }
 
     final serializedFeatures = Map.fromEntries(
       stagedFeatures.entries.map(

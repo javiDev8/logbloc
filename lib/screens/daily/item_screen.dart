@@ -43,14 +43,16 @@ class ItemScreen extends StatelessWidget {
 
     final sortedFts = item.getSortedFts(staged: true);
 
-    paintFt(Feature ft) => FeatureWidget(
-      key: UniqueKey(),
-      lock: FeatureLock(model: true, record: false),
-      feature: ft,
-      dirt: () {
-        if (!dirtItemFlagPool.data) dirtItemFlagPool.set((_) => true);
-      },
-    );
+    paintFt(Feature ft) {
+      return FeatureWidget(
+        key: UniqueKey(),
+        lock: FeatureLock(model: true, record: false),
+        feature: ft,
+        dirt: () {
+          if (!dirtItemFlagPool.data) dirtItemFlagPool.set((_) => true);
+        },
+      );
+    }
 
     return Scaffold(
       key: itemScreenKey,

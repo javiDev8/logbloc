@@ -27,11 +27,9 @@ class TextFt extends Feature {
     );
   }
 
-  @override
   factory TextFt.empty() =>
       TextFt.fromBareFt(Feature.empty('text'), content: '');
 
-  @override
   factory TextFt.fromEntry(
     MapEntry<String, dynamic> entry,
     Map<String, dynamic>? recordFt,

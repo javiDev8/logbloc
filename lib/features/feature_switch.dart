@@ -4,6 +4,8 @@ import 'package:logize/features/feature_widget.dart';
 import 'package:logize/features/number/number_ft_class.dart';
 import 'package:logize/features/number/number_ft_stats_widget.dart';
 import 'package:logize/features/number/number_ft_widget.dart';
+import 'package:logize/features/picture/picture_ft_class.dart';
+import 'package:logize/features/picture/picture_ft_widget.dart';
 import 'package:logize/features/task_list/task_list_ft_class.dart';
 import 'package:logize/features/task_list/task_list_ft_stats.dart';
 import 'package:logize/features/task_list/task_list_ft_widget.dart';
@@ -12,7 +14,7 @@ import 'package:logize/features/text/text_ft_stats.dart';
 import 'package:logize/features/text/text_ft_widget.dart';
 import 'package:flutter/material.dart';
 
-final List<String> availableFtTypes = ['number', 'text', 'task_list'];
+final List<String> availableFtTypes = ['number', 'text', 'task_list', 'picture'];
 
 dynamic featureSwitch({
   required String parseType,
@@ -93,6 +95,27 @@ dynamic featureSwitch({
           return Text('task list');
         case 'icon':
           return Icons.list;
+      }
+
+    case 'picture':
+      switch (parseType) {
+        case 'class':
+          return entry == null
+              ? PictureFt.empty()
+              : PictureFt.fromEntry(entry, recordFt);
+        case 'widget':
+          return PictureFtWidget(
+            lock: lock!,
+            ft: ft as PictureFt,
+            detailed: detailed!,
+            dirt: dirt,
+          );
+        //case 'stats':
+        //  return PictureFtStatsWidget(ftRecs: ftRecs!, ft: ft as PictureFt);
+        case 'label':
+          return Text('picture');
+        case 'icon':
+          return Icons.camera;
       }
 
     default:

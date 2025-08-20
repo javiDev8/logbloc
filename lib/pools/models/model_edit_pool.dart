@@ -55,9 +55,11 @@ class ModelEditPool extends Pool<Model> {
   }
 
   setFeature(Feature ft) {
-    if (data.features[ft.key] == null && data.features.isNotEmpty) {
+    if (data.features[ft.key] == null) {
       // means feature is being added, so ensure appears on top
-      ft.position = data.getSortedFeatureList()[0].position - 1;
+      ft.position = data.features.isNotEmpty
+          ? data.getSortedFeatureList()[0].position - 1
+          : 0;
       editingFts.add(ft.id);
     }
     data.features[ft.key] = ft;
