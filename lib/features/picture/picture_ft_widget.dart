@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logize/features/feature_widget.dart';
 import 'package:logize/features/picture/picture_ft_class.dart';
@@ -49,7 +50,7 @@ class PictureFtWidget extends StatelessWidget {
               Padding(
                 padding: EdgeInsetsGeometry.only(top: 10),
                 child: ClipRRect(
-		  borderRadius: BorderRadiusGeometry.circular(20),
+                  borderRadius: BorderRadiusGeometry.circular(20),
                   child: Image.file(
                     File(ft.tmpFile?.path ?? ft.path!),
                     fit: BoxFit.cover,
@@ -63,19 +64,22 @@ class PictureFtWidget extends StatelessWidget {
               Txt('no pic'),
 
             if (!lock.record)
-              Row(
-                children: [
-                  Button(
-                    null,
-                    lead: Icons.camera,
-                    onPressed: () => pickImg(ImageSource.camera),
-                  ),
-                  Button(
-                    'from gallery',
-                    filled: false,
-                    onPressed: () => pickImg(ImageSource.gallery),
-                  ),
-                ],
+              Padding(
+                padding: EdgeInsetsGeometry.all(10),
+                child: Row(
+                  children: [
+                    Button(
+                      null,
+                      lead: MdiIcons.camera,
+                      onPressed: () => pickImg(ImageSource.camera),
+                    ),
+                    Button(
+                      'from gallery',
+                      filled: false,
+                      onPressed: () => pickImg(ImageSource.gallery),
+                    ),
+                  ],
+                ),
               ),
           ],
         );

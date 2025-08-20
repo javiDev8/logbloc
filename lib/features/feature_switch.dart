@@ -6,6 +6,7 @@ import 'package:logize/features/number/number_ft_class.dart';
 import 'package:logize/features/number/number_ft_stats_widget.dart';
 import 'package:logize/features/number/number_ft_widget.dart';
 import 'package:logize/features/picture/picture_ft_class.dart';
+import 'package:logize/features/picture/picture_ft_stats.dart';
 import 'package:logize/features/picture/picture_ft_widget.dart';
 import 'package:logize/features/task_list/task_list_ft_class.dart';
 import 'package:logize/features/task_list/task_list_ft_stats.dart';
@@ -15,7 +16,12 @@ import 'package:logize/features/text/text_ft_stats.dart';
 import 'package:logize/features/text/text_ft_widget.dart';
 import 'package:flutter/material.dart';
 
-final List<String> availableFtTypes = ['number', 'text', 'task_list', 'picture'];
+final List<String> availableFtTypes = [
+  'number',
+  'text',
+  'task_list',
+  'picture',
+];
 
 dynamic featureSwitch({
   required String parseType,
@@ -50,7 +56,7 @@ dynamic featureSwitch({
         case 'label':
           return TrText(Tr.ftNumberLabel);
         case 'icon':
-          return Icons.square_foot;
+          return MdiIcons.ruler;
       }
 
     case 'text':
@@ -71,7 +77,7 @@ dynamic featureSwitch({
         case 'label':
           return Text('text');
         case 'icon':
-          return Icons.text_format;
+          return MdiIcons.text;
       }
 
     case 'task_list':
@@ -95,7 +101,7 @@ dynamic featureSwitch({
         case 'label':
           return Text('task list');
         case 'icon':
-          return Icons.list;
+          return MdiIcons.formatListChecks;
       }
 
     case 'picture':
@@ -111,12 +117,12 @@ dynamic featureSwitch({
             detailed: detailed!,
             dirt: dirt,
           );
-        //case 'stats':
-        //  return PictureFtStatsWidget(ftRecs: ftRecs!, ft: ft as PictureFt);
+        case 'stats':
+          return PictureFtStats(ftRecs: ftRecs!, ft: ft as PictureFt);
         case 'label':
           return Text('picture');
         case 'icon':
-          return MdiIcons.cameraOutline;
+          return MdiIcons.imageOutline;
       }
 
     default:

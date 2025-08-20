@@ -65,19 +65,12 @@ class MonthlyChart extends StatelessWidget {
             }
           });
 
-          final maxYValue = recordFts.isNotEmpty
-              ? (recordFts.map(
-                      (r) => getRecordValue(r),
-                    )).reduce((a, b) => a > b ? a : b) *
-                    1.2
-              : 10.0;
-
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  padding: const EdgeInsets.all(20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -207,7 +200,7 @@ class MonthlyChart extends StatelessWidget {
                       minX: 1,
                       maxX: daysInMonth.toDouble(),
                       minY: 0,
-                      maxY: maxYValue,
+                      maxY: null,
                     ),
                   ),
                 ),

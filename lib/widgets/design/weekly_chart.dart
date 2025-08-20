@@ -81,7 +81,7 @@ class WeeklyChart extends StatelessWidget {
             child: Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 40),
+                  padding: EdgeInsets.all(20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -194,11 +194,7 @@ class WeeklyChart extends StatelessWidget {
                       ),
                       alignment: BarChartAlignment.spaceAround,
                       // set maxY to greatest value
-                      maxY:
-                          (recordFts.map(
-                            (r) => getRecordValue(r),
-                          )).reduce((a, b) => a > b ? a : b) *
-                          1.2,
+                      maxY: null,
                     ),
                   ),
                 ),

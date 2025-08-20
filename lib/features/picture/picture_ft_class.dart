@@ -53,7 +53,7 @@ class PictureFt extends Feature {
 
   @override
   Map<String, dynamic> makeRec() {
-    return {'path': path};
+    return {...super.makeRec(), 'path': path};
   }
 
   @override
