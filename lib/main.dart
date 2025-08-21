@@ -1,14 +1,11 @@
 import 'dart:async';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:logize/apis/db.dart';
 import 'package:logize/config/notifications.dart';
 import 'package:logize/event_processor.dart';
 import 'package:logize/config/locales.dart';
 import 'package:logize/pools/theme_mode_pool.dart';
 import 'package:flutter_localization/flutter_localization.dart';
-import 'package:logize/utils/noticable_print.dart';
 import 'package:logize/widgets/crash_box.dart';
-import 'package:logize/widgets/design/button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:logize/pools/pools.dart';
 import 'package:logize/screens/root_screen_switch.dart';
@@ -23,16 +20,11 @@ final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 initLogize() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FlutterLocalization.instance.ensureInitialized();
-  await notifs.initialize(
-    notifsSettings,
-    onDidReceiveNotificationResponse: notifResponseCallback,
-  );
 
+  await notif.init();
   await themeModePool.init();
   await db.init();
   await eventProcessor.init();
-
-  requestNotifPermission();
 
   runApp(const Logize());
 }
@@ -101,32 +93,6 @@ class Logize extends StatelessWidget {
           theme: detaTheme,
           darkTheme: detaDarkTheme,
           home: Scaffold(
-            appBar: PreferredSize(
-              preferredSize: Size(100, 50),
-              child: Button(
-                'test notifs',
-                onPressed: () async {
-                  try {
-                    await notifs.show(
-                      0,
-                      'title',
-                      'body',
-                      //null,
-                      NotificationDetails(
-                        android: AndroidNotificationDetails(
-                          'logize',
-                          'sa',
-                        ),
-                      ),
-                      payload: 'payload',
-                    );
-                    nPrint('after await');
-                  } catch (e) {
-                    nPrint('EXCEPTIONP: $e');
-                  }
-                },
-              ),
-            ),
             body: screenIsLarge
                 ? Row(
                     children: [
