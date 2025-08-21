@@ -67,8 +67,8 @@ class ItemBox extends StatelessWidget {
                           Padding(
                             padding: EdgeInsets.only(right: 10),
                             child: item.recordId == null
-                                ? Icon(MdiIcons.noteOutline)
-                                : Icon(MdiIcons.note),
+                                ? Icon(MdiIcons.squareRoundedOutline)
+                                : Icon(MdiIcons.squareRounded),
                           ),
 
                         fromRecords

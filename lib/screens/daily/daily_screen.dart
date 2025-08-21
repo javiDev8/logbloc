@@ -174,7 +174,7 @@ class DailyScreen extends StatelessWidget {
                     ),
                   );
                 },
-                icon: Icon(MdiIcons.notePlusOutline, size: 30),
+                icon: Icon(MdiIcons.shapeSquareRoundedPlus, size: 30),
               ),
             ],
           );

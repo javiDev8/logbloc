@@ -2,6 +2,13 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSUserNotificationsUsageDescription</key>
+	<string>This app needs to send you notifications for reminders and updates.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+	    <string>fetch</string>
+	    <string>remote-notification</string>
+	</array>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app needs access to your photo library to let you select pictures.</string>
 	<key>NSCameraUsageDescription</key>
