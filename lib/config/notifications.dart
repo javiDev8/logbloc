@@ -2,9 +2,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:logize/apis/db.dart';
+import 'package:logize/features/reminder/reminder_ft_class.dart';
+import 'package:logize/pools/models/models_pool.dart';
+import 'package:logize/utils/fmt_date.dart';
 import 'package:logize/utils/noticable_print.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import 'package:workmanager/workmanager.dart';
 
 class Notif {
   static const AndroidInitializationSettings
@@ -16,20 +21,36 @@ class Notif {
   final plugin = FlutterLocalNotificationsPlugin();
 
   init() async {
-    final InitializationSettings notifsSettings = InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: initializationSettingsDarwin,
-    );
+    try {
+      final InitializationSettings notifsSettings = InitializationSettings(
+        android: initializationSettingsAndroid,
+        iOS: initializationSettingsDarwin,
+      );
 
-    tz.initializeTimeZones();
-    tz.setLocalLocation(
-      tz.getLocation(await FlutterTimezone.getLocalTimezone()),
-    );
+      tz.initializeTimeZones();
+      tz.setLocalLocation(
+        tz.getLocation(await FlutterTimezone.getLocalTimezone()),
+      );
 
-    await plugin.initialize(
-      notifsSettings,
-      onDidReceiveNotificationResponse: notifResponseCallback,
-    );
+      await plugin.initialize(
+        notifsSettings,
+        onDidReceiveNotificationResponse: notifResponseCallback,
+      );
+
+      await Workmanager().initialize(workmanagerCallback);
+
+      final now = DateTime.now();
+      final nextMidnight = DateTime(now.year, now.month, now.day + 1);
+      final initialDelay = nextMidnight.difference(now);
+      await Workmanager().registerPeriodicTask(
+        "schedule-notifications",
+        "notifs",
+        frequency: Duration(hours: 24),
+        initialDelay: initialDelay,
+      );
+    } catch (e) {
+      nPrint('notifs init failed: $e');
+    }
   }
 
   void notifResponseCallback(
@@ -87,6 +108,7 @@ class Notif {
         ),
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       );
+      nPrint('after schedule await');
     } catch (e) {
       nPrint('scheduling error! $e');
     }
@@ -108,6 +130,40 @@ class Notif {
     } catch (e) {
       nPrint('EXCEPTIONP: $e');
     }
+  }
+
+  @pragma('vm:entry-point')
+  void workmanagerCallback() {
+    Workmanager().executeTask((task, inputData) async {
+      await db.init();
+      await modelsPool.retrieve();
+
+      final todayItems = modelsPool.getDayItems(strDate(DateTime.now()));
+
+      if (todayItems == null) {
+        return true;
+      }
+
+      await notif.init();
+
+      for (final item in todayItems) {
+        final reminders = item.model!.features.values.where(
+          (ft) => ft.type == 'reminder',
+        );
+
+        for (final reminder in reminders) {
+          final r = reminder as ReminderFt;
+          await notif.schedule(
+            r.notifId,
+            time: r.time,
+            title: r.title,
+            body: r.content,
+          );
+        }
+      }
+
+      return true;
+    });
   }
 }
 

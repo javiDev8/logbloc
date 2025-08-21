@@ -57,7 +57,7 @@ class PictureFt extends Feature {
   }
 
   @override
-  FutureOr<bool> onSave() async {
+  FutureOr<bool> onSave({String? modelId}) async {
     if (tmpFile == null) {
       if (isRequired) {
         return false;

@@ -5,7 +5,9 @@ import 'package:logize/features/feature_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:logize/pools/tags/tag_class.dart';
 import 'package:logize/pools/tags/tags_pool.dart';
+import 'package:logize/screens/models/model_screen/schedules_view/simple_pickers/simple_biweek_picker.dart';
 import 'package:logize/utils/feedback.dart';
+import 'package:logize/utils/fmt_date.dart';
 
 // the num represents a priority for sorting, being
 // 0 the default, so "0" means is there, null means is not
@@ -123,6 +125,10 @@ class Model {
 
   Future<String> save() async {
     try {
+      for (final ft in features.values) {
+        await ft.onModelSave(modelId: id);
+      }
+
       createdAt = DateTime.now();
       final eventType = await db.saveModel(this);
       eventProcessor.emitEvent(
@@ -175,6 +181,49 @@ class Model {
     }
 
     await save();
+  }
+
+  // gets all schedules that matches a date
+  List<Schedule> getDateSchedules(DateTime date) {
+    List<Schedule> schs = [];
+    for (final period in Schedule.periods) {
+      if (schedules?.isNotEmpty == true) {
+        late final String day;
+        switch (period) {
+          case null:
+            day = strDate(date);
+            break;
+          case 'week':
+            day = date.weekday.toString();
+            break;
+
+          case 'bi-week':
+            day = dateToBiweekDay(date);
+            break;
+
+          case 'month':
+            day = date.day.toString();
+            break;
+          case 'year':
+            date.year.toString();
+            break;
+        }
+
+        final schMatches = schedules!.values
+            .where(
+              (sch) =>
+                  sch.period == null ||
+                  sch.startDate!.millisecondsSinceEpoch <=
+                      date.millisecondsSinceEpoch,
+            )
+            .where((sch) => sch.period == period && sch.day == day)
+            .toList();
+
+        schs.addAll(schMatches);
+      }
+    }
+
+    return schs;
   }
 
   List<Feature> getSortedFeatureList() {

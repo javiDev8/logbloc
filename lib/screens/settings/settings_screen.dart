@@ -34,12 +34,7 @@ class SettingsScreen extends StatelessWidget {
               onPressed: () async {
                 await notif.requestNotifPermission();
                 nPrint('permisson requested succesfully');
-                await notif.schedule(
-                  0,
-                  time: TimeOfDay(hour: 3, minute: 30),
-                  title: 'testing',
-                  body: 'tha shit',
-                );
+                await notif.test();
                 nPrint('after notif schedule');
               },
             ),

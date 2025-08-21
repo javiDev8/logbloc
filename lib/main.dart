@@ -21,10 +21,10 @@ initLogize() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FlutterLocalization.instance.ensureInitialized();
 
-  await notif.init();
-  await themeModePool.init();
   await db.init();
+  await notif.init();
   await eventProcessor.init();
+  await themeModePool.init();
 
   runApp(const Logize());
 }

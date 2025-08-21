@@ -8,6 +8,9 @@ import 'package:logize/features/number/number_ft_widget.dart';
 import 'package:logize/features/picture/picture_ft_class.dart';
 import 'package:logize/features/picture/picture_ft_stats.dart';
 import 'package:logize/features/picture/picture_ft_widget.dart';
+import 'package:logize/features/reminder/reminder_ft_class.dart';
+import 'package:logize/features/reminder/reminder_ft_stats.dart';
+import 'package:logize/features/reminder/reminder_ft_widget.dart';
 import 'package:logize/features/task_list/task_list_ft_class.dart';
 import 'package:logize/features/task_list/task_list_ft_stats.dart';
 import 'package:logize/features/task_list/task_list_ft_widget.dart';
@@ -21,6 +24,7 @@ final List<String> availableFtTypes = [
   'text',
   'task_list',
   'picture',
+  'reminder',
 ];
 
 dynamic featureSwitch({
@@ -123,6 +127,27 @@ dynamic featureSwitch({
           return Text('picture');
         case 'icon':
           return MdiIcons.imageOutline;
+      }
+
+    case 'reminder':
+      switch (parseType) {
+        case 'class':
+          return entry == null
+              ? ReminderFt.empty()
+              : ReminderFt.fromEntry(entry, recordFt);
+        case 'widget':
+          return ReminderFtWidget(
+            lock: lock!,
+            ft: ft as ReminderFt,
+            detailed: detailed!,
+            dirt: dirt,
+          );
+        case 'stats':
+          return ReminderFtStats(ftRecs: ftRecs!, ft: ft as ReminderFt);
+        case 'label':
+          return Text('reminder');
+        case 'icon':
+          return MdiIcons.bell;
       }
 
     default:

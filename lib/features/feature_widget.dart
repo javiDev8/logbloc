@@ -140,7 +140,12 @@ class FeatureWidget extends StatelessWidget {
               ),
               SizedBox(
                 width: lock.model ? null : 110,
-                child: Txt(feature.title, w: 8),
+                child: lock.model
+                    ? Txt(feature.title, w: 8)
+                    : featureSwitch(
+                        parseType: 'label',
+                        ftType: feature.type,
+                      ),
               ),
               Exp(),
               if (!lock.record && feature.pinned)

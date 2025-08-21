@@ -3,7 +3,6 @@ import 'package:logize/pools/items/item_class.dart';
 import 'package:logize/pools/models/model_class.dart';
 import 'package:logize/pools/pools.dart';
 import 'package:logize/pools/tags/tags_pool.dart';
-import 'package:logize/screens/models/model_screen/schedules_view/simple_pickers/simple_biweek_picker.dart';
 import 'package:logize/utils/feedback.dart';
 import 'package:logize/utils/parse_map.dart';
 
@@ -46,44 +45,9 @@ class ModelsPool extends Pool<Models?> {
     }
     final List<Item> items = [];
     for (final model in data!.values) {
-      final List<Schedule> dayModelSchedules = [];
-      for (final period in Schedule.periods) {
-        if (model.schedules?.isNotEmpty == true) {
-          final date = DateTime.parse(strDay);
-          late final String day;
-          switch (period) {
-            case null:
-              day = strDay;
-              break;
-            case 'week':
-              day = date.weekday.toString();
-              break;
-
-            case 'bi-week':
-              day = dateToBiweekDay(date);
-              break;
-
-            case 'month':
-              day = date.day.toString();
-              break;
-            case 'year':
-              date.year.toString();
-              break;
-          }
-
-          final schMatches = model.schedules!.values
-              .where(
-                (sch) =>
-                    sch.period == null ||
-                    sch.startDate!.millisecondsSinceEpoch <=
-                        date.millisecondsSinceEpoch,
-              )
-              .where((sch) => sch.period == period && sch.day == day)
-              .toList();
-
-          dayModelSchedules.addAll(schMatches);
-        }
-      }
+      final dayModelSchedules = model.getDateSchedules(
+        DateTime.parse(strDay),
+      );
       List<Schedule> skipModelSchedules;
       if (dayModelSchedules.length > 1) {
         final notSkipMatches = dayModelSchedules
