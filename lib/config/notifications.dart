@@ -4,9 +4,11 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:logize/apis/db.dart';
 import 'package:logize/features/reminder/reminder_ft_class.dart';
+import 'package:logize/pools/models/model_class.dart';
 import 'package:logize/pools/models/models_pool.dart';
 import 'package:logize/utils/fmt_date.dart';
 import 'package:logize/utils/noticable_print.dart';
+import 'package:logize/utils/parse_map.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:workmanager/workmanager.dart';
@@ -19,6 +21,21 @@ class Notif {
   static const DarwinInitializationSettings initializationSettingsDarwin =
       DarwinInitializationSettings();
   final plugin = FlutterLocalNotificationsPlugin();
+
+  static Duration timeUntilMidnight() {
+    final now = DateTime.now();
+    final nextMidnight = DateTime(now.year, now.month, now.day + 1);
+    return nextMidnight.difference(now);
+  }
+
+  static const details = NotificationDetails(
+    android: AndroidNotificationDetails(
+      'logize-notifs',
+      'logize notification channel',
+      channelDescription:
+          'The android notifications channel for the logize application',
+    ),
+  );
 
   init() async {
     try {
@@ -38,15 +55,10 @@ class Notif {
       );
 
       await Workmanager().initialize(workmanagerCallback);
-
-      final now = DateTime.now();
-      final nextMidnight = DateTime(now.year, now.month, now.day + 1);
-      final initialDelay = nextMidnight.difference(now);
-      await Workmanager().registerPeriodicTask(
-        "schedule-notifications",
-        "notifs",
-        frequency: Duration(hours: 24),
-        initialDelay: initialDelay,
+      await Workmanager().registerOneOffTask(
+        'notifications-schedulation',
+        'notifications',
+        initialDelay: timeUntilMidnight(),
       );
     } catch (e) {
       nPrint('notifs init failed: $e');
@@ -98,14 +110,7 @@ class Notif {
           time.hour,
           time.minute,
         ),
-        const NotificationDetails(
-          android: AndroidNotificationDetails(
-            'logize-notifs',
-            'logize notification channel',
-            channelDescription:
-                'The android notifications channel for the logize application',
-          ),
-        ),
+        details,
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       );
       nPrint('after schedule await');
@@ -120,10 +125,7 @@ class Notif {
         0,
         'test',
         'body test',
-        NotificationDetails(
-          android: AndroidNotificationDetails('logize', 'sa'),
-          iOS: DarwinNotificationDetails(),
-        ),
+        details,
         payload: 'payload',
       );
       nPrint('after await');
@@ -131,12 +133,26 @@ class Notif {
       nPrint('EXCEPTIONP: $e');
     }
   }
+}
 
-  @pragma('vm:entry-point')
-  void workmanagerCallback() {
-    Workmanager().executeTask((task, inputData) async {
+@pragma('vm:entry-point')
+void workmanagerCallback() {
+  Workmanager().executeTask((task, inputData) async {
+    try {
+      // doesnt need init because will only use schedule method
+      final db = HiveDB();
+      final modelsPool = ModelsPool(null);
+
       await db.init();
-      await modelsPool.retrieve();
+      if (db.models == null) {
+        nPrint('db model is null');
+      }
+
+      final serialModels = await db.models!.getAllValues();
+      modelsPool.data = serialModels.map<String, Model>((key, value) {
+        final model = Model.fromMap(map: parseMap(value));
+        return MapEntry(key.toString(), model);
+      });
 
       final todayItems = modelsPool.getDayItems(strDate(DateTime.now()));
 
@@ -144,27 +160,48 @@ class Notif {
         return true;
       }
 
-      await notif.init();
-
       for (final item in todayItems) {
-        final reminders = item.model!.features.values.where(
-          (ft) => ft.type == 'reminder',
-        );
+        final reminders = modelsPool.data![item.modelId]!.features.values
+            .where((ft) => ft.type == 'reminder');
 
         for (final reminder in reminders) {
           final r = reminder as ReminderFt;
-          await notif.schedule(
+
+          tz.initializeTimeZones();
+          tz.setLocalLocation(
+            tz.getLocation(await FlutterTimezone.getLocalTimezone()),
+          );
+          final now = tz.TZDateTime.now(tz.local);
+          final plugin = FlutterLocalNotificationsPlugin();
+          await plugin.zonedSchedule(
             r.notifId,
-            time: r.time,
-            title: r.title,
-            body: r.content,
+            r.title,
+            r.content,
+            tz.TZDateTime(
+              tz.local,
+              now.year,
+              now.month,
+              now.day,
+              r.time.hour,
+              r.time.minute,
+            ),
+            Notif.details,
+            androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
           );
         }
       }
 
+      await Workmanager().registerOneOffTask(
+        'logize-${DateTime.now().millisecondsSinceEpoch}',
+        'test',
+        initialDelay: Notif.timeUntilMidnight(),
+      );
+
       return true;
-    });
-  }
+    } catch (e) {
+      return true;
+    }
+  });
 }
 
 final notif = Notif();
