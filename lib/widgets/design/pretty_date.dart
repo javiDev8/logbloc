@@ -60,6 +60,7 @@ class PrettyDate extends StatelessWidget {
               );
               if (pickedDate == null) return;
               initDate = pickedDate;
+              agendaKey = UniqueKey();
               currentDatePool.set((_) => pickedDate);
               itemsByDayPool.clean();
             },

@@ -7,6 +7,7 @@ import 'package:logize/pools/pools.dart';
 import 'package:logize/screens/models/model_screen/model_screen.dart';
 import 'package:logize/utils/fmt_date.dart';
 import 'package:logize/utils/nav.dart';
+import 'package:logize/utils/noticable_print.dart';
 import 'package:logize/widgets/design/act_button.dart';
 import 'package:logize/widgets/design/pretty_date.dart';
 import 'package:logize/widgets/design/topbar_wrap.dart';
@@ -18,6 +19,8 @@ import 'package:flutter/scheduler.dart';
 final int initPage = 999999999;
 DateTime initDate = DateTime.now();
 final currentDatePool = Pool<DateTime>(initDate);
+
+UniqueKey agendaKey = UniqueKey();
 
 class DailyScreen extends StatelessWidget {
   DailyScreen({super.key});
@@ -45,7 +48,7 @@ class DailyScreen extends StatelessWidget {
           return Stack(
             children: [
               PageView.builder(
-		key: UniqueKey(),
+                key: agendaKey,
                 controller: pageController,
                 onPageChanged: (currentPageIndex) {
                   currentDatePool.set(
@@ -58,6 +61,7 @@ class DailyScreen extends StatelessWidget {
                   final DateTime date = initDate.add(
                     Duration(days: pageIndex - initPage),
                   );
+                  nPrint('date on page: $date');
                   final dateKey = strDate(date);
                   final dayReloadPool = Pool<bool>(true);
 
