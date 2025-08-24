@@ -29,6 +29,7 @@ class Notif {
   }
 
   static const details = NotificationDetails(
+    iOS: DarwinNotificationDetails(presentSound: true, presentAlert: true),
     android: AndroidNotificationDetails(
       'logize-notifs',
       'logize notification channel',
@@ -166,7 +167,7 @@ void workmanagerCallback() {
         for (final reminder in reminders) {
           final r = reminder as ReminderFt;
 
-          // trigger now if already passed
+          // trigger now if time is on past
           // (maybe device was off at 00:00)
           if (r.time.compareTo(TimeOfDay.now()) <= 0) {
             await plugin.show(
