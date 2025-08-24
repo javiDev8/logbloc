@@ -45,6 +45,7 @@ class DailyScreen extends StatelessWidget {
           return Stack(
             children: [
               PageView.builder(
+		key: UniqueKey(),
                 controller: pageController,
                 onPageChanged: (currentPageIndex) {
                   currentDatePool.set(
