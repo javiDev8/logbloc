@@ -119,16 +119,13 @@ class Notif {
     }
   }
 
-  test() async {
+  trigger({
+    required String title,
+    required String body,
+    required int id,
+  }) async {
     try {
-      await plugin.show(
-        0,
-        'test',
-        'body test',
-        details,
-        payload: 'payload',
-      );
-      nPrint('after await');
+      await plugin.show(id, title, body, details, payload: 'payload');
     } catch (e) {
       nPrint('EXCEPTIONP: $e');
     }
@@ -160,6 +157,8 @@ void workmanagerCallback() {
         return true;
       }
 
+      final plugin = FlutterLocalNotificationsPlugin();
+
       for (final item in todayItems) {
         final reminders = modelsPool.data![item.modelId]!.features.values
             .where((ft) => ft.type == 'reminder');
@@ -167,12 +166,24 @@ void workmanagerCallback() {
         for (final reminder in reminders) {
           final r = reminder as ReminderFt;
 
+          // trigger now if already passed
+          // (maybe device was off at 00:00)
+          if (r.time.compareTo(TimeOfDay.now()) <= 0) {
+            await plugin.show(
+              r.notifId,
+              r.title,
+              r.content,
+              Notif.details,
+              payload: 'payload',
+            );
+            return true;
+          }
+
           tz.initializeTimeZones();
           tz.setLocalLocation(
             tz.getLocation(await FlutterTimezone.getLocalTimezone()),
           );
           final now = tz.TZDateTime.now(tz.local);
-          final plugin = FlutterLocalNotificationsPlugin();
           await plugin.zonedSchedule(
             r.notifId,
             r.title,
