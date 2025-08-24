@@ -121,7 +121,7 @@ class FeatureWidget extends StatelessWidget {
     final color = Color.fromRGBO(b, b, b, isBright ? 0.3 : 0.5);
     return Container(
       margin: EdgeInsets.all(5),
-      padding: EdgeInsets.only(left: 5, right: 5, top: 10, bottom: 10),
+      padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -139,12 +139,15 @@ class FeatureWidget extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                width: lock.model ? null : 110,
+                width: lock.model ? null : 100,
                 child: lock.model
                     ? Txt(feature.title, w: 8)
-                    : featureSwitch(
-                        parseType: 'label',
-                        ftType: feature.type,
+                    : Padding(
+                        padding: EdgeInsetsGeometry.only(left: 7),
+                        child: featureSwitch(
+                          parseType: 'label',
+                          ftType: feature.type,
+                        ),
                       ),
               ),
               Exp(),

@@ -8,7 +8,6 @@ import 'package:logize/screens/models/model_screen/model_screen.dart';
 import 'package:logize/utils/fmt_date.dart';
 import 'package:logize/utils/nav.dart';
 import 'package:logize/widgets/design/act_button.dart';
-import 'package:logize/widgets/design/button.dart';
 import 'package:logize/widgets/design/pretty_date.dart';
 import 'package:logize/widgets/design/topbar_wrap.dart';
 import 'package:logize/widgets/design/txt.dart';
@@ -116,65 +115,51 @@ class DailyScreen extends StatelessWidget {
                     showDragHandle: true,
                     context: context,
                     builder: (context) => SizedBox(
-                      height: MediaQuery.of(context).size.height / 2,
+                      height: modelsPool.data!.length * 50 + 100,
                       child: Padding(
                         padding: EdgeInsets.all(10),
                         child: Center(
-                          child: modelsPool.data!.values.isEmpty
-                              ? Column(
-                                  children: [
-                                    Expanded(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Txt('no models'),
-                                          Button(
-                                            'make your first model!',
-                                            onPressed: () => navLink(
-                                              rootIndex: 0,
-                                              screen: ModelScreen(),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                          child: ListView(
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Txt(
+                                      'Pick a ${Tr.model.getString(context)}',
+                                      w: 7,
+                                      s: 16,
                                     ),
-                                  ],
-                                )
-                              : ListView(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Txt(
-                                            'Pick a ${ Tr.model.getString(context) }',
-                                            w: 7,
-                                            s: 16,
-                                          ),
-                                        ),
-                                      ],
+                                  ),
+                                  IconButton(
+                                    onPressed: () => navLink(
+                                      rootIndex: 0,
+                                      screen: ModelScreen(),
                                     ),
+                                    icon: Icon(Icons.add),
+                                  ),
+                                ],
+                              ),
 
-                                    ...modelsPool.data!.values.map<Widget>(
-                                      (model) => ListTile(
-                                        title: Text(model.name),
-                                        onTap: () {
-                                          itemsByDayPool.scheduleModel(
-                                            model,
-                                            currentDatePool.data,
-                                          );
-                                          navPop();
-                                        },
-                                      ),
-                                    ),
-                                  ],
+                              ...modelsPool.data!.values.map<Widget>(
+                                (model) => ListTile(
+                                  title: Text(model.name),
+                                  onTap: () {
+                                    itemsByDayPool.scheduleModel(
+                                      model,
+                                      currentDatePool.data,
+                                    );
+                                    navPop();
+                                  },
                                 ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   );
                 },
-                icon: Icon(MdiIcons.shapeSquareRoundedPlus, size: 30),
+                icon: Icon(MdiIcons.cardPlusOutline, size: 30),
               ),
             ],
           );

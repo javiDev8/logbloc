@@ -58,7 +58,12 @@ class ModelEditPool extends Pool<Model> {
     if (data.features[ft.key] == null) {
       // means feature is being added, so ensure appears on top
       ft.position = data.features.isNotEmpty
-          ? data.getSortedFeatureList()[0].position - 1
+          ? data
+                    .getSortedFeatureList()
+                    .where((ft) => !ft.pinned)
+                    .toList()[0]
+                    .position -
+                1
           : 0;
       editingFts.add(ft.id);
     }

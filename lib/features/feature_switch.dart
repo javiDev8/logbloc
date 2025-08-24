@@ -147,7 +147,7 @@ dynamic featureSwitch({
         case 'label':
           return Text('reminder');
         case 'icon':
-          return MdiIcons.bell;
+          return MdiIcons.bellOutline;
       }
 
     default:

@@ -44,6 +44,8 @@ class PictureFtWidget extends StatelessWidget {
                 label: 'title',
                 round: true,
                 onChanged: (str) => ft.setTitle(str),
+		validator: (str) => str?.isNotEmpty != true ? 'write a title' : null,
+		initialValue: ft.title,
               ),
 
             if (ft.tmpFile != null || ft.path != null)
@@ -60,7 +62,7 @@ class PictureFtWidget extends StatelessWidget {
                   ),
                 ),
               )
-            else
+            else if (!lock.record)
               Txt('no pic'),
 
             if (!lock.record)
@@ -68,15 +70,21 @@ class PictureFtWidget extends StatelessWidget {
                 padding: EdgeInsetsGeometry.all(10),
                 child: Row(
                   children: [
-                    Button(
-                      null,
-                      lead: MdiIcons.camera,
-                      onPressed: () => pickImg(ImageSource.camera),
+                    Expanded(
+                      child: Button(
+                        'from gallery',
+                        lead: MdiIcons.viewGallery,
+                        filled: false,
+                        onPressed: () => pickImg(ImageSource.gallery),
+                      ),
                     ),
-                    Button(
-                      'from gallery',
-                      filled: false,
-                      onPressed: () => pickImg(ImageSource.gallery),
+                    Expanded(
+                      child: Button(
+                        'from camera',
+                        filled: false,
+                        lead: MdiIcons.camera,
+                        onPressed: () => pickImg(ImageSource.camera),
+                      ),
                     ),
                   ],
                 ),

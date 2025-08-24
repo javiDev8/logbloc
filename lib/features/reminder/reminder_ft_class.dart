@@ -88,10 +88,14 @@ class ReminderFt extends Feature {
 
   @override
   FutureOr<bool> onModelSave({String? modelId}) async {
+    if (time.compareTo(TimeOfDay.now()) <= 0) {
+      // time is on past, nothing to do here
+      return true;
+    }
+
     try {
       final schs = modelEditPool.data.getDateSchedules(DateTime.now());
       // schedule only if model schedules match today
-      // and is still in the future
       if (schs
               .where((sch) => sch.includedFts?.contains(id) != false)
               .isNotEmpty ==

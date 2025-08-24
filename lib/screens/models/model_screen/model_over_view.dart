@@ -43,7 +43,7 @@ class ModelOverView extends StatelessWidget {
                       modelEditPool.dirt(true);
                     },
                     round: false,
-                    label: 'model name',
+                    label: 'logbook name',
                     initialValue: modelEditPool.data.name,
                     enabled: editing,
                   ),
