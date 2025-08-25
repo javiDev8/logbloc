@@ -46,7 +46,6 @@ class ReadOnlyFtWidget extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 8),
                       child: Icon(
-                        size: 25,
                         featureSwitch(parseType: 'icon', ft: feature)
                             as IconData,
                       ),
@@ -133,7 +132,6 @@ class FeatureWidget extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(left: 20),
                 child: Icon(
-                  size: 20,
                   featureSwitch(parseType: 'icon', ft: feature)
                       as IconData,
                 ),

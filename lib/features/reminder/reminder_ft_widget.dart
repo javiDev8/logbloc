@@ -67,7 +67,7 @@ class ReminderFtWidget extends StatelessWidget {
                 padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
                 child: Row(
                   children: [
-                    Icon(MdiIcons.clockOutline),
+                    Icon(MdiIcons.clockOutline, size: 20),
                     Txt('${ft.time.hour}:${ft.time.minute}', w: 8),
                     Exp(),
                     Txt(ft.content),
