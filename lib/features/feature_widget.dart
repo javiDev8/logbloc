@@ -137,7 +137,7 @@ class FeatureWidget extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                width: lock.model ? null : 100,
+                width: lock.model ? null : 80,
                 child: lock.model
                     ? Txt(feature.title, w: 8)
                     : Padding(

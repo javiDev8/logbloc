@@ -46,6 +46,7 @@ class NumberFtWidget extends StatelessWidget {
         if (!lock.record)
           Expanded(
             child: TxtField(
+	      number: true,
               hint: lock.model ? '' : "value",
               round: true,
               initialValue: ft.value.toString() == 'null'
