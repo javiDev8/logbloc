@@ -5,14 +5,13 @@ import 'package:logize/event_processor.dart';
 import 'package:logize/config/locales.dart';
 import 'package:logize/pools/theme_mode_pool.dart';
 import 'package:flutter_localization/flutter_localization.dart';
-import 'package:logize/widgets/crash_box.dart';
+import 'package:logize/widgets/crash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:logize/pools/pools.dart';
 import 'package:logize/screens/root_screen_switch.dart';
 import 'package:logize/widgets/large_screen/side_navbar.dart';
 import 'package:logize/widgets/navbar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 
 final sharedPrefs = SharedPreferencesAsync();
 final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
@@ -32,32 +31,20 @@ initLogize() async {
 void main() async {
   runZonedGuarded<Future<void>>(
     () async {
-      final originalErrorWidgetBuilder = ErrorWidget.builder;
-      ErrorWidget.builder = (FlutterErrorDetails details) {
-        if (kDebugMode) {
-          return originalErrorWidgetBuilder(details);
-        }
-        return CrashBox(details);
-      };
-      FlutterError.onError = (FlutterErrorDetails details) {
-        if (!kDebugMode) {
-          CrashBox.showError(details);
-        }
-        FlutterError.presentError(details);
-      };
+      ErrorWidget.builder = (FlutterErrorDetails details) =>
+          CrashScreen(details);
+      FlutterError.onError = (FlutterErrorDetails details) =>
+          CrashScreen.showError(details);
 
       await initLogize();
     },
     (error, stack) {
-      if (!kDebugMode) {
-        FlutterErrorDetails details = FlutterErrorDetails(
-          exception: error,
-          stack: stack,
-          library: 'My App',
-        );
-        CrashBox.showError(details);
-      }
-      debugPrintStack(stackTrace: stack, label: error.toString());
+      FlutterErrorDetails details = FlutterErrorDetails(
+        exception: error,
+        stack: stack,
+        library: 'logize crash box',
+      );
+      CrashScreen.showError(details);
     },
   );
 }
