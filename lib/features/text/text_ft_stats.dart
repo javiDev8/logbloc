@@ -1,5 +1,4 @@
 import 'package:logize/features/text/text_ft_class.dart';
-import 'package:logize/widgets/design/section_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:logize/widgets/time_stats.dart';
 
@@ -16,16 +15,13 @@ class TextFtStatsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 30),
-          child: SectionDivider(string: '"${ft.title}" content length'),
-        ),
         ftRecs.isEmpty
             ? Center(child: Text('no records'))
             : Expanded(
                 child: TimeStats(
                   chartOpts: ChartOpts(
-		    ft: ft,
+                    chartLabel: "Total characters",
+                    ft: ft,
                     operation: ChartOperation.add,
                     integer: true,
                     recordFts: ftRecs,

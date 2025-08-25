@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:logize/features/feature_switch.dart';
 import 'package:logize/features/feature_widget.dart';
+import 'package:logize/pools/theme_mode_pool.dart';
 import 'package:logize/utils/fmt_date.dart';
 import 'package:logize/widgets/design/txt.dart';
 import 'package:logize/widgets/time_stats.dart';
@@ -23,32 +24,54 @@ class DailyChart extends StatelessWidget {
           final recs = chartOpts.recordFts.where(
             (r) => strDate(r['date']) == strDate(date),
           );
+
+          final n = DateTime.now();
+          final dayColor =
+              date.day == n.day &&
+                  date.month == n.month &&
+                  date.year == n.year
+              ? seedColor
+              : null;
+
           return Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Padding(
                 padding: EdgeInsetsGeometry.only(right: 20, top: 10),
-                child: Txt(hdate(date), w: 8),
+                child: Text(
+                  hdate(date),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: dayColor,
+                  ),
+                ),
               ),
               Expanded(
                 child: ListView(
                   children: recs
                       .map<Widget>(
-                        (rec) => Column(
-                          children: [
-                            Text(rec['time']),
-                            FeatureWidget(
-                              lock: FeatureLock(model: true, record: true),
-                              feature: featureSwitch(
-                                parseType: 'class',
-                                recordFt: rec,
-                                entry: MapEntry<String, dynamic>(
-                                  chartOpts.ft.key,
-                                  chartOpts.ft.serialize(),
+                        (rec) => Padding(
+                          padding: EdgeInsetsGeometry.only(bottom: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Txt('at ${rec['time']}', w: 7),
+                              FeatureWidget(
+                                lock: FeatureLock(
+                                  model: true,
+                                  record: true,
+                                ),
+                                feature: featureSwitch(
+                                  parseType: 'class',
+                                  recordFt: rec,
+                                  entry: MapEntry<String, dynamic>(
+                                    chartOpts.ft.key,
+                                    chartOpts.ft.serialize(),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       )
                       .toList(),

@@ -76,6 +76,12 @@ class WeeklyChart extends StatelessWidget {
             }
           });
 
+          final n = DateTime.now();
+          final monthColor =
+              targetMonday.month == n.month && targetMonday.year == n.year
+              ? seedColor
+              : null;
+
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -86,16 +92,10 @@ class WeeklyChart extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
-                        months[targetMonday.month],
+                        '${months[targetMonday.month]}  '
+                        '${targetMonday.year.toString()}',
                         style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(width: 10),
-                      Text(
-                        targetMonday.year.toString(),
-                        style: TextStyle(
+                          color: monthColor,
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
                         ),

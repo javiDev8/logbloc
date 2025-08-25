@@ -43,7 +43,7 @@ class ReminderFtWidget extends StatelessWidget {
               StatefulBuilder(
                 builder: (context, setState) => Button(
                   '${ft.time.hour}:${ft.time.minute}',
-                  lead: MdiIcons.clock,
+                  lead: MdiIcons.clockOutline,
                   onPressed: () async {
                     await notif.requestNotifPermission();
 
@@ -67,7 +67,7 @@ class ReminderFtWidget extends StatelessWidget {
                 padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
                 child: Row(
                   children: [
-                    Icon(MdiIcons.clock),
+                    Icon(MdiIcons.clockOutline),
                     Txt('${ft.time.hour}:${ft.time.minute}', w: 8),
                     Exp(),
                     Txt(ft.content),

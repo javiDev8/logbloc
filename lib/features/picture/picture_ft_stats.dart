@@ -15,6 +15,7 @@ class PictureFtStats extends StatelessWidget {
   Widget build(BuildContext context) {
     return TimeStats(
       chartOpts: ChartOpts(
+        chartLabel: 'Total pictures',
         ft: ft,
         getRecordValue: ((_) => 1),
         recordFts: ftRecs,

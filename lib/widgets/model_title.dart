@@ -63,13 +63,13 @@ List<Widget> makeModelTitle({bool? isNew}) => [
         },
 
         options: [
-          MenuOption(
-            value: 'archive',
-            widget: ListTile(
-              title: Text('archive'),
-              leading: Icon(Icons.archive),
-            ),
-          ),
+          //MenuOption(
+          //  value: 'archive',
+          //  widget: ListTile(
+          //    title: Text('archive'),
+          //    leading: Icon(Icons.archive),
+          //  ),
+          //),
           MenuOption(
             value: 'delete',
             widget: ListTile(

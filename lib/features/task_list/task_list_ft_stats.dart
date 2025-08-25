@@ -1,5 +1,4 @@
 import 'package:logize/features/task_list/task_list_ft_class.dart';
-import 'package:logize/widgets/design/section_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:logize/widgets/time_stats.dart';
 
@@ -29,16 +28,13 @@ class TaskListFtStatsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 30),
-          child: SectionDivider(string: '"${ft.title}" done tasks rate'),
-        ),
         ftRecs.isEmpty
             ? Center(child: Text('no records'))
             : Expanded(
                 child: TimeStats(
                   chartOpts: ChartOpts(
-		    ft: ft,
+                    chartLabel: 'Done tasks rate',
+                    ft: ft,
                     operation: ChartOperation.average,
                     integer: true,
                     recordFts: ftRecs,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logize/pools/theme_mode_pool.dart';
 import 'package:logize/utils/fmt_date.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:logize/widgets/time_stats.dart';
@@ -65,6 +66,13 @@ class MonthlyChart extends StatelessWidget {
             }
           });
 
+          final n = DateTime.now();
+          final monthColor =
+              firstDayOfMonth.month == n.month &&
+                  firstDayOfMonth.year == n.year
+              ? seedColor
+              : null;
+
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -75,16 +83,10 @@ class MonthlyChart extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
-                        months[firstDayOfMonth.month],
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Text(
-                        firstDayOfMonth.year.toString(),
-                        style: const TextStyle(
+                        '${months[firstDayOfMonth.month]}  '
+                        '${firstDayOfMonth.year.toString()}',
+                        style: TextStyle(
+                          color: monthColor,
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
                         ),
@@ -103,7 +105,9 @@ class MonthlyChart extends StatelessWidget {
                               monthData[index],
                             );
                           }),
-                          color: Theme.of(context).colorScheme.tertiary,
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.tertiaryContainer,
                           barWidth: 3,
                           isStrokeCapRound: true,
                           dotData: FlDotData(show: false),
@@ -136,11 +140,7 @@ class MonthlyChart extends StatelessWidget {
                                 child: Text(
                                   day.toString(),
                                   style: TextStyle(
-                                    color: isToday
-                                        ? Theme.of(
-                                            context,
-                                          ).colorScheme.primary
-                                        : null,
+                                    color: isToday ? seedColor : null,
                                     fontWeight: isToday
                                         ? FontWeight.bold
                                         : FontWeight.normal,
@@ -151,24 +151,6 @@ class MonthlyChart extends StatelessWidget {
                           ),
                         ),
 
-                        //bottomTitles: AxisTitles(
-                        //  sideTitles: SideTitles(
-                        //    showTitles: true,
-                        //    reservedSize: 30,
-                        //    interval: 1,
-                        //    getTitlesWidget: (value, meta) {
-                        //      final day = value.toInt();
-                        //      if (day % 7 == 1 || daysInMonth <= 10) {
-                        //        return SideTitleWidget(
-                        //          meta: meta,
-                        //          space: 8.0,
-                        //          child: Text(day.toString()),
-                        //        );
-                        //      }
-                        //      return const SizedBox.shrink();
-                        //    },
-                        //  ),
-                        //),
                         leftTitles: const AxisTitles(
                           sideTitles: SideTitles(showTitles: false),
                         ),

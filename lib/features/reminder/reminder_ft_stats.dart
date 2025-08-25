@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:logize/features/reminder/reminder_ft_class.dart';
-import 'package:logize/widgets/design/txt.dart';
 
 class ReminderFtStats extends StatelessWidget {
   final List<Map<String, dynamic>> ftRecs;
@@ -13,6 +12,14 @@ class ReminderFtStats extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Txt('unimplemented');
+    return Center(
+      child: Padding(
+        padding: EdgeInsetsGeometry.all(50),
+        child: Text(
+          'This feature currently doesnt have any stats representation available',
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
   }
 }
