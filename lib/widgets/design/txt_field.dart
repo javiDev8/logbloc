@@ -11,7 +11,8 @@ class TxtField extends StatelessWidget {
   final int? maxLines;
   final Widget? lead;
   final bool? enabled;
-  final bool number;
+  final bool? number;
+  final bool? borderless;
 
   const TxtField({
     super.key,
@@ -25,7 +26,8 @@ class TxtField extends StatelessWidget {
     this.maxLines,
     this.lead,
     this.enabled,
-    this.number = false,
+    this.number,
+    this.borderless,
   });
 
   @override
@@ -33,7 +35,7 @@ class TxtField extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(7),
       child: TextFormField(
-        keyboardType: number ? TextInputType.number : null,
+        keyboardType: number == true ? TextInputType.number : null,
         enabled: enabled,
         onTapUpOutside: (_) {
           FocusManager.instance.primaryFocus?.unfocus();
@@ -56,7 +58,9 @@ class TxtField extends StatelessWidget {
             bottom: maxLines == null ? 10 : 0,
           ),
           hintText: hint,
-          border: round == null || !round!
+          border: borderless == true
+              ? InputBorder.none
+              : round == null || !round!
               ? null
               : OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(30)),

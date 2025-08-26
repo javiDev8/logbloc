@@ -20,7 +20,7 @@ class NumberFtStatsWidget extends StatelessWidget {
             : Expanded(
                 child: TimeStats(
                   chartOpts: ChartOpts(
-                    chartLabel: 'Total',
+                    chartLabel: 'Total ${ft.title}',
                     ft: ft,
                     operation: ChartOperation.add,
                     recordFts: ftRecs,

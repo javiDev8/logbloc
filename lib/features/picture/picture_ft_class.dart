@@ -60,7 +60,7 @@ class PictureFt extends Feature {
   @override
   FutureOr<bool> onSave({String? modelId}) async {
     if (tmpFile == null) {
-      if (isRequired) {
+      if (isRequired && path == null) {
         feedback('picture "$title" is required', type: FeedbackType.error);
         return false;
       }
