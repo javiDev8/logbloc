@@ -7,7 +7,6 @@ import 'package:logize/features/reminder/reminder_ft_class.dart';
 import 'package:logize/pools/models/model_class.dart';
 import 'package:logize/pools/models/models_pool.dart';
 import 'package:logize/utils/fmt_date.dart';
-import 'package:logize/utils/noticable_print.dart';
 import 'package:logize/utils/parse_map.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -62,18 +61,13 @@ class Notif {
         initialDelay: timeUntilMidnight(),
       );
     } catch (e) {
-      nPrint('notifs init failed: $e');
+      throw Exception(e);
     }
   }
 
   void notifResponseCallback(
     NotificationResponse notificationResponse,
-  ) async {
-    final String? payload = notificationResponse.payload;
-    if (notificationResponse.payload != null) {
-      nPrint('notification payload: $payload');
-    }
-  }
+  ) async {}
 
   Future requestNotifPermission() async {
     if (Platform.isAndroid) {
@@ -114,9 +108,8 @@ class Notif {
         details,
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       );
-      nPrint('after schedule await');
     } catch (e) {
-      nPrint('scheduling error! $e');
+      throw Exception(e);
     }
   }
 
@@ -124,13 +117,8 @@ class Notif {
     required String title,
     required String body,
     required int id,
-  }) async {
-    try {
+  }) async =>
       await plugin.show(id, title, body, details, payload: 'payload');
-    } catch (e) {
-      nPrint('EXCEPTIONP: $e');
-    }
-  }
 }
 
 @pragma('vm:entry-point')
@@ -142,9 +130,6 @@ void workmanagerCallback() {
       final modelsPool = ModelsPool(null);
 
       await db.init();
-      if (db.models == null) {
-        nPrint('db model is null');
-      }
 
       final serialModels = await db.models!.getAllValues();
       modelsPool.data = serialModels.map<String, Model>((key, value) {

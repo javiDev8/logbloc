@@ -4,11 +4,12 @@ import 'package:logize/config/locales.dart';
 import 'package:logize/pools/items/items_by_day_pool.dart';
 import 'package:logize/pools/models/models_pool.dart';
 import 'package:logize/pools/pools.dart';
+import 'package:logize/pools/tags/tags_pool.dart';
 import 'package:logize/screens/models/model_screen/model_screen.dart';
 import 'package:logize/utils/fmt_date.dart';
 import 'package:logize/utils/nav.dart';
-import 'package:logize/utils/noticable_print.dart';
 import 'package:logize/widgets/design/act_button.dart';
+import 'package:logize/widgets/design/button.dart';
 import 'package:logize/widgets/design/pretty_date.dart';
 import 'package:logize/widgets/design/topbar_wrap.dart';
 import 'package:logize/widgets/design/txt.dart';
@@ -21,6 +22,10 @@ DateTime initDate = DateTime.now();
 final currentDatePool = Pool<DateTime>(initDate);
 
 UniqueKey agendaKey = UniqueKey();
+
+final agendaFilterPool = Pool<MapEntry<String, String?>>(
+  MapEntry('all', null),
+);
 
 class DailyScreen extends StatelessWidget {
   DailyScreen({super.key});
@@ -45,79 +50,155 @@ class DailyScreen extends StatelessWidget {
         pool: itemsByDayPool,
         listenedEvents: ['clean-up'],
         builder: (context, allItems) {
-          nPrint('on clean up');
           return Stack(
             children: [
-              PageView.builder(
-                key: agendaKey,
-                controller: pageController,
-                onPageChanged: (currentPageIndex) {
-                  currentDatePool.set(
-                    (_) => initDate.add(
-                      Duration(days: currentPageIndex - initPage),
+              Swimmer<MapEntry<String, String?>>(
+                pool: agendaFilterPool,
+                builder: (context, filter) => Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsetsGeometry.only(bottom: 7),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: ['by tag', 'pending', 'all']
+                                .map<Widget>(
+                                  (opt) => Button(
+                                    opt,
+                                    variant: 0,
+                                    filled: filter.key == opt,
+                                    onPressed: () => agendaFilterPool.set(
+                                      (f) => MapEntry(opt, f.value),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                          ),
+
+                          if (filter.key == 'by tag')
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: tagsPool.data!
+                                  .map(
+                                    (tag) => Button(
+                                      '#$tag',
+                                      variant: 1,
+                                      filled: filter.value == tag,
+                                      onPressed: () =>
+                                          agendaFilterPool.set(
+                                            (f) => MapEntry(f.key, tag),
+                                          ),
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                        ],
+                      ),
                     ),
-                  );
-                },
-                itemBuilder: (context, pageIndex) {
-                  final DateTime date = initDate.add(
-                    Duration(days: pageIndex - initPage),
-                  );
-                  final dateKey = strDate(date);
-                  final dayReloadPool = Pool<bool>(true);
+                    Expanded(
+                      child: PageView.builder(
+                        key: agendaKey,
+                        controller: pageController,
+                        onPageChanged: (currentPageIndex) {
+                          currentDatePool.set(
+                            (_) => initDate.add(
+                              Duration(days: currentPageIndex - initPage),
+                            ),
+                          );
+                        },
+                        itemBuilder: (context, pageIndex) {
+                          final DateTime date = initDate.add(
+                            Duration(days: pageIndex - initPage),
+                          );
+                          final dateKey = strDate(date);
+                          final dayReloadPool = Pool<bool>(true);
 
-                  return Swimmer(
-                    key: UniqueKey(),
-                    pool: dayReloadPool,
-                    builder: (context, e) {
-                      final items = itemsByDayPool.data[dateKey];
+                          return Swimmer(
+                            key: UniqueKey(),
+                            pool: dayReloadPool,
+                            builder: (context, e) {
+                              final items = itemsByDayPool.data[dateKey];
 
-                      nPrint(
-                        'ITEMS ON DAILY: ${items?.map((i) => '\n id: ${i.id}, place: ${i.schedule.place}')}',
-                      );
+                              if (items == null) {
+                                itemsByDayPool.retrieve(dateKey);
+                                Future.delayed(
+                                  Duration(milliseconds: 100),
+                                  () => dayReloadPool.emit(),
+                                );
+                                return Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                              if (items.isEmpty) {
+                                return Center(child: Text('no items'));
+                              }
 
-                      if (items == null) {
-                        itemsByDayPool.retrieve(dateKey);
-                        Future.delayed(
-                          Duration(milliseconds: 100),
-                          () => dayReloadPool.emit(),
-                        );
-                        return Center(child: CircularProgressIndicator());
-                      }
-                      if (items.isEmpty) {
-                        return Center(child: Text('no items'));
-                      }
-
-                      items.sort(
-                        (a, b) =>
-                            a.schedule.place.compareTo(b.schedule.place),
-                      );
-
-                      return Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 7),
-                        child: ReorderableListView(
-                          onReorder: (oldIndex, newIndex) async {
-                            final itemToReorder = items[oldIndex];
-                            await itemsByDayPool.reorderItem(
-                              strDay: dateKey,
-                              item: itemToReorder,
-                              index: newIndex,
-                            );
-                          },
-                          children: items
-                              .map<Widget>(
-                                (item) => Row(
-                                  key: Key(item.id),
-                                  children: [
-                                    ItemBox(key: UniqueKey(), item: item),
-                                  ],
+                              items.sort(
+                                (a, b) => a.schedule.place.compareTo(
+                                  b.schedule.place,
                                 ),
-                              )
-                              .toList(),
-                        ),
-                      );
-                    },
-                  );
-                },
+                              );
+
+                              final filteredItems = items.where((item) {
+                                switch (agendaFilterPool.data.key) {
+                                  case 'all':
+                                    return true;
+                                  case 'pending':
+                                    return item.record == null;
+                                  case 'by tag':
+                                    return agendaFilterPool.data.value ==
+                                            null ||
+                                        item.model!.tags?.contains(
+                                              agendaFilterPool.data.value,
+                                            ) ==
+                                            true;
+                                  default:
+                                    return false;
+                                }
+                              });
+
+                              Widget printItem(item) => Row(
+                                key: Key(item.id),
+                                children: [
+                                  ItemBox(key: UniqueKey(), item: item),
+                                ],
+                              );
+
+                              return Padding(
+                                padding: EdgeInsetsGeometry.symmetric(
+                                  horizontal: 7,
+                                ),
+                                child: agendaFilterPool.data.key == 'all'
+                                    ? ReorderableListView(
+                                        onReorder:
+                                            (oldIndex, newIndex) async {
+                                              final itemToReorder =
+                                                  items[oldIndex];
+                                              await itemsByDayPool
+                                                  .reorderItem(
+                                                    strDay: dateKey,
+                                                    item: itemToReorder,
+                                                    index: newIndex,
+                                                  );
+                                            },
+                                        children: items
+                                            .map<Widget>(printItem)
+                                            .toList(),
+                                      )
+                                    : ListView(
+                                        children: filteredItems
+                                            .map<Widget>(printItem)
+                                            .toList(),
+                                      ),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
               ActButton(
                 onPressed: () {
