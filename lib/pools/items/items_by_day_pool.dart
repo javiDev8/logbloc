@@ -123,10 +123,14 @@ class ItemsByDayPool extends Pool<ItemsByDay> {
           schedule: item.schedule,
         );
       }
+      modelsPool.data![item.model!.id] = item.model!;
     } else {
       item.record!.schedule.place = newPlace;
+      recordsPool.data![item.record!.id] = item.record!;
     }
-    await item.saveSortPlace();
+    item.saveSortPlace();
+    itemsByDayPool.data = {};
+    retrieve(strDay);
     controller.sink.add('clean-up');
   }
 

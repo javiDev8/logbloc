@@ -34,7 +34,7 @@ class Rec {
     );
   }
 
-  save() async {
+  save({bool? silent}) async {
     final event = Event(
       entity: 'record',
       type: '',
@@ -43,7 +43,9 @@ class Rec {
     );
     try {
       event.type = await db.saveRecord(this);
-      eventProcessor.emitEvent(event);
+      if (silent != true) {
+        eventProcessor.emitEvent(event);
+      }
     } catch (e) {
       throw Exception('record add failed: $e');
     }

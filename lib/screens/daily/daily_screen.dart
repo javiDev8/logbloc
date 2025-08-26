@@ -7,6 +7,7 @@ import 'package:logize/pools/pools.dart';
 import 'package:logize/screens/models/model_screen/model_screen.dart';
 import 'package:logize/utils/fmt_date.dart';
 import 'package:logize/utils/nav.dart';
+import 'package:logize/utils/noticable_print.dart';
 import 'package:logize/widgets/design/act_button.dart';
 import 'package:logize/widgets/design/pretty_date.dart';
 import 'package:logize/widgets/design/topbar_wrap.dart';
@@ -44,6 +45,7 @@ class DailyScreen extends StatelessWidget {
         pool: itemsByDayPool,
         listenedEvents: ['clean-up'],
         builder: (context, allItems) {
+          nPrint('on clean up');
           return Stack(
             children: [
               PageView.builder(
@@ -64,9 +66,15 @@ class DailyScreen extends StatelessWidget {
                   final dayReloadPool = Pool<bool>(true);
 
                   return Swimmer(
+                    key: UniqueKey(),
                     pool: dayReloadPool,
                     builder: (context, e) {
                       final items = itemsByDayPool.data[dateKey];
+
+                      nPrint(
+                        'ITEMS ON DAILY: ${items?.map((i) => '\n id: ${i.id}, place: ${i.schedule.place}')}',
+                      );
+
                       if (items == null) {
                         itemsByDayPool.retrieve(dateKey);
                         Future.delayed(

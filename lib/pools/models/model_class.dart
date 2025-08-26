@@ -123,7 +123,7 @@ class Model {
     if (tags != null) 'tags': tags!,
   };
 
-  Future<String> save() async {
+  Future<String> save({bool? silent}) async {
     try {
       for (final ft in features.values) {
         await ft.onModelSave(modelId: id);
@@ -131,14 +131,17 @@ class Model {
 
       createdAt = DateTime.now();
       final eventType = await db.saveModel(this);
-      eventProcessor.emitEvent(
-        Event(
-          entity: 'model',
-          type: eventType,
-          entityIds: [id],
-          timestamp: DateTime.now(),
-        ),
-      );
+      if (silent != true) {
+        eventProcessor.emitEvent(
+          Event(
+            entity: 'model',
+            type: eventType,
+            entityIds: [id],
+            timestamp: DateTime.now(),
+          ),
+        );
+      }
+
       return eventType;
     } catch (e) {
       throw Exception('model save failed: $e');

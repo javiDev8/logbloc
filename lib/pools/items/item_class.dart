@@ -111,9 +111,9 @@ class Item {
 
   saveSortPlace() async {
     if (recordId == null) {
-      await model!.save();
+      await model!.save(silent: true);
     } else {
-      await record!.save();
+      await record!.save(silent: true);
     }
   }
 
