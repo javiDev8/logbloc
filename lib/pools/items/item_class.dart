@@ -9,6 +9,7 @@ import 'package:logize/pools/records/records_pool.dart';
 import 'package:flutter/material.dart';
 import 'package:logize/screens/daily/item_screen.dart';
 import 'package:logize/utils/feedback.dart';
+import 'package:logize/utils/noticable_print.dart';
 
 class Item {
   final String id;
@@ -61,7 +62,9 @@ class Item {
   );
 
   FutureOr<bool> save() async {
+    nPrint('on item save');
     if (!itemFormKey.currentState!.validate()) {
+      nPrint('on validate');
       feedback('check your inputs!', type: FeedbackType.error);
       return false;
     }

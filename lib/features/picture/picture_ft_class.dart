@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:logize/features/feature_class.dart';
+import 'package:logize/utils/feedback.dart';
 import 'package:path_provider/path_provider.dart';
 
 class PictureFt extends Feature {
@@ -60,6 +61,7 @@ class PictureFt extends Feature {
   FutureOr<bool> onSave({String? modelId}) async {
     if (tmpFile == null) {
       if (isRequired) {
+        feedback('picture "$title" is required', type: FeedbackType.error);
         return false;
       }
       return true;

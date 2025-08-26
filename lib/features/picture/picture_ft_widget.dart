@@ -1,12 +1,10 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logize/features/feature_widget.dart';
 import 'package:logize/features/picture/picture_ft_class.dart';
 import 'package:logize/widgets/design/button.dart';
-import 'package:logize/widgets/design/txt.dart';
 import 'package:logize/widgets/design/txt_field.dart';
 
 class PictureFtWidget extends StatelessWidget {
@@ -44,8 +42,9 @@ class PictureFtWidget extends StatelessWidget {
                 label: 'title',
                 round: true,
                 onChanged: (str) => ft.setTitle(str),
-		validator: (str) => str?.isNotEmpty != true ? 'write a title' : null,
-		initialValue: ft.title,
+                validator: (str) =>
+                    str?.isNotEmpty != true ? 'write a title' : null,
+                initialValue: ft.title,
               ),
 
             if (ft.tmpFile != null || ft.path != null)
@@ -61,9 +60,7 @@ class PictureFtWidget extends StatelessWidget {
                     height: lock.record ? 200 : null,
                   ),
                 ),
-              )
-            else if (!lock.record)
-              Txt('no pic'),
+              ),
 
             if (!lock.record)
               Padding(

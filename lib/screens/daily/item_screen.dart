@@ -75,17 +75,7 @@ class ItemScreen extends StatelessWidget {
             pool: dirtItemFlagPool,
             builder: (context, dirty) => dirty
                 ? IconButton(
-                    onPressed: () async {
-                      if (itemFormKey.currentState!.validate()) {
-                        final res = await item.save();
-                        if (res) {
-                          // set method somehow doesnt work here
-                          dirtItemFlagPool.data = false;
-                          dirtItemFlagPool.controller.sink.add(false);
-                          navPop();
-                        }
-                      }
-                    },
+                    onPressed: () async => await item.save(),
                     icon: Icon(Icons.check_circle_outline),
                   )
                 : None(),
