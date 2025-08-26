@@ -37,17 +37,14 @@ class NumberFtWidget extends StatelessWidget {
             ),
           ),
 
-        if (!detailed && lock.model && lock.record)
-          Txt(
-            ft.value?.toString() ?? '',
-	    w: 8
-          ),
+        if (ft.value != null && !detailed && lock.model && lock.record)
+          Txt(ft.value?.toString() ?? '', w: 8),
 
         if (!lock.record)
           Expanded(
             child: TxtField(
-	      number: true,
-              hint: lock.model ? '' : "value",
+              number: true,
+              label: 'value',
               round: true,
               initialValue: ft.value.toString() == 'null'
                   ? ''
@@ -75,19 +72,20 @@ class NumberFtWidget extends StatelessWidget {
 
         if (detailed) Expanded(child: Text('unit:')),
 
-        Expanded(
-          child: lock.model
-              ? Text(' ${ft.unit}')
-              : TxtField(
-                  label: 'unit',
-                  round: true,
-                  initialValue: ft.unit,
-                  onChanged: (txt) {
-                    ft.setUnit(txt);
-                    dirt!();
-                  },
-                ),
-        ),
+        if (ft.unit.isNotEmpty)
+          Expanded(
+            child: lock.model
+                ? Text(' ${ft.unit}')
+                : TxtField(
+                    label: 'unit',
+                    round: true,
+                    initialValue: ft.unit,
+                    onChanged: (txt) {
+                      ft.setUnit(txt);
+                      dirt!();
+                    },
+                  ),
+          ),
       ],
     );
   }

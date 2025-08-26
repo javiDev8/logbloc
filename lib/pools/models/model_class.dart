@@ -3,7 +3,6 @@ import 'package:logize/event_processor.dart';
 import 'package:logize/features/feature_class.dart';
 import 'package:logize/features/feature_switch.dart';
 import 'package:flutter/material.dart';
-import 'package:logize/pools/tags/tag_class.dart';
 import 'package:logize/pools/tags/tags_pool.dart';
 import 'package:logize/screens/models/model_screen/schedules_view/simple_pickers/simple_biweek_picker.dart';
 import 'package:logize/utils/feedback.dart';
@@ -24,7 +23,7 @@ class Model {
   List<String>? simplePeriods;
   Map<String, List<String>>? cancelledSchedules;
   Color? color;
-  Map<String, Tag>? tags;
+  List<String>? tags;
 
   Model({
     required this.id,
@@ -90,20 +89,21 @@ class Model {
                 ),
           ),
 
-    color: map.containsKey('color')
-        ? Color(int.parse(map['color'] as String))
-        : null,
+    color: (map['color'] as int?) == null
+        ? null
+        : Color.fromARGB(
+            (map['color'] as int) >> 24 & 0xFF,
+            (map['color'] as int) >> 16 & 0xFF,
+            (map['color'] as int) >> 8 & 0xFF,
+            (map['color'] as int) & 0xFF,
+          ),
 
     tags: map['tags'] == null || tagsPool.data == null
         ? null
-        : Map.fromEntries(
-            (map['tags'] as List<String>)
-                // ensure is contained in tags pool
-                .where((tid) => tagsPool.data!.keys.contains(tid))
-                .map<MapEntry<String, Tag>>(
-                  (tid) => MapEntry(tid, tagsPool.data![tid]!),
-                ),
-          ),
+        : List.from(map['tags'] as List<dynamic>)
+              .where((t) => tagsPool.data!.contains(t))
+              .cast<String>()
+              .toList(),
   );
 
   Map<String, dynamic> serialize() => {
@@ -120,7 +120,7 @@ class Model {
     if (cancelledSchedules != null)
       'cancelled-schedules': cancelledSchedules,
     if (color != null) 'color': color!.toARGB32(),
-    if (tags != null) 'tags': tags!.keys.toList(),
+    if (tags != null) 'tags': tags!,
   };
 
   Future<String> save() async {

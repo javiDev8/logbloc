@@ -22,13 +22,8 @@ class ModelsPool extends Pool<Models?> {
         await tagsPool.retrieve();
         final models = await db.models!.getAllValues();
         data = models.map<String, Model>((key, value) {
-          try {
-            final model = Model.fromMap(map: parseMap(value));
-            return MapEntry(key.toString(), model);
-          } catch (e) {
-            feedback('model parse error');
-            throw Exception('Failed to parse : $e');
-          }
+          final model = Model.fromMap(map: parseMap(value));
+          return MapEntry(key.toString(), model);
         });
         emit();
       } catch (e) {

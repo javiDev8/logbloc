@@ -20,6 +20,7 @@ class ItemBox extends StatelessWidget {
   Widget build(BuildContext context) {
     final sortedFts = item.getSortedFts();
 
+    final color = item.model?.color ?? Colors.grey;
     return Expanded(
       child: Container(
         margin: EdgeInsets.only(top: 10),
@@ -43,17 +44,9 @@ class ItemBox extends StatelessWidget {
             child: DecoratedBox(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                color: themeModePool.data == ThemeMode.dark
-                    ? (item.model?.tags?.values.first.color != null
-                          ? endarkColor(
-                              (item.model!.tags?.values.first.color)!,
-                            )
-                          : Color.fromRGBO(100, 100, 100, 1))
-                    : (item.model?.tags?.values.first.color != null
-                          ? enbrightColor(
-                              item.model!.tags!.values.first.color!,
-                            )
-                          : enbrightColor(Colors.grey)),
+                color: (themeModePool.data == ThemeMode.light
+                    ? enbrightColor(color)
+                    : endarkColor(color)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,7 +77,7 @@ class ItemBox extends StatelessWidget {
                                   item.model!.name,
                                   style: TextStyle(
                                     fontWeight: FontWeight.w800,
-				    fontSize: 17
+                                    fontSize: 17,
                                   ),
                                 ),
                               ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:logize/pools/models/model_class.dart';
 import 'package:logize/pools/models/model_edit_pool.dart';
@@ -18,10 +19,6 @@ class ModelOverView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color =
-        modelEditPool.data.color ??
-        modelEditPool.data.tags?.values.first.color;
-
     final editingNamePool = Pool<bool>(isNew);
 
     bool editingTags = isNew;
@@ -55,9 +52,61 @@ class ModelOverView extends StatelessWidget {
                     },
                     icon: Icon(Icons.edit),
                   ),
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.palette, color: color ?? Colors.grey),
+
+                // palette button
+                LazySwimmer<Model>(
+                  pool: modelEditPool,
+                  listenedEvents: ['color'],
+                  builder: (context, model) => IconButton(
+                    onPressed: () async {
+                      Color newColor = Colors.red;
+                      await showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          content: SizedBox(
+                            height: 140,
+                            child: Column(
+                              children: [
+                                ColorPicker(
+                                  pickerColor: newColor,
+                                  pickerAreaBorderRadius: BorderRadius.all(
+                                    Radius.circular(20),
+                                  ),
+                                  pickerAreaHeightPercent: 0.0,
+                                  paletteType: PaletteType.hsl,
+                                  enableAlpha: false,
+                                  labelTypes: [],
+                                  onColorChanged: (c) => newColor = c,
+                                ),
+                                Row(
+                                  children: [
+                                    Button(
+                                      'cancel',
+                                      filled: false,
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
+                                    ),
+                                    Expanded(
+                                      child: Button(
+                                        'save',
+                                        lead: Icons.check_circle_outline,
+                                        onPressed: () {
+                                          modelEditPool.setColor(newColor);
+                                          modelEditPool.dirt(true);
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                    icon: Icon(Icons.palette, color: model.color),
+                  ),
                 ),
               ],
             ),
@@ -73,13 +122,13 @@ class ModelOverView extends StatelessWidget {
                   children: [
                     AddTagButton(),
                     if (modelEditPool.data.tags?.isNotEmpty == true) ...[
-                      ...(model.tags?.values ?? []).map<Widget>(
+                      ...(model.tags ?? []).map<Widget>(
                         (t) => editingTags
                             ? Container(
                                 margin: EdgeInsets.all(5),
                                 padding: EdgeInsets.all(1),
                                 decoration: BoxDecoration(
-                                  color: t.color,
+                                  //color: t.color,
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(20),
                                   ),
@@ -91,11 +140,11 @@ class ModelOverView extends StatelessWidget {
                                   children: [
                                     IconButton(
                                       onPressed: () =>
-                                          modelEditPool.removeTag(t.id),
+                                          modelEditPool.removeTag(t),
                                       icon: Icon(Icons.close, size: 17),
                                     ),
                                     Text(
-                                      '#${t.name}',
+                                      '#$t',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w800,
                                       ),
@@ -104,7 +153,7 @@ class ModelOverView extends StatelessWidget {
                                   ],
                                 ),
                               )
-                            : Txt('#${t.name}', w: 7, color: t.color),
+                            : Txt('#$t', w: 7),
                       ),
 
                       if (!editingTags)

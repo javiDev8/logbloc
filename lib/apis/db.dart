@@ -1,7 +1,6 @@
 import 'package:logize/pools/models/model_class.dart';
 import 'package:logize/pools/models/models_pool.dart';
 import 'package:logize/pools/records/record_class.dart';
-import 'package:logize/pools/tags/tag_class.dart';
 import 'package:logize/utils/feedback.dart';
 import 'package:logize/utils/parse_map.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
@@ -11,7 +10,7 @@ typedef Col = CollectionBox<Map>?;
 class HiveDB {
   Col records;
   Col models;
-  Col tags;
+  CollectionBox<String>? tags;
   BoxCollection? hdb;
 
   init() async {
@@ -24,7 +23,7 @@ class HiveDB {
       });
       records = await hdb!.openBox<Map>('records');
       models = await hdb!.openBox<Map>('models');
-      tags = await hdb!.openBox<Map>('tags');
+      tags = await hdb!.openBox<String>('tags');
 
       if (records == null || models == null || tags == null) {
         throw Exception('null boxes');
@@ -99,13 +98,13 @@ class HiveDB {
 
   // tags
 
-  saveTag(Tag tag) async => await tags!.put(tag.id, tag.serialize());
+  saveTag(String tag) async => await tags!.put(tag, tag);
 
-  deleteTag(String key) async {
-    await tags!.delete(key);
+  deleteTag(String tag) async {
+    await tags!.delete(tag);
 
     final taggedModelIds = modelsPool.data!.values
-        .where((model) => model.tags?.containsKey(key) == true)
+        .where((model) => model.tags?.contains(tag) == true)
         .map((model) => model.id)
         .toList();
 

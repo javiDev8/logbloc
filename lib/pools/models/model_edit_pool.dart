@@ -1,8 +1,8 @@
 import 'dart:async';
+import 'package:flutter/widgets.dart';
 import 'package:logize/features/feature_class.dart';
 import 'package:logize/pools/models/model_class.dart';
 import 'package:logize/pools/pools.dart';
-import 'package:logize/pools/tags/tag_class.dart';
 import 'package:logize/screens/models/model_screen/model_screen.dart';
 import 'package:logize/utils/feedback.dart';
 
@@ -144,21 +144,26 @@ class ModelEditPool extends Pool<Model> {
     dirt(true);
   }
 
-  addTag(Tag tag) {
-    if (data.tags?.containsKey(tag.id) == true) return;
-    data.tags ??= {};
-    data.tags![tag.id] = tag;
+  addTag(String tag) {
+    if (data.tags?.contains(tag) == true) return;
+    data.tags ??= [];
+    data.tags!.add(tag);
     controller.sink.add('tags');
     dirt(true);
   }
 
   void removeTag(String key) {
-    if (data.tags?.containsKey(key) == true) {
+    if (data.tags?.contains(key) == true) {
       data.tags!.remove(key);
       if (data.tags!.isEmpty) data.tags = null;
       controller.sink.add('tags');
       dirt(true);
     }
+  }
+
+  void setColor(Color c) {
+    data.color = c;
+    controller.sink.add('color');
   }
 
   setSchedulePeriod({required String period, required bool simple}) {

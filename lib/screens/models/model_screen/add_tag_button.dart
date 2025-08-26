@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:logize/apis/db.dart';
 import 'package:logize/pools/models/model_edit_pool.dart';
 import 'package:logize/pools/pools.dart';
-import 'package:logize/pools/tags/tag_class.dart';
 import 'package:logize/pools/tags/tags_pool.dart';
 import 'package:logize/utils/warn_dialogs.dart';
 import 'package:logize/widgets/design/button.dart';
@@ -15,7 +14,7 @@ class AddTagButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Tag tag = Tag.empty();
+    String tag = '';
 
     return IconButton(
       onPressed: () => showModalBottomSheet(
@@ -27,7 +26,7 @@ class AddTagButton extends StatelessWidget {
           child: Padding(
             padding: EdgeInsetsGeometry.all(10),
             child: Center(
-              child: Swimmer<Map<String, Tag>?>(
+              child: Swimmer<List<String>?>(
                 pool: tagsPool,
                 builder: (context, tags) {
                   if (tags == null) {
@@ -52,7 +51,7 @@ class AddTagButton extends StatelessWidget {
                                 context: context,
                                 builder: (context) => AlertDialog(
                                   content: SizedBox(
-                                    height: 240,
+                                    height: 130,
                                     child: Center(
                                       child: Form(
                                         key: formKey,
@@ -66,11 +65,9 @@ class AddTagButton extends StatelessWidget {
                                                 if (str!.isEmpty) {
                                                   return 'give your tag a name!';
                                                 }
-                                                if (tagsPool.data?.values
-                                                        .where(
-                                                          (t) =>
-                                                              t.name ==
-                                                              str,
+                                                if (tagsPool.data
+                                                        ?.where(
+                                                          (t) => t == str,
                                                         )
                                                         .isNotEmpty ==
                                                     true) {
@@ -79,22 +76,9 @@ class AddTagButton extends StatelessWidget {
                                                 return null;
                                               },
                                               onChanged: (str) =>
-                                                  tag.name = str,
+                                                  tag = str,
                                               round: true,
                                               label: 'tag name',
-                                            ),
-                                            ColorPicker(
-                                              pickerAreaBorderRadius:
-                                                  BorderRadius.all(
-                                                    Radius.circular(20),
-                                                  ),
-                                              pickerAreaHeightPercent: 0.0,
-                                              paletteType: PaletteType.hsl,
-                                              enableAlpha: false,
-                                              labelTypes: [],
-                                              pickerColor: Tag.initColor,
-                                              onColorChanged: (color) =>
-                                                  tag.color = color,
                                             ),
                                             Row(
                                               children: [
@@ -118,7 +102,11 @@ class AddTagButton extends StatelessWidget {
                                                           .validate()) {
                                                         return;
                                                       }
-                                                      await tag.save();
+                                                      await db.saveTag(
+                                                        tag,
+                                                      );
+                                                      tagsPool.data = null;
+                                                      tagsPool.retrieve();
                                                       Navigator.of(
                                                         // ignore: use_build_context_synchronously
                                                         context,
@@ -141,21 +129,15 @@ class AddTagButton extends StatelessWidget {
                         ),
                       ),
 
-                      ...tagsPool.data!.entries.map(
-                        (tagEntry) => ListTile(
+                      ...tagsPool.data!.map(
+                        (tag) => ListTile(
                           onTap: () {
-                            modelEditPool.addTag(
-                              tagsPool.data![tagEntry.key]!,
-                            );
+                            modelEditPool.addTag(tag);
                             Navigator.of(context).pop();
                           },
                           title: Row(
                             children: [
-                              Icon(
-                                Icons.circle,
-                                color: tagEntry.value.color,
-                              ),
-                              Expanded(child: Txt(tagEntry.value.name)),
+                              Expanded(child: Txt(tag)),
                               MenuButton(
                                 onSelected: (val) async {
                                   switch (val) {
@@ -163,14 +145,12 @@ class AddTagButton extends StatelessWidget {
                                       await warnDelete(
                                         context,
                                         delete: () async {
-                                          modelEditPool.removeTag(
-                                            tagEntry.key,
-                                          );
-                                          await tagEntry.value.delete();
+                                          modelEditPool.removeTag(tag);
+                                          await db.tags!.delete(tag);
                                           return false;
                                         },
                                         msg:
-                                            'The tag "${tagEntry.value.name}" will be '
+                                            'The tag "$tag" will be '
                                             'removed in all models, do you want to delete it?',
                                       );
 
