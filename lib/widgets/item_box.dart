@@ -21,6 +21,32 @@ class ItemBox extends StatelessWidget {
     final sortedFts = item.getSortedFts();
 
     final color = item.model?.color ?? Colors.grey;
+
+    final pinnedFts = [];
+    final unpinnedFts = [];
+    for (final ft in sortedFts) {
+      if (ft.pinned) {
+        pinnedFts.add(ft);
+      } else {
+        unpinnedFts.add(ft);
+      }
+    }
+
+    final unPinnedFtsWids = unpinnedFts.map(
+      (ft) => Padding(
+        padding: EdgeInsets.all(5),
+        child: Icon(
+          size: 20,
+          featureSwitch(parseType: 'icon', ft: ft) as IconData,
+        ),
+      ),
+    );
+
+    final splitHead =
+        pinnedFts.isNotEmpty ||
+        unpinnedFts.length > 5 ||
+        item.model!.name.length > 15;
+
     return Expanded(
       child: Container(
         margin: EdgeInsets.only(top: 10),
@@ -52,7 +78,10 @@ class ItemBox extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: EdgeInsets.all(20),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 15,
+                    ),
                     child: Row(
                       children: [
                         if (!fromRecords)
@@ -72,7 +101,7 @@ class ItemBox extends StatelessWidget {
                                 ),
                               )
                             : SizedBox(
-                                width: 120,
+                                width: splitHead ? 270 : 120,
                                 child: Text(
                                   item.model!.name,
                                   style: TextStyle(
@@ -84,36 +113,40 @@ class ItemBox extends StatelessWidget {
 
                         Exp(),
 
-                        if (!fromRecords)
-                          ...sortedFts
-                              .where((f) => !f.pinned)
-                              .map<Widget>(
-                                (ft) => Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 5,
-                                  ),
-                                  child: Icon(
-                                    size: 20,
-                                    featureSwitch(
-                                          parseType: 'icon',
-                                          ft: ft,
-                                        )
-                                        as IconData,
-                                  ),
-                                ),
-                              ),
+                        if (!fromRecords && !splitHead) ...unPinnedFtsWids,
                       ],
                     ),
                   ),
 
-                  ...sortedFts
-                      .where((f) => f.pinned)
-                      .map<Widget>(
-                        (ft) => FeatureWidget(
-                          lock: FeatureLock(model: true, record: true),
-                          feature: ft,
-                        ),
+                  ...pinnedFts.map<Widget>(
+                    (ft) => FeatureWidget(
+                      lock: FeatureLock(model: true, record: true),
+                      feature: ft,
+                    ),
+                  ),
+
+                  if (splitHead)
+                    Padding(
+                      padding: EdgeInsetsGeometry.only(
+                        left: 20,
+                        right: 20,
+                        bottom: 15,
                       ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Expanded(
+                            child: Wrap(
+                              alignment: WrapAlignment.end,
+                              children: [
+                                if (pinnedFts.isNotEmpty) Text('...  '),
+                                ...unPinnedFtsWids,
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                 ],
               ),
             ),
