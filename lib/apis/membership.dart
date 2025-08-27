@@ -60,7 +60,7 @@ class MembershipApi {
   }
 
   Future<void> purchase() async {
-    const String productId = 'logize-base-plan';
+    const String productId = '01';
     final completer = Completer<void>();
     late StreamSubscription<List<PurchaseDetails>> subscription;
 
