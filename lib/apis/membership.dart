@@ -39,8 +39,7 @@ class MembershipApi {
       currentPlan = spSrc;
       return;
     } else {
-      final baSrc = await backApi.checkPlan(deviceId);
-      currentPlan = baSrc;
+      currentPlan = await backApi.checkPlan(deviceId);
     }
   }
 

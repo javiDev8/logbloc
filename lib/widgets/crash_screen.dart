@@ -13,7 +13,6 @@ class CrashScreen extends StatelessWidget {
 
   static showError(FlutterErrorDetails details) {
     nPrint('ERROR: $details');
-    runApp(CrashScreen(details));
   }
 
   @override
