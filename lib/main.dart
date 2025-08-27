@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:logize/apis/db.dart';
-import 'package:logize/config/notifications.dart';
+import 'package:logize/apis/membership.dart';
+import 'package:logize/apis/notifications.dart';
 import 'package:logize/event_processor.dart';
 import 'package:logize/config/locales.dart';
 import 'package:logize/pools/theme_mode_pool.dart';
@@ -24,6 +25,8 @@ initLogize() async {
   await notif.init();
   await eventProcessor.init();
   await themeModePool.init();
+
+  await membershipApi.init();
 
   runApp(const Logize());
 }

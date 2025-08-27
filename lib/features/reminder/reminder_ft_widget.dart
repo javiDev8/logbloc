@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
-import 'package:logize/config/notifications.dart';
+import 'package:logize/apis/notifications.dart';
 import 'package:logize/features/feature_widget.dart';
 import 'package:logize/features/reminder/reminder_ft_class.dart';
 import 'package:logize/widgets/design/button.dart';

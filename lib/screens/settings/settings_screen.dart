@@ -1,4 +1,5 @@
 import 'package:logize/config/locales.dart';
+import 'package:logize/screens/settings/buy_app_screen.dart';
 import 'package:logize/screens/settings/preferences_settings.dart';
 import 'package:logize/widgets/design/section_divider.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,8 @@ class SettingsScreen extends StatelessWidget {
             SectionDivider(string: Tr.preferences.getString(context)),
             PreferencesSettings(),
 
+	    SectionDivider(string: 'plan',),
+	    BuyAppScreen()
             //SectionDivider(string: Tr.help.getString(context)),
             //HelpSettings(),
           ],

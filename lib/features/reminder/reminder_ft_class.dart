@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:logize/config/notifications.dart';
+import 'package:logize/apis/notifications.dart';
 import 'package:logize/features/feature_class.dart';
 import 'package:logize/pools/models/model_edit_pool.dart';
 import 'package:logize/utils/noticable_print.dart';
