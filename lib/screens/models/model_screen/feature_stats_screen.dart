@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:logize/features/feature_switch.dart';
-import 'package:logize/pools/models/model_edit_pool.dart';
-import 'package:logize/pools/pools.dart';
-import 'package:logize/pools/records/record_class.dart';
-import 'package:logize/pools/records/records_pool.dart';
-import 'package:logize/widgets/design/topbar_wrap.dart';
-import 'package:logize/widgets/design/txt.dart';
+import 'package:logbloc/features/feature_switch.dart';
+import 'package:logbloc/pools/models/model_edit_pool.dart';
+import 'package:logbloc/pools/pools.dart';
+import 'package:logbloc/pools/records/record_class.dart';
+import 'package:logbloc/pools/records/records_pool.dart';
+import 'package:logbloc/widgets/design/topbar_wrap.dart';
+import 'package:logbloc/widgets/design/txt.dart';
 
 class FeatureStatsScreen extends StatelessWidget {
   final String ftKey;

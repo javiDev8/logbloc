@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:logize/utils/nav.dart';
-import 'package:logize/widgets/design/button.dart';
+import 'package:logbloc/utils/nav.dart';
+import 'package:logbloc/widgets/design/button.dart';
 
 FutureOr<bool?> warnUnsavedChanges(
   BuildContext context, {

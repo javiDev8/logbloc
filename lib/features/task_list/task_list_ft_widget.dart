@@ -1,9 +1,9 @@
-import 'package:logize/features/feature_widget.dart';
-import 'package:logize/features/task_list/task_list_ft_class.dart';
-import 'package:logize/pools/pools.dart';
-import 'package:logize/widgets/design/menu_button.dart';
-import 'package:logize/widgets/design/txt.dart';
-import 'package:logize/widgets/design/txt_field.dart';
+import 'package:logbloc/features/feature_widget.dart';
+import 'package:logbloc/features/task_list/task_list_ft_class.dart';
+import 'package:logbloc/pools/pools.dart';
+import 'package:logbloc/widgets/design/menu_button.dart';
+import 'package:logbloc/widgets/design/txt.dart';
+import 'package:logbloc/widgets/design/txt_field.dart';
 import 'package:flutter/material.dart';
 
 class TaskListFtWidget extends StatelessWidget {

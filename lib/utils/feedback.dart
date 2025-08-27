@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:logize/main.dart';
-import 'package:logize/pools/theme_mode_pool.dart';
-import 'package:logize/widgets/design/txt.dart';
+import 'package:logbloc/main.dart';
+import 'package:logbloc/pools/theme_mode_pool.dart';
+import 'package:logbloc/widgets/design/txt.dart';
 
 enum FeedbackType { error, success, warn }
 

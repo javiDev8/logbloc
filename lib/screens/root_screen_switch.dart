@@ -1,14 +1,14 @@
-import 'package:logize/pools/models/model_edit_pool.dart';
-import 'package:logize/pools/pools.dart';
-import 'package:logize/pools/screen_index_pool.dart';
-import 'package:logize/screens/daily/daily_screen.dart';
-import 'package:logize/screens/daily/item_screen.dart';
-import 'package:logize/screens/models/model_screen/model_screen.dart';
-import 'package:logize/screens/models/models_screen.dart';
-import 'package:logize/screens/settings/settings_screen.dart';
+import 'package:logbloc/pools/models/model_edit_pool.dart';
+import 'package:logbloc/pools/pools.dart';
+import 'package:logbloc/pools/screen_index_pool.dart';
+import 'package:logbloc/screens/daily/daily_screen.dart';
+import 'package:logbloc/screens/daily/item_screen.dart';
+import 'package:logbloc/screens/models/model_screen/model_screen.dart';
+import 'package:logbloc/screens/models/models_screen.dart';
+import 'package:logbloc/screens/settings/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:logize/utils/warn_dialogs.dart';
+import 'package:logbloc/utils/warn_dialogs.dart';
 
 class RootScreen {
   final Widget screen;

@@ -1,14 +1,14 @@
-import 'package:logize/features/feature_switch.dart';
-import 'package:logize/features/feature_widget.dart';
-import 'package:logize/pools/items/item_class.dart';
-import 'package:logize/pools/screen_index_pool.dart';
-import 'package:logize/pools/theme_mode_pool.dart';
-import 'package:logize/screens/daily/item_screen.dart';
-import 'package:logize/screens/root_screen_switch.dart';
-import 'package:logize/utils/color_convert.dart';
-import 'package:logize/utils/fmt_date.dart';
-import 'package:logize/utils/nav.dart';
-import 'package:logize/widgets/design/exp.dart';
+import 'package:logbloc/features/feature_switch.dart';
+import 'package:logbloc/features/feature_widget.dart';
+import 'package:logbloc/pools/items/item_class.dart';
+import 'package:logbloc/pools/screen_index_pool.dart';
+import 'package:logbloc/pools/theme_mode_pool.dart';
+import 'package:logbloc/screens/daily/item_screen.dart';
+import 'package:logbloc/screens/root_screen_switch.dart';
+import 'package:logbloc/utils/color_convert.dart';
+import 'package:logbloc/utils/fmt_date.dart';
+import 'package:logbloc/utils/nav.dart';
+import 'package:logbloc/widgets/design/exp.dart';
 import 'package:flutter/material.dart';
 
 class ItemBox extends StatelessWidget {

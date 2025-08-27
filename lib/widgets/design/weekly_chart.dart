@@ -1,9 +1,9 @@
-import 'package:logize/pools/theme_mode_pool.dart';
-import 'package:logize/utils/fmt_date.dart';
+import 'package:logbloc/pools/theme_mode_pool.dart';
+import 'package:logbloc/utils/fmt_date.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:logize/widgets/design/txt.dart';
-import 'package:logize/widgets/time_stats.dart';
+import 'package:logbloc/widgets/design/txt.dart';
+import 'package:logbloc/widgets/time_stats.dart';
 
 class WeeklyChart extends StatelessWidget {
   final ChartOpts opts;

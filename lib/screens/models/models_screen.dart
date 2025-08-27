@@ -1,15 +1,15 @@
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
-import 'package:logize/config/locales.dart';
-import 'package:logize/pools/models/model_class.dart';
-import 'package:logize/pools/models/models_pool.dart';
-import 'package:logize/pools/pools.dart';
-import 'package:logize/screens/models/model_screen/model_screen.dart';
-import 'package:logize/utils/nav.dart';
-import 'package:logize/widgets/design/act_button.dart';
+import 'package:logbloc/config/locales.dart';
+import 'package:logbloc/pools/models/model_class.dart';
+import 'package:logbloc/pools/models/models_pool.dart';
+import 'package:logbloc/pools/pools.dart';
+import 'package:logbloc/screens/models/model_screen/model_screen.dart';
+import 'package:logbloc/utils/nav.dart';
+import 'package:logbloc/widgets/design/act_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
-import 'package:logize/widgets/design/section_divider.dart';
-import 'package:logize/widgets/design/topbar_wrap.dart';
+import 'package:logbloc/widgets/design/section_divider.dart';
+import 'package:logbloc/widgets/design/topbar_wrap.dart';
 
 class ModelsScreen extends StatelessWidget {
   const ModelsScreen({super.key});

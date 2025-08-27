@@ -1,10 +1,10 @@
-import 'package:logize/apis/db.dart';
-import 'package:logize/pools/items/item_class.dart';
-import 'package:logize/pools/models/model_class.dart';
-import 'package:logize/pools/pools.dart';
-import 'package:logize/pools/tags/tags_pool.dart';
-import 'package:logize/utils/feedback.dart';
-import 'package:logize/utils/parse_map.dart';
+import 'package:logbloc/apis/db.dart';
+import 'package:logbloc/pools/items/item_class.dart';
+import 'package:logbloc/pools/models/model_class.dart';
+import 'package:logbloc/pools/pools.dart';
+import 'package:logbloc/pools/tags/tags_pool.dart';
+import 'package:logbloc/utils/feedback.dart';
+import 'package:logbloc/utils/parse_map.dart';
 
 typedef Models = Map<String, Model>;
 

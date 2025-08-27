@@ -2,10 +2,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:logize/features/feature_widget.dart';
-import 'package:logize/features/picture/picture_ft_class.dart';
-import 'package:logize/widgets/design/button.dart';
-import 'package:logize/widgets/design/txt_field.dart';
+import 'package:logbloc/features/feature_widget.dart';
+import 'package:logbloc/features/picture/picture_ft_class.dart';
+import 'package:logbloc/widgets/design/button.dart';
+import 'package:logbloc/widgets/design/txt_field.dart';
 
 class PictureFtWidget extends StatelessWidget {
   final PictureFt ft;

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:logize/features/feature_switch.dart';
-import 'package:logize/pools/models/model_class.dart';
-import 'package:logize/pools/models/model_edit_pool.dart';
-import 'package:logize/pools/theme_mode_pool.dart';
-import 'package:logize/screens/models/model_screen/schedules_view/simple_pickers/simple_biweek_picker.dart';
-import 'package:logize/utils/color_convert.dart';
-import 'package:logize/utils/fmt_date.dart';
-import 'package:logize/utils/warn_dialogs.dart';
-import 'package:logize/widgets/design/button.dart';
-import 'package:logize/widgets/design/txt.dart';
+import 'package:logbloc/features/feature_switch.dart';
+import 'package:logbloc/pools/models/model_class.dart';
+import 'package:logbloc/pools/models/model_edit_pool.dart';
+import 'package:logbloc/pools/theme_mode_pool.dart';
+import 'package:logbloc/screens/models/model_screen/schedules_view/simple_pickers/simple_biweek_picker.dart';
+import 'package:logbloc/utils/color_convert.dart';
+import 'package:logbloc/utils/fmt_date.dart';
+import 'package:logbloc/utils/warn_dialogs.dart';
+import 'package:logbloc/widgets/design/button.dart';
+import 'package:logbloc/widgets/design/txt.dart';
 
 class ScheduleWidget extends StatelessWidget {
   final Schedule schedule;

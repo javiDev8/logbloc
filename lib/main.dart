@@ -1,23 +1,23 @@
 import 'dart:async';
-import 'package:logize/apis/db.dart';
-import 'package:logize/apis/membership.dart';
-import 'package:logize/apis/notifications.dart';
-import 'package:logize/event_processor.dart';
-import 'package:logize/config/locales.dart';
-import 'package:logize/pools/theme_mode_pool.dart';
+import 'package:logbloc/apis/db.dart';
+import 'package:logbloc/apis/membership.dart';
+import 'package:logbloc/apis/notifications.dart';
+import 'package:logbloc/event_processor.dart';
+import 'package:logbloc/config/locales.dart';
+import 'package:logbloc/pools/theme_mode_pool.dart';
 import 'package:flutter_localization/flutter_localization.dart';
-import 'package:logize/widgets/crash_screen.dart';
+import 'package:logbloc/widgets/crash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:logize/pools/pools.dart';
-import 'package:logize/screens/root_screen_switch.dart';
-import 'package:logize/widgets/large_screen/side_navbar.dart';
-import 'package:logize/widgets/navbar.dart';
+import 'package:logbloc/pools/pools.dart';
+import 'package:logbloc/screens/root_screen_switch.dart';
+import 'package:logbloc/widgets/large_screen/side_navbar.dart';
+import 'package:logbloc/widgets/navbar.dart';
 import 'package:flutter/material.dart';
 
 final sharedPrefs = SharedPreferencesAsync();
 final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
-initLogize() async {
+initLogbloc() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FlutterLocalization.instance.ensureInitialized();
 
@@ -28,7 +28,7 @@ initLogize() async {
 
   await membershipApi.init();
 
-  runApp(const Logize());
+  runApp(const Logbloc());
 }
 
 void main() async {
@@ -39,21 +39,21 @@ void main() async {
       FlutterError.onError = (FlutterErrorDetails details) =>
           CrashScreen.showError(details);
 
-      await initLogize();
+      await initLogbloc();
     },
     (error, stack) {
       FlutterErrorDetails details = FlutterErrorDetails(
         exception: error,
         stack: stack,
-        library: 'logize crash box',
+        library: 'logbloc crash box',
       );
       CrashScreen.showError(details);
     },
   );
 }
 
-class Logize extends StatelessWidget {
-  const Logize({super.key});
+class Logbloc extends StatelessWidget {
+  const Logbloc({super.key});
   @override
   Widget build(BuildContext context) {
     final screenIsLarge = MediaQuery.sizeOf(context).width > 500;
@@ -74,7 +74,7 @@ class Logize extends StatelessWidget {
       builder: (context, mode) {
         eventProcessor.listen();
         return MaterialApp(
-          title: 'Logize',
+          title: 'Logbloc',
           scaffoldMessengerKey: scaffoldMessengerKey,
           supportedLocales: FlutterLocalization.instance.supportedLocales,
           localizationsDelegates:

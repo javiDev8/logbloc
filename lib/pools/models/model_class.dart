@@ -1,12 +1,12 @@
-import 'package:logize/apis/db.dart';
-import 'package:logize/event_processor.dart';
-import 'package:logize/features/feature_class.dart';
-import 'package:logize/features/feature_switch.dart';
+import 'package:logbloc/apis/db.dart';
+import 'package:logbloc/event_processor.dart';
+import 'package:logbloc/features/feature_class.dart';
+import 'package:logbloc/features/feature_switch.dart';
 import 'package:flutter/material.dart';
-import 'package:logize/pools/tags/tags_pool.dart';
-import 'package:logize/screens/models/model_screen/schedules_view/simple_pickers/simple_biweek_picker.dart';
-import 'package:logize/utils/feedback.dart';
-import 'package:logize/utils/fmt_date.dart';
+import 'package:logbloc/pools/tags/tags_pool.dart';
+import 'package:logbloc/screens/models/model_screen/schedules_view/simple_pickers/simple_biweek_picker.dart';
+import 'package:logbloc/utils/feedback.dart';
+import 'package:logbloc/utils/fmt_date.dart';
 
 // the num represents a priority for sorting, being
 // 0 the default, so "0" means is there, null means is not

@@ -1,13 +1,13 @@
-import 'package:logize/pools/items/item_class.dart';
-import 'package:logize/pools/models/model_class.dart';
-import 'package:logize/pools/models/models_pool.dart';
-import 'package:logize/pools/pools.dart';
-import 'package:logize/pools/records/records_pool.dart';
+import 'package:logbloc/pools/items/item_class.dart';
+import 'package:logbloc/pools/models/model_class.dart';
+import 'package:logbloc/pools/models/models_pool.dart';
+import 'package:logbloc/pools/pools.dart';
+import 'package:logbloc/pools/records/records_pool.dart';
 
 // needed for average
 // ignore:depend_on_referenced_packages
 import 'package:collection/collection.dart';
-import 'package:logize/utils/fmt_date.dart';
+import 'package:logbloc/utils/fmt_date.dart';
 
 typedef ItemsByDay = Map<String, List<Item>>;
 

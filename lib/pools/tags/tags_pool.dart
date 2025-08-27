@@ -1,5 +1,5 @@
-import 'package:logize/apis/db.dart';
-import 'package:logize/pools/pools.dart';
+import 'package:logbloc/apis/db.dart';
+import 'package:logbloc/pools/pools.dart';
 
 class TagsPool extends Pool<List<String>?> {
   TagsPool(super.def);

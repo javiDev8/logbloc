@@ -1,4 +1,4 @@
-import 'package:logize/features/feature_class.dart';
+import 'package:logbloc/features/feature_class.dart';
 
 class TaskListFt extends Feature {
   final Map<String, Task> tasks;

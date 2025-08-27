@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:logize/features/reminder/reminder_ft_class.dart';
+import 'package:logbloc/features/reminder/reminder_ft_class.dart';
 
 class ReminderFtStats extends StatelessWidget {
   final List<Map<String, dynamic>> ftRecs;

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:logize/pools/models/model_edit_pool.dart';
-import 'package:logize/screens/models/model_screen/schedules_view/schedule_widget.dart';
-import 'package:logize/screens/models/model_screen/schedules_view/simple_pickers/period_picker_menu_button.dart';
-import 'package:logize/widgets/design/txt.dart';
+import 'package:logbloc/pools/models/model_edit_pool.dart';
+import 'package:logbloc/screens/models/model_screen/schedules_view/schedule_widget.dart';
+import 'package:logbloc/screens/models/model_screen/schedules_view/simple_pickers/period_picker_menu_button.dart';
+import 'package:logbloc/widgets/design/txt.dart';
 
 class SimplePickerWrap extends StatelessWidget {
   final String title;

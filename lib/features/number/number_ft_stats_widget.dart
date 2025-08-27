@@ -1,6 +1,6 @@
-import 'package:logize/features/number/number_ft_class.dart';
+import 'package:logbloc/features/number/number_ft_class.dart';
 import 'package:flutter/material.dart';
-import 'package:logize/widgets/time_stats.dart';
+import 'package:logbloc/widgets/time_stats.dart';
 
 class NumberFtStatsWidget extends StatelessWidget {
   final List<Map<String, dynamic>> ftRecs;

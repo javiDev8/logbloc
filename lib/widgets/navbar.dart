@@ -1,7 +1,7 @@
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
-import 'package:logize/config/locales.dart';
-import 'package:logize/pools/pools.dart';
-import 'package:logize/pools/screen_index_pool.dart';
+import 'package:logbloc/config/locales.dart';
+import 'package:logbloc/pools/pools.dart';
+import 'package:logbloc/pools/screen_index_pool.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 

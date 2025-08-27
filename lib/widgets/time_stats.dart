@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:logize/features/feature_class.dart';
-import 'package:logize/widgets/design/button.dart';
-import 'package:logize/widgets/design/daily_chart.dart';
-import 'package:logize/widgets/design/monthly_chart.dart';
-import 'package:logize/widgets/design/txt.dart';
-import 'package:logize/widgets/design/weekly_chart.dart';
+import 'package:logbloc/features/feature_class.dart';
+import 'package:logbloc/widgets/design/button.dart';
+import 'package:logbloc/widgets/design/daily_chart.dart';
+import 'package:logbloc/widgets/design/monthly_chart.dart';
+import 'package:logbloc/widgets/design/txt.dart';
+import 'package:logbloc/widgets/design/weekly_chart.dart';
 
 class TimeStats extends StatelessWidget {
   final ChartOpts chartOpts;

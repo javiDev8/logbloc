@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:logize/pools/models/model_class.dart';
-import 'package:logize/pools/models/model_edit_pool.dart';
-import 'package:logize/screens/models/model_screen/schedules_view/simple_pickers/pick_button.dart';
-import 'package:logize/screens/models/model_screen/schedules_view/simple_pickers/simple_picker_wrap.dart';
+import 'package:logbloc/pools/models/model_class.dart';
+import 'package:logbloc/pools/models/model_edit_pool.dart';
+import 'package:logbloc/screens/models/model_screen/schedules_view/simple_pickers/pick_button.dart';
+import 'package:logbloc/screens/models/model_screen/schedules_view/simple_pickers/simple_picker_wrap.dart';
 
 final weekDayChars = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 

@@ -2,12 +2,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
-import 'package:logize/apis/db.dart';
-import 'package:logize/features/reminder/reminder_ft_class.dart';
-import 'package:logize/pools/models/model_class.dart';
-import 'package:logize/pools/models/models_pool.dart';
-import 'package:logize/utils/fmt_date.dart';
-import 'package:logize/utils/parse_map.dart';
+import 'package:logbloc/apis/db.dart';
+import 'package:logbloc/features/reminder/reminder_ft_class.dart';
+import 'package:logbloc/pools/models/model_class.dart';
+import 'package:logbloc/pools/models/models_pool.dart';
+import 'package:logbloc/utils/fmt_date.dart';
+import 'package:logbloc/utils/parse_map.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:workmanager/workmanager.dart';
@@ -30,10 +30,10 @@ class Notif {
   static const details = NotificationDetails(
     iOS: DarwinNotificationDetails(presentSound: true, presentAlert: true),
     android: AndroidNotificationDetails(
-      'logize-notifs',
-      'logize notification channel',
+      'logbloc-notifs',
+      'logbloc notification channel',
       channelDescription:
-          'The android notifications channel for the logize application',
+          'The android notifications channel for the logbloc application',
     ),
   );
 
@@ -189,7 +189,7 @@ void workmanagerCallback() {
       }
 
       await Workmanager().registerOneOffTask(
-        'logize-${DateTime.now().millisecondsSinceEpoch}',
+        'logbloc-${DateTime.now().millisecondsSinceEpoch}',
         'test',
         initialDelay: Notif.timeUntilMidnight(),
       );

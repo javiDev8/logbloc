@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:flutter/widgets.dart';
-import 'package:logize/features/feature_class.dart';
-import 'package:logize/pools/models/model_class.dart';
-import 'package:logize/pools/pools.dart';
-import 'package:logize/screens/models/model_screen/model_screen.dart';
-import 'package:logize/utils/feedback.dart';
+import 'package:logbloc/features/feature_class.dart';
+import 'package:logbloc/pools/models/model_class.dart';
+import 'package:logbloc/pools/pools.dart';
+import 'package:logbloc/screens/models/model_screen/model_screen.dart';
+import 'package:logbloc/utils/feedback.dart';
 
 // needed for average
 // ignore:depend_on_referenced_packages

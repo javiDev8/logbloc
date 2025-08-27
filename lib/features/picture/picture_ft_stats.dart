@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:logize/features/picture/picture_ft_class.dart';
-import 'package:logize/widgets/time_stats.dart';
+import 'package:logbloc/features/picture/picture_ft_class.dart';
+import 'package:logbloc/widgets/time_stats.dart';
 
 class PictureFtStats extends StatelessWidget {
   final List<Map<String, dynamic>> ftRecs;

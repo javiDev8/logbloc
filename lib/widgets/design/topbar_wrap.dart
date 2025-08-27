@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:logize/pools/pools.dart';
-import 'package:logize/pools/screen_index_pool.dart';
-import 'package:logize/pools/theme_mode_pool.dart';
-import 'package:logize/screens/root_screen_switch.dart';
+import 'package:logbloc/pools/pools.dart';
+import 'package:logbloc/pools/screen_index_pool.dart';
+import 'package:logbloc/pools/theme_mode_pool.dart';
+import 'package:logbloc/screens/root_screen_switch.dart';
 
 PreferredSize wrapBar({
   required bool backable,

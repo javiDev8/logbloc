@@ -1,8 +1,8 @@
-import 'package:logize/pools/models/model_class.dart';
-import 'package:logize/pools/models/models_pool.dart';
-import 'package:logize/pools/records/record_class.dart';
-import 'package:logize/utils/feedback.dart';
-import 'package:logize/utils/parse_map.dart';
+import 'package:logbloc/pools/models/model_class.dart';
+import 'package:logbloc/pools/models/models_pool.dart';
+import 'package:logbloc/pools/records/record_class.dart';
+import 'package:logbloc/utils/feedback.dart';
+import 'package:logbloc/utils/parse_map.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 
 typedef Col = CollectionBox<Map>?;
@@ -16,7 +16,7 @@ class HiveDB {
   init() async {
     try {
       await Hive.initFlutter();
-      hdb = await BoxCollection.open('/logizehivedb', {
+      hdb = await BoxCollection.open('/logblochivedb', {
         'records',
         'models',
         'tags',

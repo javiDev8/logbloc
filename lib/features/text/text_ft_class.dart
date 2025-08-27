@@ -1,4 +1,4 @@
-import 'package:logize/features/feature_class.dart';
+import 'package:logbloc/features/feature_class.dart';
 
 class TextFt extends Feature {
   String content;

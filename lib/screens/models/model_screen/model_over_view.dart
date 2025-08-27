@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
-import 'package:logize/pools/models/model_class.dart';
-import 'package:logize/pools/models/model_edit_pool.dart';
-import 'package:logize/pools/models/models_pool.dart';
-import 'package:logize/pools/pools.dart';
-import 'package:logize/screens/models/model_records_screen.dart';
-import 'package:logize/screens/models/model_screen/add_tag_button.dart';
-import 'package:logize/utils/nav.dart';
-import 'package:logize/widgets/design/button.dart';
-import 'package:logize/widgets/design/exp.dart';
-import 'package:logize/widgets/design/txt.dart';
-import 'package:logize/widgets/design/txt_field.dart';
+import 'package:logbloc/pools/models/model_class.dart';
+import 'package:logbloc/pools/models/model_edit_pool.dart';
+import 'package:logbloc/pools/models/models_pool.dart';
+import 'package:logbloc/pools/pools.dart';
+import 'package:logbloc/screens/models/model_records_screen.dart';
+import 'package:logbloc/screens/models/model_screen/add_tag_button.dart';
+import 'package:logbloc/utils/nav.dart';
+import 'package:logbloc/widgets/design/button.dart';
+import 'package:logbloc/widgets/design/exp.dart';
+import 'package:logbloc/widgets/design/txt.dart';
+import 'package:logbloc/widgets/design/txt_field.dart';
 
 class ModelOverView extends StatelessWidget {
   final bool isNew;

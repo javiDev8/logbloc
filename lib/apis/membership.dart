@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:logize/apis/back.dart';
-import 'package:logize/main.dart';
-import 'package:logize/utils/feedback.dart';
+import 'package:logbloc/apis/back.dart';
+import 'package:logbloc/main.dart';
+import 'package:logbloc/utils/feedback.dart';
 
 class MembershipApi {
   String currentPlan = '';

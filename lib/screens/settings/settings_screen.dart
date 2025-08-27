@@ -1,11 +1,11 @@
-import 'package:logize/config/locales.dart';
-import 'package:logize/screens/settings/buy_app_screen.dart';
-import 'package:logize/screens/settings/preferences_settings.dart';
-import 'package:logize/widgets/design/section_divider.dart';
+import 'package:logbloc/config/locales.dart';
+import 'package:logbloc/screens/settings/buy_app_screen.dart';
+import 'package:logbloc/screens/settings/preferences_settings.dart';
+import 'package:logbloc/widgets/design/section_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
-import 'package:logize/widgets/design/topbar_wrap.dart';
-import 'package:logize/widgets/design/txt.dart';
+import 'package:logbloc/widgets/design/topbar_wrap.dart';
+import 'package:logbloc/widgets/design/txt.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});

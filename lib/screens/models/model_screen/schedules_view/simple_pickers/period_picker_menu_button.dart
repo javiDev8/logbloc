@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:logize/pools/models/model_edit_pool.dart';
-import 'package:logize/utils/warn_dialogs.dart';
-import 'package:logize/widgets/design/menu_button.dart';
+import 'package:logbloc/pools/models/model_edit_pool.dart';
+import 'package:logbloc/utils/warn_dialogs.dart';
+import 'package:logbloc/widgets/design/menu_button.dart';
 
 class PeriodPickerMenuButton extends StatelessWidget {
   final String period;

@@ -1,13 +1,13 @@
-import 'package:logize/features/feature_class.dart';
-import 'package:logize/features/feature_switch.dart';
-import 'package:logize/pools/models/model_edit_pool.dart';
-import 'package:logize/pools/theme_mode_pool.dart';
-import 'package:logize/screens/models/model_screen/feature_stats_screen.dart';
-import 'package:logize/utils/nav.dart';
-import 'package:logize/utils/warn_dialogs.dart';
-import 'package:logize/widgets/design/exp.dart';
+import 'package:logbloc/features/feature_class.dart';
+import 'package:logbloc/features/feature_switch.dart';
+import 'package:logbloc/pools/models/model_edit_pool.dart';
+import 'package:logbloc/pools/theme_mode_pool.dart';
+import 'package:logbloc/screens/models/model_screen/feature_stats_screen.dart';
+import 'package:logbloc/utils/nav.dart';
+import 'package:logbloc/utils/warn_dialogs.dart';
+import 'package:logbloc/widgets/design/exp.dart';
 import 'package:flutter/material.dart';
-import 'package:logize/widgets/design/txt.dart';
+import 'package:logbloc/widgets/design/txt.dart';
 
 class FeatureLock {
   bool model;

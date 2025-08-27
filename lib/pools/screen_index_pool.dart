@@ -1,2 +1,2 @@
-import 'package:logize/pools/pools.dart';
+import 'package:logbloc/pools/pools.dart';
 final screenIndexPool = Pool<int>(1);

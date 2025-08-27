@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:logize/pools/models/model_class.dart';
-import 'package:logize/pools/models/model_edit_pool.dart';
-import 'package:logize/screens/models/model_screen/schedules_view/simple_pickers/simple_biweek_picker.dart';
-import 'package:logize/screens/models/model_screen/schedules_view/simple_pickers/simple_monthday_picker.dart';
-import 'package:logize/screens/models/model_screen/schedules_view/simple_pickers/simple_weekday_picker.dart';
-import 'package:logize/utils/fmt_date.dart';
-import 'package:logize/utils/nav.dart';
-import 'package:logize/widgets/design/button.dart';
-import 'package:logize/widgets/design/exp.dart';
-import 'package:logize/widgets/design/txt.dart';
-import 'package:logize/widgets/design/txt_field.dart';
+import 'package:logbloc/pools/models/model_class.dart';
+import 'package:logbloc/pools/models/model_edit_pool.dart';
+import 'package:logbloc/screens/models/model_screen/schedules_view/simple_pickers/simple_biweek_picker.dart';
+import 'package:logbloc/screens/models/model_screen/schedules_view/simple_pickers/simple_monthday_picker.dart';
+import 'package:logbloc/screens/models/model_screen/schedules_view/simple_pickers/simple_weekday_picker.dart';
+import 'package:logbloc/utils/fmt_date.dart';
+import 'package:logbloc/utils/nav.dart';
+import 'package:logbloc/widgets/design/button.dart';
+import 'package:logbloc/widgets/design/exp.dart';
+import 'package:logbloc/widgets/design/txt.dart';
+import 'package:logbloc/widgets/design/txt_field.dart';
 
 class AddScheduleButton extends StatelessWidget {
   final String type;

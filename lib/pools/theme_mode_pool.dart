@@ -1,5 +1,5 @@
-import 'package:logize/main.dart';
-import 'package:logize/pools/pools.dart';
+import 'package:logbloc/main.dart';
+import 'package:logbloc/pools/pools.dart';
 import 'package:flutter/material.dart';
 
 const seedColor = Color.fromARGB(255, 230, 173, 83);

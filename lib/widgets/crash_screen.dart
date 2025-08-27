@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
-import 'package:logize/pools/theme_mode_pool.dart';
-import 'package:logize/utils/noticable_print.dart';
-import 'package:logize/widgets/design/button.dart';
-import 'package:logize/widgets/design/txt.dart';
+import 'package:logbloc/pools/theme_mode_pool.dart';
+import 'package:logbloc/utils/noticable_print.dart';
+import 'package:logbloc/widgets/design/button.dart';
+import 'package:logbloc/widgets/design/txt.dart';
 import 'package:restart_app/restart_app.dart';
 
 class CrashScreen extends StatelessWidget {

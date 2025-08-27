@@ -1,8 +1,8 @@
-import 'package:logize/config/locales.dart';
-import 'package:logize/pools/pools.dart';
-import 'package:logize/pools/theme_mode_pool.dart';
-import 'package:logize/widgets/design/button.dart';
-import 'package:logize/widgets/design/dropdown.dart';
+import 'package:logbloc/config/locales.dart';
+import 'package:logbloc/pools/pools.dart';
+import 'package:logbloc/pools/theme_mode_pool.dart';
+import 'package:logbloc/widgets/design/button.dart';
+import 'package:logbloc/widgets/design/dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 

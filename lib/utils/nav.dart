@@ -1,5 +1,5 @@
-import 'package:logize/pools/screen_index_pool.dart';
-import 'package:logize/screens/root_screen_switch.dart';
+import 'package:logbloc/pools/screen_index_pool.dart';
+import 'package:logbloc/screens/root_screen_switch.dart';
 import 'package:flutter/material.dart';
 
 navPush({required Widget screen}) => rootScreens[screenIndexPool.data]

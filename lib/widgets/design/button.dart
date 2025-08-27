@@ -1,4 +1,4 @@
-import 'package:logize/pools/theme_mode_pool.dart';
+import 'package:logbloc/pools/theme_mode_pool.dart';
 import 'package:flutter/material.dart';
 
 class Button extends StatelessWidget {

@@ -1,9 +1,9 @@
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
-import 'package:logize/pools/items/items_by_day_pool.dart';
-import 'package:logize/pools/theme_mode_pool.dart';
-import 'package:logize/screens/daily/daily_screen.dart';
-import 'package:logize/utils/fmt_date.dart';
-import 'package:logize/widgets/design/exp.dart';
+import 'package:logbloc/pools/items/items_by_day_pool.dart';
+import 'package:logbloc/pools/theme_mode_pool.dart';
+import 'package:logbloc/screens/daily/daily_screen.dart';
+import 'package:logbloc/utils/fmt_date.dart';
+import 'package:logbloc/widgets/design/exp.dart';
 import 'package:flutter/material.dart';
 
 class PrettyDate extends StatelessWidget {

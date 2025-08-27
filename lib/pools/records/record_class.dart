@@ -1,7 +1,7 @@
-import 'package:logize/apis/db.dart';
-import 'package:logize/event_processor.dart';
-import 'package:logize/pools/models/model_class.dart';
-import 'package:logize/utils/feedback.dart';
+import 'package:logbloc/apis/db.dart';
+import 'package:logbloc/event_processor.dart';
+import 'package:logbloc/pools/models/model_class.dart';
+import 'package:logbloc/utils/feedback.dart';
 
 class Rec {
   String id;

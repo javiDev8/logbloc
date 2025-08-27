@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:logize/features/feature_switch.dart';
-import 'package:logize/features/feature_widget.dart';
-import 'package:logize/pools/theme_mode_pool.dart';
-import 'package:logize/utils/fmt_date.dart';
-import 'package:logize/widgets/design/txt.dart';
-import 'package:logize/widgets/time_stats.dart';
+import 'package:logbloc/features/feature_switch.dart';
+import 'package:logbloc/features/feature_widget.dart';
+import 'package:logbloc/pools/theme_mode_pool.dart';
+import 'package:logbloc/utils/fmt_date.dart';
+import 'package:logbloc/widgets/design/txt.dart';
+import 'package:logbloc/widgets/time_stats.dart';
 
 class DailyChart extends StatelessWidget {
   final ChartOpts chartOpts;

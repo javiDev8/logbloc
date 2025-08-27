@@ -1,4 +1,4 @@
-package dev.sweetfeatures.logize
+package dev.sweetfeatures.logbloc
 
 import io.flutter.embedding.android.FlutterActivity
 

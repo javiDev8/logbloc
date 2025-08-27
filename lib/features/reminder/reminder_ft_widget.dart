@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
-import 'package:logize/apis/notifications.dart';
-import 'package:logize/features/feature_widget.dart';
-import 'package:logize/features/reminder/reminder_ft_class.dart';
-import 'package:logize/widgets/design/button.dart';
-import 'package:logize/widgets/design/exp.dart';
-import 'package:logize/widgets/design/txt.dart';
-import 'package:logize/widgets/design/txt_field.dart';
+import 'package:logbloc/apis/notifications.dart';
+import 'package:logbloc/features/feature_widget.dart';
+import 'package:logbloc/features/reminder/reminder_ft_class.dart';
+import 'package:logbloc/widgets/design/button.dart';
+import 'package:logbloc/widgets/design/exp.dart';
+import 'package:logbloc/widgets/design/txt.dart';
+import 'package:logbloc/widgets/design/txt_field.dart';
 
 class ReminderFtWidget extends StatelessWidget {
   final ReminderFt ft;

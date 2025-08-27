@@ -1,6 +1,6 @@
-import 'package:logize/features/text/text_ft_class.dart';
+import 'package:logbloc/features/text/text_ft_class.dart';
 import 'package:flutter/material.dart';
-import 'package:logize/widgets/time_stats.dart';
+import 'package:logbloc/widgets/time_stats.dart';
 
 class TextFtStatsWidget extends StatelessWidget {
   final List<Map<String, dynamic>> ftRecs;

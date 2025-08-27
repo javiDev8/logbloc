@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:logize/apis/membership.dart';
-import 'package:logize/widgets/design/button.dart';
-import 'package:logize/widgets/design/txt.dart';
+import 'package:logbloc/apis/membership.dart';
+import 'package:logbloc/widgets/design/button.dart';
+import 'package:logbloc/widgets/design/txt.dart';
 
 class BuyAppScreen extends StatelessWidget {
   const BuyAppScreen({super.key});

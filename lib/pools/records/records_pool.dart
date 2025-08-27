@@ -1,8 +1,8 @@
-import 'package:logize/apis/db.dart';
-import 'package:logize/pools/items/item_class.dart';
-import 'package:logize/pools/pools.dart';
-import 'package:logize/pools/records/record_class.dart';
-import 'package:logize/utils/parse_map.dart';
+import 'package:logbloc/apis/db.dart';
+import 'package:logbloc/pools/items/item_class.dart';
+import 'package:logbloc/pools/pools.dart';
+import 'package:logbloc/pools/records/record_class.dart';
+import 'package:logbloc/utils/parse_map.dart';
 
 class RecordsPool extends Pool<Map<String, Rec>?> {
   RecordsPool(super.def);

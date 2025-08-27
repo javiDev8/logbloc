@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:logize/apis/db.dart';
-import 'package:logize/pools/models/model_edit_pool.dart';
-import 'package:logize/pools/pools.dart';
-import 'package:logize/pools/tags/tags_pool.dart';
-import 'package:logize/utils/warn_dialogs.dart';
-import 'package:logize/widgets/design/button.dart';
-import 'package:logize/widgets/design/menu_button.dart';
-import 'package:logize/widgets/design/txt.dart';
-import 'package:logize/widgets/design/txt_field.dart';
+import 'package:logbloc/apis/db.dart';
+import 'package:logbloc/pools/models/model_edit_pool.dart';
+import 'package:logbloc/pools/pools.dart';
+import 'package:logbloc/pools/tags/tags_pool.dart';
+import 'package:logbloc/utils/warn_dialogs.dart';
+import 'package:logbloc/widgets/design/button.dart';
+import 'package:logbloc/widgets/design/menu_button.dart';
+import 'package:logbloc/widgets/design/txt.dart';
+import 'package:logbloc/widgets/design/txt_field.dart';
 
 class AddTagButton extends StatelessWidget {
   const AddTagButton({super.key});

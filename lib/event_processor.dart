@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:logize/main.dart';
-import 'package:logize/pools/items/items_by_day_pool.dart';
-import 'package:logize/pools/models/models_pool.dart';
-import 'package:logize/pools/records/records_pool.dart';
-import 'package:logize/pools/tags/tags_pool.dart';
+import 'package:logbloc/main.dart';
+import 'package:logbloc/pools/items/items_by_day_pool.dart';
+import 'package:logbloc/pools/models/models_pool.dart';
+import 'package:logbloc/pools/records/records_pool.dart';
+import 'package:logbloc/pools/tags/tags_pool.dart';
 
 class Event {
   String? id;

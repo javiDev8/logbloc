@@ -1,11 +1,11 @@
-import 'package:logize/pools/items/item_class.dart';
-import 'package:logize/pools/models/model_class.dart';
-import 'package:logize/pools/pools.dart';
-import 'package:logize/pools/records/record_class.dart';
-import 'package:logize/pools/records/records_pool.dart';
-import 'package:logize/widgets/design/topbar_wrap.dart';
-import 'package:logize/widgets/design/txt.dart';
-import 'package:logize/widgets/item_box.dart';
+import 'package:logbloc/pools/items/item_class.dart';
+import 'package:logbloc/pools/models/model_class.dart';
+import 'package:logbloc/pools/pools.dart';
+import 'package:logbloc/pools/records/record_class.dart';
+import 'package:logbloc/pools/records/records_pool.dart';
+import 'package:logbloc/widgets/design/topbar_wrap.dart';
+import 'package:logbloc/widgets/design/txt.dart';
+import 'package:logbloc/widgets/item_box.dart';
 import 'package:flutter/material.dart';
 
 class ModelRecordsScreen extends StatelessWidget {

@@ -1,7 +1,7 @@
-import 'package:logize/features/feature_widget.dart';
-import 'package:logize/features/number/number_ft_class.dart';
-import 'package:logize/widgets/design/txt.dart';
-import 'package:logize/widgets/design/txt_field.dart';
+import 'package:logbloc/features/feature_widget.dart';
+import 'package:logbloc/features/number/number_ft_class.dart';
+import 'package:logbloc/widgets/design/txt.dart';
+import 'package:logbloc/widgets/design/txt_field.dart';
 import 'package:flutter/material.dart';
 
 class NumberFtWidget extends StatelessWidget {
