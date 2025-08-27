@@ -15,7 +15,7 @@ class BuyAppScreen extends StatelessWidget {
             Button(
               'buy the app',
               onPressed: () async {
-                await membershipApi.purchase();
+                await membershipApi.upgrade();
                 setState(() {});
               },
             )

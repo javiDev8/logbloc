@@ -4,7 +4,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:logbloc/apis/back.dart';
 import 'package:logbloc/main.dart';
-import 'package:logbloc/utils/feedback.dart';
+import 'package:logbloc/utils/noticable_print.dart';
 
 class MembershipApi {
   String currentPlan = '';
@@ -51,15 +51,15 @@ class MembershipApi {
 
       await purchase();
       currentPlan = 'base';
-      sharedPrefs.setString('plan', 'base');
+      await sharedPrefs.setString('plan', 'base');
       await backApi.upgradePlan(deviceId);
     } catch (e) {
-      return feedback('error on upgrade!', type: FeedbackType.error);
+      throw Exception('upgrade error: $e');
     }
   }
 
   Future<void> purchase() async {
-    const String productId = '01';
+    const String productId = '1';
     final completer = Completer<void>();
     late StreamSubscription<List<PurchaseDetails>> subscription;
 
@@ -67,17 +67,28 @@ class MembershipApi {
       purchaseDetailsList,
     ) {
       for (final purchaseDetails in purchaseDetailsList) {
-        if (purchaseDetails.status == PurchaseStatus.purchased) {
+        if (purchaseDetails.status == PurchaseStatus.pending) {
+        } else if (purchaseDetails.status == PurchaseStatus.purchased) {
           InAppPurchase.instance.completePurchase(purchaseDetails);
-          completer.complete();
+          if (!completer.isCompleted) {
+            completer.complete();
+          }
         } else if (purchaseDetails.status == PurchaseStatus.error) {
-          completer.completeError(purchaseDetails.error!);
+          if (!completer.isCompleted) {
+            completer.completeError(purchaseDetails.error!);
+          }
+        } else if (purchaseDetails.status == PurchaseStatus.canceled) {
+          if (!completer.isCompleted) {
+            completer.completeError('Purchase was canceled');
+          }
         }
       }
     });
 
     final ProductDetailsResponse productDetailsResponse =
         await InAppPurchase.instance.queryProductDetails({productId});
+
+    nPrint('product details res: ${productDetailsResponse.productDetails}');
 
     if (productDetailsResponse.productDetails.isNotEmpty) {
       final ProductDetails productDetails =
@@ -89,11 +100,17 @@ class MembershipApi {
         purchaseParam: purchaseParam,
       );
     } else {
-      completer.completeError('Product details not found');
+      if (!completer.isCompleted) {
+        completer.completeError('Product details not found');
+      }
     }
-
-    await completer.future.timeout(Duration(seconds: 30));
-    subscription.cancel();
+    try {
+      await completer.future.timeout(const Duration(seconds: 30));
+    } catch (e) {
+      throw Exception('PURCHASE ERROR: $e');
+    } finally {
+      subscription.cancel();
+    }
   }
 }
 
