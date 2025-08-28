@@ -10,6 +10,7 @@ class Button extends StatelessWidget {
   final Color? overwrittenColor;
   final int variant;
   final bool filled;
+  final bool disabled;
 
   const Button(
     this.text, {
@@ -21,6 +22,7 @@ class Button extends StatelessWidget {
     this.overwrittenColor,
     this.variant = 0,
     this.filled = true,
+    this.disabled = false,
   });
 
   @override
@@ -30,7 +32,10 @@ class Button extends StatelessWidget {
     final color = themeModePool.data == ThemeMode.light
         ? Colors.black
         : Colors.white;
-    final txtStyle = TextStyle(fontWeight: FontWeight.w600, color: color);
+    final txtStyle = TextStyle(
+      fontWeight: FontWeight.w600,
+      color: disabled ? Colors.grey : color,
+    );
 
     final cs = Theme.of(context).colorScheme;
     final variants = [
@@ -77,7 +82,7 @@ class Button extends StatelessWidget {
       return Padding(
         padding: EdgeInsets.all(5),
         child: TextButton(
-          onPressed: onPressed,
+          onPressed: disabled ? null : onPressed,
           style: style,
           child: Padding(
             padding: EdgeInsets.only(left: p, right: p, top: 5, bottom: 5),

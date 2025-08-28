@@ -4,7 +4,6 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:logbloc/apis/back.dart';
 import 'package:logbloc/main.dart';
-import 'package:logbloc/utils/noticable_print.dart';
 
 class MembershipApi {
   String currentPlan = '';
@@ -59,7 +58,7 @@ class MembershipApi {
   }
 
   Future<void> purchase() async {
-    const String productId = '1';
+    final String productId = await backApi.getProductId();
     final completer = Completer<void>();
     late StreamSubscription<List<PurchaseDetails>> subscription;
 
@@ -87,8 +86,6 @@ class MembershipApi {
 
     final ProductDetailsResponse productDetailsResponse =
         await InAppPurchase.instance.queryProductDetails({productId});
-
-    nPrint('product details res: ${productDetailsResponse.productDetails}');
 
     if (productDetailsResponse.productDetails.isNotEmpty) {
       final ProductDetails productDetails =

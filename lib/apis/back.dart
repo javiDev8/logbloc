@@ -5,16 +5,17 @@ import 'package:logbloc/utils/noticable_print.dart';
 
 class BackApi {
   static const String domain = 'api.sweetfeatures.dev';
+  static const defHeads = {'Content-Type': 'application/json'};
 
   Future<String> checkPlan(String deviceId) async {
     try {
       final res = await http.post(
         Uri.https(domain, '/check-device'),
-        headers: {'Content-Type': 'application/json'},
+        headers: defHeads,
         body: jsonEncode({'id': deviceId}),
       );
       if (res.statusCode == 200) {
-	nPrint('on 200! body: ${res.body}');
+        nPrint('on 200! body: ${res.body}');
         final data = jsonDecode(res.body);
         return data['plan'] as String;
       }
@@ -30,10 +31,16 @@ class BackApi {
       headers: {
         'Authorization':
             '7W9UAzC3IQ0pZmXyELDQjLWtCWcdpRKg8JXZF8DGXbmyBQ0iDME0K',
-        'Content-Type': 'application/json',
+        ...defHeads,
       },
       body: jsonEncode({'deviceId': deviceId}),
     );
+  }
+
+  Future<String> getProductId() async {
+    final res = await http.get(Uri.https(domain, '/product-id'));
+    if (res.statusCode != 200) throw Exception('Non 200 code');
+    return jsonDecode(res.body)['id'];
   }
 }
 
