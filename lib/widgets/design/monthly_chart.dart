@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:logbloc/pools/theme_mode_pool.dart';
 import 'package:logbloc/utils/fmt_date.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:logbloc/widgets/dump_ft_records.dart';
 import 'package:logbloc/widgets/time_stats.dart';
 
 class MonthlyChart extends StatelessWidget {
   final ChartOpts opts;
+  final bool dump;
   final PageController pageController = PageController(initialPage: 1000);
 
-  MonthlyChart({super.key, required this.opts});
+  MonthlyChart({super.key, required this.opts, required this.dump});
 
   DateTime getFirstDayOfMonth(DateTime date) =>
       DateTime(date.year, date.month, 1);
@@ -25,7 +27,7 @@ class MonthlyChart extends StatelessWidget {
     final bool? integer = opts.integer;
 
     return SizedBox(
-      height: 350,
+      height: 450,
       child: PageView.builder(
         controller: pageController,
         itemBuilder: (context, index) {
@@ -94,98 +96,123 @@ class MonthlyChart extends StatelessWidget {
                     ],
                   ),
                 ),
-                Expanded(
-                  child: LineChart(
-                    LineChartData(
-                      lineBarsData: [
-                        LineChartBarData(
-                          spots: List.generate(daysInMonth, (index) {
-                            return FlSpot(
-                              (index + 1).toDouble(),
-                              monthData[index],
-                            );
-                          }),
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.tertiaryContainer,
-                          barWidth: 3,
-                          isStrokeCapRound: true,
-                          dotData: FlDotData(show: false),
-                        ),
-                      ],
-                      titlesData: FlTitlesData(
-                        show: true,
 
-                        bottomTitles: AxisTitles(
-                          sideTitles: SideTitles(
-                            showTitles: true,
-                            reservedSize: 30,
-                            interval: 1,
-                            getTitlesWidget: (value, meta) {
-                              final day = value.toInt();
-                              final bool isToday =
-                                  targetMonth.year == now.year &&
-                                  targetMonth.month == now.month &&
-                                  day == now.day;
-                              final bool shouldShowTitle =
-                                  (day % 7 == 1) || isToday;
-
-                              if (!shouldShowTitle) {
-                                return const SizedBox.shrink();
-                              }
-
-                              return SideTitleWidget(
-                                meta: meta,
-                                space: 8.0,
-                                child: Text(
-                                  day.toString(),
-                                  style: TextStyle(
-                                    color: isToday ? seedColor : null,
-                                    fontWeight: isToday
-                                        ? FontWeight.bold
-                                        : FontWeight.normal,
-                                  ),
-                                ),
+                if (dump)
+                  Expanded(
+                    child: ListView(
+                      children:
+                          dumpFtRecords(
+                                ft: opts.ft,
+                                recordFts: recordFts
+                                    .where(
+                                      (rec) =>
+                                          rec['date'].year ==
+                                              targetMonth.year &&
+                                          rec['date'].month ==
+                                              targetMonth.month,
+                                    )
+                                    .toList(),
+                              )
+                              .map(
+                                (w) => Row(children: [Expanded(child: w)]),
+                              )
+                              .toList(),
+                    ),
+                  )
+                else
+                  SizedBox(
+                    height: 300,
+                    child: LineChart(
+                      LineChartData(
+                        lineBarsData: [
+                          LineChartBarData(
+                            spots: List.generate(daysInMonth, (index) {
+                              return FlSpot(
+                                (index + 1).toDouble(),
+                                monthData[index],
                               );
+                            }),
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.tertiaryContainer,
+                            barWidth: 3,
+                            isStrokeCapRound: true,
+                            dotData: FlDotData(show: false),
+                          ),
+                        ],
+                        titlesData: FlTitlesData(
+                          show: true,
+
+                          bottomTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              reservedSize: 30,
+                              interval: 1,
+                              getTitlesWidget: (value, meta) {
+                                final day = value.toInt();
+                                final bool isToday =
+                                    targetMonth.year == now.year &&
+                                    targetMonth.month == now.month &&
+                                    day == now.day;
+                                final bool shouldShowTitle =
+                                    (day % 7 == 1) || isToday;
+
+                                if (!shouldShowTitle) {
+                                  return const SizedBox.shrink();
+                                }
+
+                                return SideTitleWidget(
+                                  meta: meta,
+                                  space: 8.0,
+                                  child: Text(
+                                    day.toString(),
+                                    style: TextStyle(
+                                      color: isToday ? seedColor : null,
+                                      fontWeight: isToday
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+
+                          leftTitles: const AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                          topTitles: const AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                          rightTitles: const AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                        ),
+                        gridData: FlGridData(show: false),
+                        borderData: FlBorderData(show: false),
+                        lineTouchData: LineTouchData(
+                          touchTooltipData: LineTouchTooltipData(
+                            getTooltipItems: (touchedSpots) {
+                              return touchedSpots.map((spot) {
+                                String val = spot.y.toStringAsFixed(1);
+                                if (integer == true) {
+                                  val = spot.y.toInt().toString();
+                                }
+                                return LineTooltipItem(
+                                  '${spot.x.toInt()}  $val${unit ?? ''}',
+                                  const TextStyle(color: Colors.white),
+                                );
+                              }).toList();
                             },
                           ),
                         ),
-
-                        leftTitles: const AxisTitles(
-                          sideTitles: SideTitles(showTitles: false),
-                        ),
-                        topTitles: const AxisTitles(
-                          sideTitles: SideTitles(showTitles: false),
-                        ),
-                        rightTitles: const AxisTitles(
-                          sideTitles: SideTitles(showTitles: false),
-                        ),
+                        minX: 1,
+                        maxX: daysInMonth.toDouble(),
+                        minY: 0,
+                        maxY: null,
                       ),
-                      gridData: FlGridData(show: false),
-                      borderData: FlBorderData(show: false),
-                      lineTouchData: LineTouchData(
-                        touchTooltipData: LineTouchTooltipData(
-                          getTooltipItems: (touchedSpots) {
-                            return touchedSpots.map((spot) {
-                              String val = spot.y.toStringAsFixed(1);
-                              if (integer == true) {
-                                val = spot.y.toInt().toString();
-                              }
-                              return LineTooltipItem(
-                                '${spot.x.toInt()}  $val${unit ?? ''}',
-                                const TextStyle(color: Colors.white),
-                              );
-                            }).toList();
-                          },
-                        ),
-                      ),
-                      minX: 1,
-                      maxX: daysInMonth.toDouble(),
-                      minY: 0,
-                      maxY: null,
                     ),
                   ),
-                ),
               ],
             ),
           );

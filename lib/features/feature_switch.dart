@@ -30,7 +30,7 @@ final List<String> availableFtTypes = [
 dynamic featureSwitch({
   required String parseType,
 
-  bool? detailed,
+  bool detailed = false,
   String? ftType,
   FeatureLock? lock,
   Feature? ft,
@@ -52,7 +52,7 @@ dynamic featureSwitch({
           return NumberFtWidget(
             lock: lock!,
             ft: ft as NumberFt,
-            detailed: detailed!,
+            detailed: detailed,
             dirt: dirt,
           );
         case 'stats':
@@ -73,7 +73,7 @@ dynamic featureSwitch({
           return TextFtWidget(
             lock: lock!,
             ft: ft as TextFt,
-            detailed: detailed!,
+            detailed: detailed,
             dirt: dirt,
           );
         case 'stats':
@@ -94,7 +94,7 @@ dynamic featureSwitch({
           return TaskListFtWidget(
             lock: lock!,
             ft: ft as TaskListFt,
-            detailed: detailed!,
+            detailed: detailed,
             dirt: dirt,
           );
         case 'stats':
@@ -118,7 +118,7 @@ dynamic featureSwitch({
           return PictureFtWidget(
             lock: lock!,
             ft: ft as PictureFt,
-            detailed: detailed!,
+            detailed: detailed,
             dirt: dirt,
           );
         case 'stats':
@@ -139,7 +139,7 @@ dynamic featureSwitch({
           return ReminderFtWidget(
             lock: lock!,
             ft: ft as ReminderFt,
-            detailed: detailed!,
+            detailed: detailed,
             dirt: dirt,
           );
         case 'stats':

@@ -13,23 +13,27 @@ class TextFtStatsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double getChars(Map<String, dynamic> rec) {
+      return rec['content']?.length.toDouble() ?? 0.0;
+    }
+
+    double getWords(Map<String, dynamic> rec) {
+      return rec['content']?.split(' ').length.toDouble() ?? 0.0;
+    }
+
     return Column(
       children: [
         ftRecs.isEmpty
             ? Center(child: Text('no records'))
-            : Expanded(
-                child: TimeStats(
-                  chartOpts: ChartOpts(
-                    chartLabel: "Total characters",
-                    ft: ft,
-                    operation: ChartOperation.add,
-                    integer: true,
-                    recordFts: ftRecs,
-                    getRecordValue: (Map<String, dynamic> rec) {
-                      return rec['content']?.length.toDouble() ?? 0.0;
-                    },
-                    unit: 'characters',
-                  ),
+            : TimeStats(
+                showOptions: {'characters': getChars, 'words': getWords},
+                chartOpts: ChartOpts(
+                  operation: ChartOperation.add,
+                  ft: ft,
+                  integer: true,
+                  recordFts: ftRecs,
+                  getRecordValue: getChars,
+                  unit: 'characters',
                 ),
               ),
       ],

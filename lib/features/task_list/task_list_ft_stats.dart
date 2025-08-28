@@ -24,6 +24,21 @@ class TaskListFtStatsWidget extends StatelessWidget {
     return rootTasks.where((r) => r.done).length / rootTasks.length * 100;
   }
 
+  double getDone(Map<String, dynamic> ftRec) {
+    final rootTasks = getRootTasks(ftRec);
+    return rootTasks.where((r) => r.done).length.toDouble();
+  }
+
+  double getPending(Map<String, dynamic> ftRec) {
+    final rootTasks = getRootTasks(ftRec);
+    return rootTasks.where((r) => !r.done).length.toDouble();
+  }
+
+  double getTasks(Map<String, dynamic> ftRec) {
+    final rootTasks = getRootTasks(ftRec);
+    return rootTasks.length.toDouble();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -32,15 +47,19 @@ class TaskListFtStatsWidget extends StatelessWidget {
             ? Center(child: Text('no records'))
             : Expanded(
                 child: TimeStats(
+                  showOptions: {
+                    'tasks': getTasks,
+                    'done tasks': getDone,
+                    'pending tasks': getPending,
+                    'done task rate': getDoneRate,
+                  },
                   chartOpts: ChartOpts(
-                    chartLabel: 'Done tasks rate',
-                    ft: ft,
                     operation: ChartOperation.average,
+                    ft: ft,
                     integer: true,
                     recordFts: ftRecs,
 
-                    getRecordValue: (Map<String, dynamic> rec) =>
-                        getDoneRate(rec),
+                    getRecordValue: getDoneRate,
                     unit: '%',
                   ),
                 ),

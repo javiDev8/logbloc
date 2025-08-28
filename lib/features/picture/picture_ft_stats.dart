@@ -14,12 +14,12 @@ class PictureFtStats extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TimeStats(
+      showOptions: {},
       chartOpts: ChartOpts(
-        chartLabel: 'Total pictures',
+        operation: ChartOperation.add,
         ft: ft,
         getRecordValue: ((_) => 1),
         recordFts: ftRecs,
-        operation: ChartOperation.add,
         integer: true,
       ),
     );

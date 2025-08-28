@@ -19,10 +19,10 @@ class NumberFtStatsWidget extends StatelessWidget {
             ? Center(child: Text('no records'))
             : Expanded(
                 child: TimeStats(
+		  showOptions: {},
                   chartOpts: ChartOpts(
-                    chartLabel: 'Total ${ft.title}',
+		    operation: ChartOperation.add,
                     ft: ft,
-                    operation: ChartOperation.add,
                     recordFts: ftRecs,
                     getRecordValue: (Map<String, dynamic> rec) {
                       return rec['value']?.toDouble() ?? 0.0;
