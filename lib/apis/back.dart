@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:logbloc/utils/noticable_print.dart';
 
 class BackApi {
   static const String domain = 'api.sweetfeatures.dev';
@@ -15,7 +14,6 @@ class BackApi {
         body: jsonEncode({'id': deviceId}),
       );
       if (res.statusCode == 200) {
-        nPrint('on 200! body: ${res.body}');
         final data = jsonDecode(res.body);
         return data['plan'] as String;
       }

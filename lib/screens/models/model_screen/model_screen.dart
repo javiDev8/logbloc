@@ -114,7 +114,10 @@ class ModelScreenState extends State<ModelScreen>
                     child: TabBarView(
                       controller: tabController,
                       children: [
-                        ModelOverView(isNew: isNew),
+                        ModelOverView(
+                          isNew: isNew,
+                          goToFeatures: () => tabController.animateTo(1),
+                        ),
                         ModelFeaturesView(),
                         ModelSchedulesView(),
                       ],
