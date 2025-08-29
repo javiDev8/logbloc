@@ -1,15 +1,19 @@
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
+import 'package:logbloc/apis/membership.dart';
 import 'package:logbloc/config/locales.dart';
 import 'package:logbloc/pools/models/model_class.dart';
 import 'package:logbloc/pools/models/models_pool.dart';
 import 'package:logbloc/pools/pools.dart';
+import 'package:logbloc/pools/screen_index_pool.dart';
 import 'package:logbloc/screens/models/model_screen/model_screen.dart';
 import 'package:logbloc/utils/nav.dart';
 import 'package:logbloc/widgets/design/act_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
+import 'package:logbloc/widgets/design/button.dart';
 import 'package:logbloc/widgets/design/section_divider.dart';
 import 'package:logbloc/widgets/design/topbar_wrap.dart';
+import 'package:logbloc/widgets/design/txt.dart';
 
 class ModelsScreen extends StatelessWidget {
   const ModelsScreen({super.key});
@@ -62,7 +66,46 @@ class ModelsScreen extends StatelessWidget {
 
           ActButton(
             icon: Icon(MdiIcons.notebookPlusOutline, size: 30),
-            onPressed: () => navPush(screen: ModelScreen()),
+            onPressed: () async {
+              if (membershipApi.currentPlan == 'free' &&
+                  modelsPool.data!.length == 3) {
+                await showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    content: SizedBox(
+                      height: 220,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Txt(
+                            'You have only 3 free logbooks and are already in use',
+                            s: 18,
+                            w: 8,
+                          ),
+                          Txt('Buy the app to get unlimited logbooks'),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Button(
+                                  'Buy app',
+                                  onPressed: () {
+                                    screenIndexPool.set((_) => 2);
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+                return;
+              }
+
+              navPush(screen: ModelScreen());
+            },
           ),
         ],
       ),

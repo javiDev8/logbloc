@@ -39,6 +39,7 @@ class MembershipApi {
       return;
     } else {
       currentPlan = await backApi.checkPlan(deviceId);
+      await sharedPrefs.setString('plan', currentPlan);
     }
   }
 

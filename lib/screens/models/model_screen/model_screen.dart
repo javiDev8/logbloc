@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:logbloc/apis/membership.dart';
 import 'package:logbloc/pools/models/model_class.dart';
 import 'package:logbloc/pools/models/model_edit_pool.dart';
 import 'package:logbloc/pools/models/models_pool.dart';
@@ -7,8 +6,6 @@ import 'package:logbloc/pools/pools.dart';
 import 'package:logbloc/screens/models/model_screen/model_features_view.dart';
 import 'package:logbloc/screens/models/model_screen/model_over_view.dart';
 import 'package:logbloc/screens/models/model_screen/schedules_view/model_schedules_view.dart';
-import 'package:logbloc/utils/feedback.dart';
-import 'package:logbloc/utils/nav.dart';
 import 'package:logbloc/utils/warn_dialogs.dart';
 import 'package:logbloc/widgets/design/topbar_wrap.dart';
 import 'package:logbloc/widgets/design/txt.dart';
@@ -46,17 +43,7 @@ class ModelScreenState extends State<ModelScreen>
   Widget build(BuildContext context) {
     final isNew = widget.model == null;
 
-    if (membershipApi.currentPlan == 'free' &&
-        isNew &&
-        modelsPool.data!.length == 3) {
-      feedback(
-        'you have already 3 logbooks! buy the app to get unlimited logbooks',
-      );
-      navPop();
-    }
-
     modelEditPool.data = widget.model ?? Model.empty();
-    //modelEditPool.dirty = isNew;
     return Scaffold(
       key: modelScreenKey,
       appBar: PreferredSize(
