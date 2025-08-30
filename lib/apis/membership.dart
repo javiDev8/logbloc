@@ -8,6 +8,7 @@ import 'package:logbloc/main.dart';
 class MembershipApi {
   String currentPlan = '';
   String deviceId = '';
+  bool welcomed = false;
 
   Future<String> getDeviceId() async {
     try {
@@ -32,6 +33,8 @@ class MembershipApi {
   }
 
   Future<void> init() async {
+    welcomed = (await sharedPrefs.getBool('welcomed')) ?? false;
+
     deviceId = await getDeviceId();
     final spSrc = await sharedPrefs.getString('plan');
     if (spSrc != null) {

@@ -6,6 +6,7 @@ import 'package:logbloc/event_processor.dart';
 import 'package:logbloc/config/locales.dart';
 import 'package:logbloc/pools/theme_mode_pool.dart';
 import 'package:flutter_localization/flutter_localization.dart';
+import 'package:logbloc/screens/welcome/welcome_screen.dart';
 import 'package:logbloc/widgets/crash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:logbloc/pools/pools.dart';
@@ -25,7 +26,6 @@ initLogbloc() async {
   await notif.init();
   await eventProcessor.init();
   await themeModePool.init();
-
   await membershipApi.init();
 
   runApp(const Logbloc());
@@ -82,17 +82,21 @@ class Logbloc extends StatelessWidget {
           themeMode: mode,
           theme: detaTheme,
           darkTheme: detaDarkTheme,
-          home: Scaffold(
-            body: screenIsLarge
-                ? Row(
-                    children: [
-                      SideNavbar(key: UniqueKey()),
-                      Expanded(child: RootScreenSwitch(key: UniqueKey())),
-                    ],
-                  )
-                : RootScreenSwitch(key: UniqueKey()),
-            bottomNavigationBar: !screenIsLarge ? Navbar() : null,
-          ),
+          home: membershipApi.welcomed
+              ? Scaffold(
+                  body: screenIsLarge
+                      ? Row(
+                          children: [
+                            SideNavbar(key: UniqueKey()),
+                            Expanded(
+                              child: RootScreenSwitch(key: UniqueKey()),
+                            ),
+                          ],
+                        )
+                      : RootScreenSwitch(key: UniqueKey()),
+                  bottomNavigationBar: !screenIsLarge ? Navbar() : null,
+                )
+              : WelcomeScreen(),
         );
       },
     );
