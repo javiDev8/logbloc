@@ -59,7 +59,7 @@ class MembershipApi {
   }
 
   Future<void> purchase() async {
-    final String productId = await backApi.getProductId();
+    final String productId = await backApi.getAsset('product-id');
     final completer = Completer<void>();
     late StreamSubscription<List<PurchaseDetails>> subscription;
 

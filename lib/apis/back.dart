@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:logbloc/apis/membership.dart';
 
 class BackApi {
   static const String domain = 'api.sweetfeatures.dev';
@@ -35,10 +36,26 @@ class BackApi {
     );
   }
 
-  Future<String> getProductId() async {
-    final res = await http.get(Uri.https(domain, '/product-id'));
-    if (res.statusCode != 200) throw Exception('Non 200 code');
-    return jsonDecode(res.body)['id'];
+  Future<String> getAsset(String id) async {
+    final res = await http.get(Uri.https(domain, '/assets/$id'));
+    if (res.statusCode != 200) {
+      throw Exception('assets return ${res.statusCode}');
+    }
+    return res.body;
+  }
+
+  Future<void> reportError(String content) async {
+    final res = await http.post(
+      Uri.https(domain, '/error'),
+      headers: defHeads,
+      body: jsonEncode({
+        'deviceId': membershipApi.deviceId,
+        'content': content
+      }),
+    );
+    if (res.statusCode != 200) {
+      throw Exception('assets return ${res.statusCode}');
+    }
   }
 }
 
