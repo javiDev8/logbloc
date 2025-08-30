@@ -36,12 +36,12 @@ class BackApi {
     );
   }
 
-  Future<String> getAsset(String id) async {
-    final res = await http.get(Uri.https(domain, '/assets/$id'));
+  Future<Map<String, dynamic>> getAllAssets() async {
+    final res = await http.get(Uri.https(domain, '/assets/all'));
     if (res.statusCode != 200) {
       throw Exception('assets return ${res.statusCode}');
     }
-    return res.body;
+    return jsonDecode(res.body);
   }
 
   Future<void> reportError(String content) async {
@@ -50,7 +50,7 @@ class BackApi {
       headers: defHeads,
       body: jsonEncode({
         'deviceId': membershipApi.deviceId,
-        'content': content
+        'content': content,
       }),
     );
     if (res.statusCode != 200) {

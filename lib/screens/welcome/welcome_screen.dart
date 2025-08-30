@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logbloc/apis/membership.dart';
+import 'package:logbloc/assets/asset_url_holder.dart';
 import 'package:logbloc/main.dart';
 import 'package:logbloc/pools/theme_mode_pool.dart';
 import 'package:logbloc/screens/welcome/welcome_page.dart';
@@ -37,22 +38,44 @@ class WelcomeScreenState extends State<WelcomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: detaTheme.colorScheme.tertiary,
       body: PageView(
         controller: controller,
         children: [
           WelcomePage(
+            title: "Welcome to Logbloc",
             withNextBtn: true,
             index: 0,
             controller: controller,
-            child: Center(child: Txt('welcome')),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.network(assetHolder.urls['welcome-img']),
+                Padding(
+                  padding: EdgeInsetsGeometry.all(20),
+                  child: Text(
+                    'A simple yet scalable system to design and track routines',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
+
           WelcomePage(
+            title: 'Quick Start',
             withNextBtn: true,
             index: 1,
             controller: controller,
             child: Center(child: Txt('quick start')),
           ),
+
           WelcomePage(
+            title: 'Ready?',
             withNextBtn: false,
             index: 2,
             controller: controller,

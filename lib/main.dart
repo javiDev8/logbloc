@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:logbloc/apis/db.dart';
 import 'package:logbloc/apis/membership.dart';
 import 'package:logbloc/apis/notifications.dart';
+import 'package:logbloc/assets/asset_url_holder.dart';
 import 'package:logbloc/event_processor.dart';
 import 'package:logbloc/config/locales.dart';
 import 'package:logbloc/pools/theme_mode_pool.dart';
@@ -22,11 +23,15 @@ initLogbloc() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FlutterLocalization.instance.ensureInitialized();
 
+  // TODO: DEV ONLY REMOVE FOR BUILD
+  //await sharedPrefs.clear();
+
   await db.init();
   await notif.init();
   await eventProcessor.init();
   await themeModePool.init();
   await membershipApi.init();
+  await assetHolder.init();
 
   runApp(const Logbloc());
 }

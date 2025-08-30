@@ -2,7 +2,6 @@ import 'package:logbloc/pools/theme_mode_pool.dart';
 import 'package:logbloc/utils/fmt_date.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:logbloc/utils/noticable_print.dart';
 import 'package:logbloc/widgets/design/txt.dart';
 import 'package:logbloc/widgets/dump_ft_records.dart';
 import 'package:logbloc/widgets/time_stats.dart';
@@ -51,7 +50,6 @@ class DailyChart extends StatelessWidget {
                 hour: int.parse(ts[0]),
                 minute: int.parse(ts[1]),
               );
-              nPrint('recDate: $recDate');
 
               final targetHour = targetDay.add(Duration(hours: hourIndex));
               // Filter records that fall within the specific hour.
@@ -88,23 +86,24 @@ class DailyChart extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        // Display the full date instead of month/year.
-                        '${months[targetDay.month]} ${targetDay.day}, ${targetDay.year}',
-                        style: TextStyle(
-                          color: dayColor,
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
+                if (!dump)
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          // Display the full date instead of month/year.
+                          '${months[targetDay.month]} ${targetDay.day}, ${targetDay.year}',
+                          style: TextStyle(
+                            color: dayColor,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
 
                 if (dump) ...[
                   // Update the date range display to show the current day.
