@@ -29,6 +29,11 @@ class ModelRecordsScreen extends StatelessWidget {
           if (records.isEmpty) {
             return Center(child: Text('no records'));
           }
+          records.sort(
+            (a, b) => DateTime.parse(
+              a.schedule.day,
+            ).compareTo(DateTime.parse(b.schedule.day)),
+          );
           return Padding(
             padding: EdgeInsets.symmetric(horizontal: 7),
             child: ListView(
@@ -43,7 +48,7 @@ class ModelRecordsScreen extends StatelessWidget {
                             modelId: model.id,
                             recordId: r.id,
                             schedule: r.schedule,
-			    date: r.schedule.day
+                            date: r.schedule.day,
                           ),
                         ),
                       ],

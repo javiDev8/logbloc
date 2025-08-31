@@ -23,9 +23,6 @@ initLogbloc() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FlutterLocalization.instance.ensureInitialized();
 
-  // TODO: DEV ONLY REMOVE FOR BUILD
-  await sharedPrefs.clear();
-
   await db.init();
   await notif.init();
   await eventProcessor.init();
