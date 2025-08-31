@@ -6,6 +6,7 @@ import 'package:logbloc/pools/theme_mode_pool.dart';
 import 'package:logbloc/screens/welcome/welcome_page.dart';
 import 'package:logbloc/widgets/design/button.dart';
 import 'package:logbloc/widgets/design/txt.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -37,6 +38,10 @@ class WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final ytController = YoutubePlayerController(
+      initialVideoId: assetHolder.data['guide-video'],
+    );
+
     return Scaffold(
       backgroundColor: detaTheme.colorScheme.tertiary,
       body: PageView(
@@ -50,7 +55,7 @@ class WelcomeScreenState extends State<WelcomeScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.network(assetHolder.urls['welcome-img']),
+                Image.network(assetHolder.data['welcome-img']),
                 Padding(
                   padding: EdgeInsetsGeometry.all(20),
                   child: Text(
@@ -71,7 +76,23 @@ class WelcomeScreenState extends State<WelcomeScreen> {
             withNextBtn: true,
             index: 1,
             controller: controller,
-            child: Center(child: Txt('quick start')),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(child: YoutubePlayer(controller: ytController)),
+                Padding(
+                  padding: EdgeInsetsGeometry.all(20),
+                  child: Text(
+                    'Dont miss this really quick guide',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
 
           WelcomePage(
@@ -82,7 +103,18 @@ class WelcomeScreenState extends State<WelcomeScreen> {
             child: Center(
               child: Column(
                 children: [
-                  Expanded(child: Center(child: Txt('Free trial'))),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Txt(
+                          '${assetHolder.data['free-txt']}',
+                          s: 20,
+                          w: 8,
+                        ),
+                        Image.network('${assetHolder.data['free-img']}'),
+                      ],
+                    ),
+                  ),
                   Row(
                     children: [
                       Expanded(

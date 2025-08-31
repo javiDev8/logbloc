@@ -24,9 +24,9 @@ class WelcomePage extends StatelessWidget {
       padding: EdgeInsetsGeometry.symmetric(vertical: 100, horizontal: 20),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Txt(title, w: 8, s: 40),
+          Wrap(children: [Txt(title, w: 8, s: 40)]),
           Expanded(child: child),
 
           if (withNextBtn)

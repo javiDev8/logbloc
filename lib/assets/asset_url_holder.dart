@@ -1,9 +1,9 @@
 import 'package:logbloc/apis/back.dart';
 
 class AssetUrlHolder {
-  Map<String, dynamic> urls = {};
+  Map<String, dynamic> data = {};
   init() async {
-    urls = await backApi.getAllAssets();
+    data = await backApi.getAllAssets();
   }
 }
 

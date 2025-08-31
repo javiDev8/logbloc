@@ -63,7 +63,7 @@ class MembershipApi {
   }
 
   Future<void> purchase() async {
-    final String productId = assetHolder.urls['product-id'];
+    final String productId = assetHolder.data['product-id'];
     final completer = Completer<void>();
     late StreamSubscription<List<PurchaseDetails>> subscription;
 
