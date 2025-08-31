@@ -24,8 +24,6 @@ final List<String> availableFtTypes = [
   'task_list',
   'picture',
   'reminder',
-  'chronometer',
-  'voice_note',
   'number',
 ];
 
@@ -151,24 +149,6 @@ dynamic featureSwitch({
         case 'icon':
           return MdiIcons.bellOutline;
       }
-
-    case 'chronometer':
-      switch (parseType) {
-        case 'label':
-          return Text('chronometer');
-        case 'icon':
-          return MdiIcons.timerOutline;
-      }
-      break;
-
-    case 'voice_note':
-      switch (parseType) {
-        case 'label':
-          return Text('voice note');
-        case 'icon':
-          return MdiIcons.microphoneOutline;
-      }
-      break;
 
     default:
       throw Exception('uknown feature type "$type"');
