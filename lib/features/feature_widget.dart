@@ -130,14 +130,14 @@ class FeatureWidget extends StatelessWidget {
           Row(
             children: [
               Padding(
-                padding: EdgeInsets.only(left: 20),
+                padding: EdgeInsets.only(left: 10),
                 child: Icon(
                   featureSwitch(parseType: 'icon', ft: feature)
                       as IconData,
                 ),
               ),
               SizedBox(
-                width: lock.model ? null : 80,
+                width: lock.model ? null : 90,
                 child: lock.model
                     ? Txt(feature.title, w: 8)
                     : Padding(

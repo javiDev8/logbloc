@@ -20,11 +20,13 @@ import 'package:logbloc/features/text/text_ft_widget.dart';
 import 'package:flutter/material.dart';
 
 final List<String> availableFtTypes = [
-  'number',
   'text',
   'task_list',
   'picture',
   'reminder',
+  'chronometer',
+  'voice_note',
+  'number',
 ];
 
 dynamic featureSwitch({
@@ -150,7 +152,25 @@ dynamic featureSwitch({
           return MdiIcons.bellOutline;
       }
 
+    case 'chronometer':
+      switch (parseType) {
+        case 'label':
+          return Text('chronometer');
+        case 'icon':
+          return MdiIcons.timerOutline;
+      }
+      break;
+
+    case 'voice_note':
+      switch (parseType) {
+        case 'label':
+          return Text('voice note');
+        case 'icon':
+          return MdiIcons.microphoneOutline;
+      }
+      break;
+
     default:
-      throw Exception('uknown feature type');
+      throw Exception('uknown feature type "$type"');
   }
 }
