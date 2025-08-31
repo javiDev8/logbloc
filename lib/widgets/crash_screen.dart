@@ -13,7 +13,8 @@ class CrashScreen extends StatelessWidget {
   const CrashScreen(this.details, {super.key});
 
   static showError(FlutterErrorDetails details) {
-    throw Exception(details.exception);
+    print('$details');
+    //throw Exception(details.exception);
   }
 
   @override

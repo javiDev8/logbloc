@@ -28,8 +28,9 @@ class Navbar extends StatelessWidget {
                 label: Tr.agenda.getString(context),
               ),
               NavigationDestination(
-                icon: Icon(Icons.settings),
-                label: Tr.settings.getString(context),
+                icon: Icon(Icons.menu),
+                //label: Tr.settings.getString(context),
+                label: 'etc'
               ),
             ],
           ),

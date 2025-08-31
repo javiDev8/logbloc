@@ -12,7 +12,6 @@ import 'package:logbloc/widgets/crash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:logbloc/pools/pools.dart';
 import 'package:logbloc/screens/root_screen_switch.dart';
-import 'package:logbloc/widgets/large_screen/side_navbar.dart';
 import 'package:logbloc/widgets/navbar.dart';
 import 'package:flutter/material.dart';
 
@@ -58,8 +57,6 @@ class Logbloc extends StatelessWidget {
   const Logbloc({super.key});
   @override
   Widget build(BuildContext context) {
-    final screenIsLarge = MediaQuery.sizeOf(context).width > 500;
-
     FlutterLocalization.instance.init(
       mapLocales: [
         const MapLocale('en', Tr.en),
@@ -86,17 +83,8 @@ class Logbloc extends StatelessWidget {
           darkTheme: detaDarkTheme,
           home: membershipApi.welcomed
               ? Scaffold(
-                  body: screenIsLarge
-                      ? Row(
-                          children: [
-                            SideNavbar(key: UniqueKey()),
-                            Expanded(
-                              child: RootScreenSwitch(key: UniqueKey()),
-                            ),
-                          ],
-                        )
-                      : RootScreenSwitch(key: UniqueKey()),
-                  bottomNavigationBar: !screenIsLarge ? Navbar() : null,
+                  body: RootScreenSwitch(key: UniqueKey()),
+                  bottomNavigationBar: Navbar(),
                 )
               : WelcomeScreen(),
         );

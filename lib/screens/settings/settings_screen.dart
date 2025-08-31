@@ -1,4 +1,5 @@
 import 'package:logbloc/config/locales.dart';
+import 'package:logbloc/screens/settings/about_section.dart';
 import 'package:logbloc/screens/settings/buy_app_box.dart';
 import 'package:logbloc/screens/settings/preferences_settings.dart';
 import 'package:logbloc/widgets/design/section_divider.dart';
@@ -13,10 +14,7 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: wrapBar(
-        backable: false,
-        children: [Txt(Tr.settings.getString(context))],
-      ),
+      appBar: wrapBar(backable: false, children: [Txt('etc')]),
       body: Padding(
         padding: EdgeInsets.only(left: 20, right: 10),
         child: ListView(
@@ -26,8 +24,8 @@ class SettingsScreen extends StatelessWidget {
             SectionDivider(string: Tr.preferences.getString(context)),
             PreferencesSettings(),
 
-            //SectionDivider(string: Tr.help.getString(context)),
-            //HelpSettings(),
+            SectionDivider(string: 'about'),
+            AboutSection(),
           ],
         ),
       ),
