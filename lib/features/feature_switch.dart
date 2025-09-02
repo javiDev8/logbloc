@@ -18,10 +18,13 @@ import 'package:logbloc/features/text/text_ft_class.dart';
 import 'package:logbloc/features/text/text_ft_stats.dart';
 import 'package:logbloc/features/text/text_ft_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:logbloc/features/voice_note/voice_note_ft_class.dart';
+import 'package:logbloc/features/voice_note/voice_note_ft_widget.dart';
 
 final List<String> availableFtTypes = [
   'text',
   'task_list',
+  'voice_note',
   'picture',
   'reminder',
   'number',
@@ -148,6 +151,27 @@ dynamic featureSwitch({
           return Text('reminder');
         case 'icon':
           return MdiIcons.bellOutline;
+      }
+
+    case 'voice_note':
+      switch (parseType) {
+        case 'class':
+          return entry == null
+              ? VoiceNoteFt.empty()
+              : VoiceNoteFt.fromEntry(entry, recordFt);
+
+        case 'widget':
+          return VoiceNoteFtWidget(
+            lock: lock!,
+            ft: ft as VoiceNoteFt,
+            detailed: detailed,
+            dirt: dirt,
+          );
+
+        case 'label':
+          return Text('voice note');
+        case 'icon':
+          return MdiIcons.microphoneOutline;
       }
 
     default:
