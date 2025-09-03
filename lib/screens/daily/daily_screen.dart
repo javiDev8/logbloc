@@ -131,7 +131,7 @@ class DailyScreen extends StatelessWidget {
                                 );
                               }
                               if (items.isEmpty) {
-                                return Center(child: Text('no items'));
+                                return Center(child: Text('no entries'));
                               }
 
                               items.sort(

@@ -36,12 +36,12 @@ class BackApi {
     );
   }
 
-  Future<Map<String, dynamic>> getAllAssets() async {
-    final res = await http.get(Uri.https(domain, '/assets/all'));
+  Future<String> getAsset(String id) async {
+    final res = await http.get(Uri.https(domain, '/assets/$id'));
     if (res.statusCode != 200) {
-      throw Exception('assets return ${res.statusCode}');
+      throw Exception('get asset returned ${res.statusCode}');
     }
-    return jsonDecode(res.body);
+    return res.body;
   }
 
   Future<void> reportError(String content) async {

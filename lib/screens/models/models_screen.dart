@@ -9,7 +9,6 @@ import 'package:logbloc/screens/models/model_screen/model_screen.dart';
 import 'package:logbloc/utils/nav.dart';
 import 'package:logbloc/widgets/design/act_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localization/flutter_localization.dart';
 import 'package:logbloc/widgets/design/button.dart';
 import 'package:logbloc/widgets/design/section_divider.dart';
 import 'package:logbloc/widgets/design/topbar_wrap.dart';
@@ -41,7 +40,7 @@ class ModelsScreen extends StatelessWidget {
               }
 
               if (models.isEmpty) {
-                return Center(child: Text(Tr.noModels.getString(context)));
+                return Center(child: Text('no logbooks'));
               }
 
               return ListView(

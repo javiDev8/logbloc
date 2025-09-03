@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:logbloc/apis/back.dart';
-import 'package:logbloc/assets/asset_url_holder.dart';
 import 'package:logbloc/main.dart';
 
 class MembershipApi {
@@ -63,7 +62,7 @@ class MembershipApi {
   }
 
   Future<void> purchase() async {
-    final String productId = assetHolder.data['product-id'];
+    final String productId = await backApi.getAsset('product-id');
     final completer = Completer<void>();
     late StreamSubscription<List<PurchaseDetails>> subscription;
 

@@ -1,8 +1,8 @@
 import 'dart:async';
+import 'package:logbloc/apis/back.dart';
 import 'package:logbloc/apis/db.dart';
 import 'package:logbloc/apis/membership.dart';
 import 'package:logbloc/apis/notifications.dart';
-import 'package:logbloc/assets/asset_url_holder.dart';
 import 'package:logbloc/event_processor.dart';
 import 'package:logbloc/config/locales.dart';
 import 'package:logbloc/pools/theme_mode_pool.dart';
@@ -27,7 +27,9 @@ initLogbloc() async {
   await eventProcessor.init();
   await themeModePool.init();
   await membershipApi.init();
-  await assetHolder.init();
+  if (!membershipApi.welcomed) {
+    guideVideoId = await backApi.getAsset('guide-video');
+  }
 
   runApp(const Logbloc());
 }

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:logbloc/apis/membership.dart';
-import 'package:logbloc/assets/asset_url_holder.dart';
 import 'package:logbloc/main.dart';
 import 'package:logbloc/pools/theme_mode_pool.dart';
 import 'package:logbloc/screens/welcome/welcome_page.dart';
 import 'package:logbloc/widgets/design/button.dart';
 import 'package:logbloc/widgets/design/txt.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+
+String guideVideoId = '';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -39,7 +40,7 @@ class WelcomeScreenState extends State<WelcomeScreen> {
   @override
   Widget build(BuildContext context) {
     final ytController = YoutubePlayerController(
-      initialVideoId: assetHolder.data['guide-video'],
+      initialVideoId: guideVideoId,
     );
 
     return Scaffold(
@@ -55,7 +56,9 @@ class WelcomeScreenState extends State<WelcomeScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.network(assetHolder.data['welcome-img']),
+                Image.network(
+                  'https://assets.sweetfeatures.dev/welcome-img.png',
+                ),
                 Padding(
                   padding: EdgeInsetsGeometry.all(20),
                   child: Text(
@@ -107,11 +110,14 @@ class WelcomeScreenState extends State<WelcomeScreen> {
                     child: Column(
                       children: [
                         Txt(
-                          '${assetHolder.data['free-txt']}',
+                          ' Explore the app with 3 free logbooks forever. If you love it,'
+                          ' get unlimited logbooks with a one-time purchase of \$3 ',
                           s: 20,
                           w: 8,
                         ),
-                        Image.network('${assetHolder.data['free-img']}'),
+                        Image.network(
+                          'https://assets.sweetfeatures.dev/start-trial.png',
+                        ),
                       ],
                     ),
                   ),
@@ -122,19 +128,6 @@ class WelcomeScreenState extends State<WelcomeScreen> {
                           'start free trial',
                           filled: false,
                           onPressed: finish,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Button(
-                          'buy app',
-                          onPressed: () async {
-                            await membershipApi.upgrade();
-                            await finish();
-                          },
                         ),
                       ),
                     ],

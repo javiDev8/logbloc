@@ -23,9 +23,9 @@ class BuyAppBox extends StatelessWidget {
           builder: (context, setState) => Column(
             children: [
               if (membershipApi.currentPlan == 'free') ...[
-                Txt('You are currently on the free trial'),
+                Txt('You are currently limited to 3 logbooks'),
                 Txt(
-                  'Buy the app and unlock unlimited logbooks!',
+                  'Unlock unlimited logbooks with a one-time purchase of \$3',
                   s: 19,
                   w: 8,
                   color: seedColor,
@@ -42,9 +42,16 @@ class BuyAppBox extends StatelessWidget {
                         setState(() => isLoading = true);
                         try {
                           await membershipApi.upgrade();
+                          feedback(
+                            'Successfully purchased',
+                            type: FeedbackType.success,
+                          );
                           setState(() => isLoading = false);
                         } catch (e) {
-                          feedback('Purchase failed: $e');
+                          feedback(
+                            'Purchase cancelled',
+                            type: FeedbackType.error,
+                          );
                         }
                       },
                     ),
