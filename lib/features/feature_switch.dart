@@ -1,5 +1,7 @@
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:logbloc/config/locales.dart';
+import 'package:logbloc/features/chronometer/chronometer_ft_class.dart';
+import 'package:logbloc/features/chronometer/chronometer_ft_widget.dart';
 import 'package:logbloc/features/feature_class.dart';
 import 'package:logbloc/features/feature_widget.dart';
 import 'package:logbloc/features/number/number_ft_class.dart';
@@ -25,9 +27,10 @@ import 'package:logbloc/features/voice_note/voice_note_ft_widget.dart';
 final List<String> availableFtTypes = [
   'text',
   'task_list',
-  'voice_note',
-  'picture',
   'reminder',
+  'picture',
+  'voice_note',
+  'chronometer',
   'number',
 ];
 
@@ -179,6 +182,33 @@ dynamic featureSwitch({
           return Text('voice note');
         case 'icon':
           return MdiIcons.microphoneOutline;
+      }
+
+    case 'chronometer':
+      switch (parseType) {
+        case 'class':
+          return entry == null
+              ? ChronometerFt.empty()
+              : ChronometerFt.fromEntry(entry, recordFt);
+
+        //case 'stats':
+        //  return VoiceNoteFtStatsWidget(
+        //    ftRecs: ftRecs!,
+        //    ft: ft as VoiceNoteFt,
+        //  );
+
+        case 'widget':
+          return ChronometerFtWidget(
+            lock: lock!,
+            ft: ft as ChronometerFt,
+            detailed: detailed,
+            dirt: dirt,
+          );
+
+        case 'label':
+          return Text('chronomter');
+        case 'icon':
+          return MdiIcons.timerOutline;
       }
 
     default:
