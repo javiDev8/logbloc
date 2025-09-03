@@ -73,7 +73,7 @@ class ChronometerFtWidget extends StatelessWidget {
                     },
                     icon: Icon(Icons.square),
                   ),
-                ] else
+                ] else if (!lock.record)
                   IconButton(
                     onPressed: () => setState(() {
                       if (pauseStart == null) {

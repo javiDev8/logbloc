@@ -14,7 +14,13 @@ import 'package:flutter/material.dart';
 class ItemBox extends StatelessWidget {
   final Item item;
   final bool fromRecords;
-  const ItemBox({super.key, required this.item, this.fromRecords = false});
+  final bool readOnly;
+  const ItemBox({
+    super.key,
+    required this.item,
+    this.fromRecords = false,
+    this.readOnly = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +71,7 @@ class ItemBox extends StatelessWidget {
                 await Future.delayed(Duration(milliseconds: 150));
               }
               globalItem = item;
-              navPush(screen: ItemScreen());
+              navPush(screen: ItemScreen(readOnly: readOnly));
             },
             child: DecoratedBox(
               decoration: BoxDecoration(

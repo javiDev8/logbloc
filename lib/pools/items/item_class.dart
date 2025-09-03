@@ -97,7 +97,7 @@ class Item {
         await recordsPool.data![recordId]!.save();
       }
 
-      feedback('record saved', type: FeedbackType.success);
+      feedback('${model!.name} record saved', type: FeedbackType.success);
       stagedFeatures = {};
       return true;
     } catch (e) {

@@ -42,6 +42,7 @@ class ModelRecordsScreen extends StatelessWidget {
                     (r) => Row(
                       children: [
                         ItemBox(
+                          readOnly: true,
                           key: UniqueKey(),
                           fromRecords: true,
                           item: Item(

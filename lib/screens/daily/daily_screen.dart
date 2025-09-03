@@ -62,7 +62,7 @@ class DailyScreen extends StatelessWidget {
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
-                            children: ['by tag', 'pending', 'all']
+                            children: ['by tag', 'used', 'empty', 'all']
                                 .map<Widget>(
                                   (opt) => Button(
                                     opt,
@@ -144,15 +144,15 @@ class DailyScreen extends StatelessWidget {
                                 switch (agendaFilterPool.data.key) {
                                   case 'all':
                                     return true;
-                                  case 'pending':
+                                  case 'used':
+                                    return item.record != null;
+                                  case 'empty':
                                     return item.record == null;
                                   case 'by tag':
-                                    return agendaFilterPool.data.value ==
-                                            null ||
-                                        item.model!.tags?.contains(
-                                              agendaFilterPool.data.value,
-                                            ) ==
-                                            true;
+                                    return item.model!.tags?.contains(
+                                          agendaFilterPool.data.value,
+                                        ) ==
+                                        true;
                                   default:
                                     return false;
                                 }

@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:logbloc/features/feature_class.dart';
+import 'package:logbloc/utils/feedback.dart';
 
 class ChronometerFt extends Feature {
   DateTime? start;
@@ -77,4 +80,15 @@ class ChronometerFt extends Feature {
     'start': start?.millisecondsSinceEpoch,
   };
 
+  @override
+  FutureOr<bool> onSave({String? modelId}) async {
+    if (isRequired && duration == null) {
+      feedback(
+        'chronometer "$title" is required',
+        type: FeedbackType.error,
+      );
+      return false;
+    }
+    return true;
+  }
 }

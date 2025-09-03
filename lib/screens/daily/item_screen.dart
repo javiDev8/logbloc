@@ -22,7 +22,8 @@ final itemFormKey = GlobalKey<FormState>();
 Item? globalItem;
 
 class ItemScreen extends StatelessWidget {
-  const ItemScreen({super.key});
+  final bool readOnly;
+  const ItemScreen({super.key, this.readOnly = false});
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +47,7 @@ class ItemScreen extends StatelessWidget {
     paintFt(Feature ft) {
       return FeatureWidget(
         key: UniqueKey(),
-        lock: FeatureLock(model: true, record: false),
+        lock: FeatureLock(model: true, record: readOnly),
         feature: ft,
         dirt: () {
           if (!dirtItemFlagPool.data) dirtItemFlagPool.set((_) => true);
@@ -75,7 +76,9 @@ class ItemScreen extends StatelessWidget {
             pool: dirtItemFlagPool,
             builder: (context, dirty) => dirty
                 ? IconButton(
-                    onPressed: () async => await item.save(),
+                    onPressed: () async {
+                      if (await item.save()) navPop();
+                    },
                     icon: Icon(Icons.check_circle_outline),
                   )
                 : None(),

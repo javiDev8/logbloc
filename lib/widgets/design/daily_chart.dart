@@ -57,20 +57,7 @@ class DailyChart extends StatelessWidget {
                       recDate.isAtSameMomentAs(targetHour)) &&
                   recDate.isBefore(targetHour.add(Duration(hours: 1)));
             });
-            switch (operation) {
-              case ChartOperation.average:
-                if (hourFtRecs.isEmpty) return 0.0;
-                return hourFtRecs.fold<double>(
-                      0.0,
-                      (sum, rec) => sum + getRecordValue(rec),
-                    ) /
-                    hourFtRecs.length;
-              default:
-                return hourFtRecs.fold(
-                  0.0,
-                  (sum, rec) => sum + getRecordValue(rec),
-                );
-            }
+            return operate(hourFtRecs, operation, getRecordValue);
           });
 
           final n = DateTime.now();

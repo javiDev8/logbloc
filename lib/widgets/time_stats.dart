@@ -79,6 +79,14 @@ class TimeStats extends StatelessWidget {
                         value: ChartOperation.average,
                         label: 'average',
                       ),
+                      DropdownMenuEntry(
+                        value: ChartOperation.min,
+                        label: 'min',
+                      ),
+                      DropdownMenuEntry(
+                        value: ChartOperation.max,
+                        label: 'max',
+                      ),
                     ],
                   ),
 
@@ -113,7 +121,38 @@ class TimeStats extends StatelessWidget {
   }
 }
 
-enum ChartOperation { add, average }
+enum ChartOperation { add, average, min, max }
+
+double operate(
+  Iterable<Map<String, dynamic>> dayFtRecs,
+  ChartOperation operation,
+  double Function(Map<String, dynamic>) getRecordValue,
+) {
+  if (dayFtRecs.isEmpty) return 0.0;
+  switch (operation) {
+    case ChartOperation.average:
+      return dayFtRecs.fold<double>(
+            0.0,
+            (sum, rec) => sum + getRecordValue(rec),
+          ) / dayFtRecs.length;
+
+    case ChartOperation.min:
+      return dayFtRecs
+          .map<double>((rec) => getRecordValue(rec))
+          .reduce((a, b) => a < b ? a : b);
+
+    case ChartOperation.max:
+      return dayFtRecs
+          .map<double>((rec) => getRecordValue(rec))
+          .reduce((a, b) => a > b ? a : b);
+
+    case ChartOperation.add:
+      return dayFtRecs.fold<double>(
+        0.0,
+        (sum, rec) => sum + getRecordValue(rec),
+      );
+  }
+}
 
 class ChartOpts {
   Feature ft;

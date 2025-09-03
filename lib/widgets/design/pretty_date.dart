@@ -47,7 +47,7 @@ class PrettyDate extends StatelessWidget {
           ),
           Text(
             year,
-            style: TextStyle(fontWeight: FontWeight.w200, color: color),
+            style: TextStyle(fontWeight: FontWeight.normal, color: color),
           ),
           IconButton(
             onPressed: () async {

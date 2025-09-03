@@ -72,7 +72,7 @@ class NumberFtWidget extends StatelessWidget {
 
         if (detailed) Expanded(child: Text('unit:')),
 
-        if (ft.unit.isNotEmpty)
+        if (ft.unit.isNotEmpty || !lock.model)
           Expanded(
             child: lock.model
                 ? Text(' ${ft.unit}')

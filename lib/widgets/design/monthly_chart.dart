@@ -50,21 +50,7 @@ class MonthlyChart extends StatelessWidget {
                   recDate.day == currentDate.day;
             });
 
-            if (dayFtRecs.isEmpty) return 0.0;
-            switch (operation) {
-              case ChartOperation.average:
-                return dayFtRecs.fold<double>(
-                      0.0,
-                      (sum, rec) => sum + getRecordValue(rec),
-                    ) /
-                    dayFtRecs.length;
-              default:
-                ChartOperation.add;
-                return dayFtRecs.fold<double>(
-                  0.0,
-                  (sum, rec) => sum + getRecordValue(rec),
-                );
-            }
+            return operate(dayFtRecs, operation, getRecordValue);
           });
 
           final n = DateTime.now();

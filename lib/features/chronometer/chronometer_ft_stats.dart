@@ -16,7 +16,7 @@ class ChronometerFtStats extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double getMillisecs(Map<String, dynamic> rec) {
-      return rec['duration'] / 1;
+      return (rec['duration'] as int).toDouble();
     }
 
     return Column(

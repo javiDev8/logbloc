@@ -62,20 +62,7 @@ class WeeklyChart extends StatelessWidget {
                   recDate.isBefore(weekDayDate.add(Duration(days: 1)));
             });
 
-            switch (operation) {
-              case ChartOperation.average:
-                if (dayFtRecs.isEmpty) return 0.0;
-                return dayFtRecs.fold<double>(
-                      0.0,
-                      (sum, rec) => sum + getRecordValue(rec),
-                    ) /
-                    dayFtRecs.length;
-              default:
-                return dayFtRecs.fold(
-                  0.0,
-                  (sum, rec) => sum + getRecordValue(rec),
-                );
-            }
+            return operate(dayFtRecs, operation, getRecordValue);
           });
 
           return Padding(
