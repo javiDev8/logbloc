@@ -26,7 +26,7 @@ class MonthlyChart extends StatelessWidget {
     final bool? integer = opts.integer;
 
     return SizedBox(
-      height: 450,
+      height: dump ? 500 : 450,
       child: PageView.builder(
         controller: pageController,
         itemBuilder: (context, index) {

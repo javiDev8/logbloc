@@ -39,7 +39,7 @@ class WeeklyChart extends StatelessWidget {
     final bool? integer = opts.integer;
 
     return SizedBox(
-      height: 450,
+      height: dump ? 500 : 450,
       child: PageView.builder(
         controller: pageController,
         onPageChanged: (index) {},
@@ -78,12 +78,6 @@ class WeeklyChart extends StatelessWidget {
             }
           });
 
-          final n = DateTime.now();
-          final monthColor =
-              targetMonday.month == n.month && targetMonday.year == n.year
-              ? seedColor
-              : null;
-
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -93,40 +87,34 @@ class WeeklyChart extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
+                      Txt(
+                        '${_formatDayOfWeek(targetMonday)} '
+                        '${targetMonday.day} to '
+                        '${_formatDayOfWeek(targetMonday.add(Duration(days: 6)))} '
+                        '${targetMonday.add(Duration(days: 6)).day}',
+
+                        // primary if now is current week
+                        color:
+                            (targetMonday.isBefore(
+                                  now.add(Duration(days: 1)),
+                                ) &&
+                                targetMonday
+                                    .add(Duration(days: 7))
+                                    .isAfter(now))
+                            ? seedColor
+                            : null,
+                        w: 8,
+                      ),
+
                       Text(
                         '${months[targetMonday.month]}  '
                         '${targetMonday.year.toString()}',
-                        style: TextStyle(
-                          color: monthColor,
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                        ),
                       ),
                     ],
                   ),
                 ),
 
                 if (dump) ...[
-                  // start and end of current week on this format:
-                  // Mon 1 to Sun 8
-                  Txt(
-                    '${_formatDayOfWeek(targetMonday)} '
-                    '${targetMonday.day} to '
-                    '${_formatDayOfWeek(targetMonday.add(Duration(days: 6)))} '
-                    '${targetMonday.add(Duration(days: 6)).day}',
-
-                    // primary if now is current week
-                    color:
-                        (targetMonday.isBefore(
-                              now.add(Duration(days: 1)),
-                            ) &&
-                            targetMonday
-                                .add(Duration(days: 7))
-                                .isAfter(now))
-                        ? Theme.of(context).colorScheme.primary
-                        : null,
-                    w: 8,
-                  ),
                   Expanded(
                     child: ListView(
                       children:

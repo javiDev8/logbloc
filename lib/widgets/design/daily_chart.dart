@@ -2,7 +2,6 @@ import 'package:logbloc/pools/theme_mode_pool.dart';
 import 'package:logbloc/utils/fmt_date.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:logbloc/widgets/design/txt.dart';
 import 'package:logbloc/widgets/dump_ft_records.dart';
 import 'package:logbloc/widgets/time_stats.dart';
 
@@ -31,7 +30,7 @@ class DailyChart extends StatelessWidget {
     final bool? integer = opts.integer;
 
     return SizedBox(
-      height: 450,
+      height: dump ? 500 : 400,
       child: PageView.builder(
         controller: pageController,
         onPageChanged: (index) {},
@@ -86,40 +85,26 @@ class DailyChart extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                if (!dump)
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          // Display the full date instead of month/year.
-                          '${months[targetDay.month]} ${targetDay.day}, ${targetDay.year}',
-                          style: TextStyle(
-                            color: dayColor,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        // Display the full date instead of month/year.
+                        '${months[targetDay.month]} ${targetDay.day}, ${targetDay.year}',
+                        style: TextStyle(
+                          color: dayColor,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
+                ),
 
                 if (dump) ...[
                   // Update the date range display to show the current day.
-                  Txt(
-                    hdate(targetDay),
-                    color:
-                        (targetDay.isBefore(
-                              now.add(const Duration(days: 1)),
-                            ) &&
-                            targetDay.isAfter(
-                              now.subtract(const Duration(days: 1)),
-                            ))
-                        ? Theme.of(context).colorScheme.primary
-                        : null,
-                    w: 8,
-                  ),
                   Expanded(
                     child: ListView(
                       children:
