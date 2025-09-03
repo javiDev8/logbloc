@@ -122,6 +122,7 @@ class ChartOpts {
   String? unit;
   bool? integer;
   ChartOperation operation;
+  final String Function(double)? makeTooltip;
 
   ChartOpts({
     required this.ft,
@@ -130,5 +131,6 @@ class ChartOpts {
     required this.operation,
     this.unit,
     this.integer,
+    this.makeTooltip,
   });
 }

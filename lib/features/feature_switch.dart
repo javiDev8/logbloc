@@ -1,6 +1,7 @@
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:logbloc/config/locales.dart';
 import 'package:logbloc/features/chronometer/chronometer_ft_class.dart';
+import 'package:logbloc/features/chronometer/chronometer_ft_stats.dart';
 import 'package:logbloc/features/chronometer/chronometer_ft_widget.dart';
 import 'package:logbloc/features/feature_class.dart';
 import 'package:logbloc/features/feature_widget.dart';
@@ -191,11 +192,11 @@ dynamic featureSwitch({
               ? ChronometerFt.empty()
               : ChronometerFt.fromEntry(entry, recordFt);
 
-        //case 'stats':
-        //  return VoiceNoteFtStatsWidget(
-        //    ftRecs: ftRecs!,
-        //    ft: ft as VoiceNoteFt,
-        //  );
+        case 'stats':
+          return ChronometerFtStats(
+            ftRecs: ftRecs!,
+            ft: ft as ChronometerFt,
+          );
 
         case 'widget':
           return ChronometerFtWidget(

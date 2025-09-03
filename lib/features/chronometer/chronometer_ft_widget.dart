@@ -21,9 +21,17 @@ class ChronometerFtWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Duration counter = Duration();
     bool isRunning = false;
-    bool isPaused = false;
+
+    DateTime? pauseStart;
+    Duration pausedTime = Duration();
+
+    Duration getTime() {
+      final totalTime = DateTime.now().difference(ft.start!);
+      return Duration(
+        milliseconds: totalTime.inMilliseconds - pausedTime.inMilliseconds,
+      );
+    }
 
     return Column(
       children: [
@@ -47,7 +55,8 @@ class ChronometerFtWidget extends StatelessWidget {
                   IconButton(
                     onPressed: () => setState(() {
                       isRunning = false;
-                      isPaused = true;
+                      ft.duration = getTime();
+                      pauseStart = DateTime.now();
                     }),
                     icon: Icon(Icons.pause),
                   ),
@@ -55,11 +64,11 @@ class ChronometerFtWidget extends StatelessWidget {
                   IconButton(
                     onPressed: () {
                       dirt!();
+                      ft.duration = getTime();
                       setState(() {
                         isRunning = false;
-                        isPaused = false;
-                        ft.duration = counter;
-                        counter = Duration();
+                        pauseStart = null;
+                        pausedTime = Duration();
                       });
                     },
                     icon: Icon(Icons.square),
@@ -67,26 +76,33 @@ class ChronometerFtWidget extends StatelessWidget {
                 ] else
                   IconButton(
                     onPressed: () => setState(() {
+                      if (pauseStart == null) {
+                        ft.start = DateTime.now();
+                      } else {
+                        pausedTime = Duration(
+                          milliseconds:
+                              pausedTime.inMilliseconds +
+                              (DateTime.now().difference(
+                                pauseStart!,
+                              )).inMilliseconds,
+                        );
+                      }
                       isRunning = true;
                     }),
                     icon: Icon(Icons.play_arrow),
                   ),
 
-                if ((!detailed && isRunning) || isPaused)
+                if ((!detailed && isRunning) || pauseStart != null)
                   StatefulBuilder(
                     builder: (context, ss) {
                       if (isRunning) {
                         Future.delayed(
                           Duration(milliseconds: 10),
-                          () => ss(() {
-                            counter = Duration(
-                              milliseconds: counter.inMilliseconds + 10,
-                            );
-                          }),
+                          () => ss(() {}),
                         );
                       }
 
-                      return Txt(fmtDuration(counter));
+                      return Txt(fmtDuration(getTime()));
                     },
                   )
                 else if (ft.duration != null)

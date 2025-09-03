@@ -27,7 +27,8 @@ class VoiceNoteFtWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Duration counter = Duration();
+    //Duration counter = Duration();
+    DateTime? start;
     bool isRecording = false;
     bool isPlaying = false;
 
@@ -35,7 +36,8 @@ class VoiceNoteFtWidget extends StatelessWidget {
       builder: (context, setState) {
         player.playerStateStream.listen((state) {
           if (state.processingState == ProcessingState.completed) {
-            if (!isRecording) counter = Duration();
+            //if (!isRecording) counter = Duration();
+            if (!isRecording) start = null;
             setState(() {
               isPlaying = false;
             });
@@ -48,12 +50,16 @@ class VoiceNoteFtWidget extends StatelessWidget {
           final tmpDir = await getTemporaryDirectory();
           final tmpPath = '${tmpDir.path}/${ft.genFileName()}';
           await recorder.start(RecordConfig(), path: tmpPath);
-          setState(() => isRecording = true);
+          setState(() {
+            start = DateTime.now();
+            isRecording = true;
+          });
         }
 
         Future<void> playRecording() async {
           await player.setFilePath(ft.tmpPath ?? ft.path!);
-          counter = Duration();
+          //counter = Duration();
+          start = DateTime.now();
           setState(() => isPlaying = true);
           await player.play();
         }
@@ -64,9 +70,12 @@ class VoiceNoteFtWidget extends StatelessWidget {
         }
 
         Future stopRecording() async {
+          //counter = Duration();
+
+          final duration = DateTime.now().difference(start!);
           final path = await recorder.stop();
           if (path != null) {
-            ft.duration = Duration(milliseconds: counter.inMilliseconds);
+            ft.duration = duration;
             setState(() {
               ft.tmpPath = path;
               isRecording = false;
@@ -121,18 +130,23 @@ class VoiceNoteFtWidget extends StatelessWidget {
                           Future.delayed(
                             Duration(seconds: 1),
                             () => ss(() {
-                              counter = Duration(
-                                seconds: counter.inSeconds + 1,
-                              );
+                              //counter = Duration(
+                              //  seconds: counter.inSeconds + 1,
+                              //);
                             }),
                           );
-                          return Txt(fmtDuration(counter));
+                          return Txt(
+                            fmtDuration(
+                              DateTime.now().difference(start!),
+                              exact: false,
+                            ),
+                          );
                         },
                       ),
                   ],
 
                   if (!isRecording && ft.duration != null)
-                    Txt(fmtDuration(ft.duration!)),
+                    Txt(fmtDuration(ft.duration!, exact: false)),
                 ],
               ),
           ],

@@ -208,14 +208,16 @@ class DailyChart extends StatelessWidget {
                           touchTooltipData: BarTouchTooltipData(
                             getTooltipItem:
                                 (group, groupIndex, rod, rodIndex) {
-                                  String val = rod.toY.toStringAsFixed(1);
+                                  String val = opts.makeTooltip != null
+                                      ? opts.makeTooltip!(rod.toY)
+                                      : rod.toY.toStringAsFixed(3);
                                   if (integer != null && integer) {
                                     val = val.split('.')[0];
                                   }
                                   final hour = group.x;
                                   return BarTooltipItem(
                                     // Include the formatted hour in the tooltip.
-                                    '${_formatHour(hour)} | $val',
+                                    '$val at ${_formatHour(hour)}',
                                     const TextStyle(color: Colors.white),
                                   );
                                 },

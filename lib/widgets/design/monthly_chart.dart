@@ -22,7 +22,6 @@ class MonthlyChart extends StatelessWidget {
   Widget build(BuildContext context) {
     final recordFts = opts.recordFts;
     final getRecordValue = opts.getRecordValue;
-    final String? unit = opts.unit;
     final ChartOperation operation = opts.operation;
     final bool? integer = opts.integer;
 
@@ -194,12 +193,14 @@ class MonthlyChart extends StatelessWidget {
                           touchTooltipData: LineTouchTooltipData(
                             getTooltipItems: (touchedSpots) {
                               return touchedSpots.map((spot) {
-                                String val = spot.y.toStringAsFixed(1);
+                                String val = opts.makeTooltip != null
+                                    ? opts.makeTooltip!(spot.y)
+                                    : spot.y.toStringAsFixed(3);
                                 if (integer == true) {
                                   val = spot.y.toInt().toString();
                                 }
                                 return LineTooltipItem(
-                                  '${spot.x.toInt()}  $val${unit ?? ''}',
+                                  '${spot.x.toInt()}  $val',
                                   const TextStyle(color: Colors.white),
                                 );
                               }).toList();

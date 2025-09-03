@@ -1,6 +1,7 @@
 import 'package:logbloc/features/feature_class.dart';
 
 class ChronometerFt extends Feature {
+  DateTime? start;
   Duration? duration;
 
   ChronometerFt({
@@ -12,11 +13,13 @@ class ChronometerFt extends Feature {
     required super.position,
 
     this.duration,
+    this.start,
   });
 
   factory ChronometerFt.fromBareFt(
     Feature ft, {
     required Duration? duration,
+    required DateTime? start,
   }) => ChronometerFt(
     id: ft.id,
     type: ft.type,
@@ -26,11 +29,13 @@ class ChronometerFt extends Feature {
     position: ft.position,
 
     duration: duration,
+    start: start,
   );
 
   factory ChronometerFt.empty() => ChronometerFt.fromBareFt(
     Feature.empty('chronometer'),
     duration: null,
+    start: null,
   );
 
   factory ChronometerFt.fromEntry(
@@ -48,6 +53,12 @@ class ChronometerFt extends Feature {
                       as int),
             )
           : null,
+
+      start: entry.value['start'] != null || recordFt?['start'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(
+              ((entry.value['start'] ?? recordFt?['start']) as int),
+            )
+          : null,
     );
     return res;
   }
@@ -56,10 +67,14 @@ class ChronometerFt extends Feature {
   Map<String, dynamic> serialize() => {
     ...super.serialize(),
     'duration': duration?.inMilliseconds,
+    'start': start?.millisecondsSinceEpoch,
   };
 
   @override
-  makeRec() => {...super.makeRec(), 'duration': duration?.inMilliseconds};
+  makeRec() => {
+    ...super.makeRec(),
+    'duration': duration?.inMilliseconds,
+    'start': start?.millisecondsSinceEpoch,
+  };
 
-  setDuration(Duration newDuration) => duration = newDuration;
 }

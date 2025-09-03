@@ -1,4 +1,4 @@
-String fmtDuration(Duration duration) {
+String fmtDuration(Duration duration, {bool exact = true}) {
   String twoDigits(int n) => n.toString().padLeft(2, '0');
 
   final hours = twoDigits(duration.inHours);
@@ -6,7 +6,8 @@ String fmtDuration(Duration duration) {
   final seconds = twoDigits(duration.inSeconds.remainder(60));
   final millisecs = twoDigits(duration.inMilliseconds.remainder(1000));
 
-  final ms = millisecs.split('');
-
-  return '${hours == '00' ? '' : '$hours:'}${minutes == '00' ? '' : '$minutes:'}$seconds:${ms[0]}${ms[1]}';
+  return '${hours == '00' ? '' : '$hours:'}'
+      '$minutes:'
+      '$seconds'
+      '${exact ? ':$millisecs' : ''}';
 }

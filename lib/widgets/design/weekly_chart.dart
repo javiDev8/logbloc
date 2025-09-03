@@ -9,6 +9,7 @@ import 'package:logbloc/widgets/time_stats.dart';
 class WeeklyChart extends StatelessWidget {
   final ChartOpts opts;
   final bool dump;
+
   final PageController pageController = PageController(initialPage: 1000);
 
   WeeklyChart({super.key, required this.opts, required this.dump});
@@ -233,12 +234,13 @@ class WeeklyChart extends StatelessWidget {
                           touchTooltipData: BarTouchTooltipData(
                             getTooltipItem:
                                 (group, groupIndex, rod, rodIndex) {
-                                  String val = rod.toY.toStringAsFixed(1);
+                                  String val = opts.makeTooltip != null
+                                      ? opts.makeTooltip!(rod.toY)
+                                      : rod.toY.toStringAsFixed(3);
                                   if (integer != null && integer) {
                                     val = val.split('.')[0];
                                   }
                                   return BarTooltipItem(
-                                    //'$val ${unit ?? ''}',
                                     val,
                                     const TextStyle(color: Colors.white),
                                   );
