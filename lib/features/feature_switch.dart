@@ -19,6 +19,7 @@ import 'package:logbloc/features/text/text_ft_stats.dart';
 import 'package:logbloc/features/text/text_ft_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:logbloc/features/voice_note/voice_note_ft_class.dart';
+import 'package:logbloc/features/voice_note/voice_note_ft_stats.dart';
 import 'package:logbloc/features/voice_note/voice_note_ft_widget.dart';
 
 final List<String> availableFtTypes = [
@@ -159,6 +160,12 @@ dynamic featureSwitch({
           return entry == null
               ? VoiceNoteFt.empty()
               : VoiceNoteFt.fromEntry(entry, recordFt);
+
+        case 'stats':
+          return VoiceNoteFtStatsWidget(
+            ftRecs: ftRecs!,
+            ft: ft as VoiceNoteFt,
+          );
 
         case 'widget':
           return VoiceNoteFtWidget(

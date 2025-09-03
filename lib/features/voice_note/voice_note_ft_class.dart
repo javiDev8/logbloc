@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:just_audio/just_audio.dart';
 import 'package:logbloc/features/feature_class.dart';
 import 'package:logbloc/utils/feedback.dart';
 import 'package:path_provider/path_provider.dart';
@@ -9,7 +10,7 @@ import 'package:permission_handler/permission_handler.dart';
 class VoiceNoteFt extends Feature {
   String? path;
   String? tmpPath;
-  double? duration;
+  Duration? duration;
 
   VoiceNoteFt({
     required super.id,
@@ -27,7 +28,7 @@ class VoiceNoteFt extends Feature {
   factory VoiceNoteFt.fromBareFt(
     Feature ft, {
     required String? path,
-    required double? duration,
+    required Duration? duration,
   }) => VoiceNoteFt(
     id: ft.id,
     type: ft.type,
@@ -55,8 +56,14 @@ class VoiceNoteFt extends Feature {
       ft,
       path: entry.value['path'] ?? recordFt?['path'] as String?,
       duration:
-          (entry.value['duration'] ?? recordFt?['duration'])?.toDouble()
-              as double?,
+          entry.value['duration'] != null || recordFt?['duration'] != null
+          ? Duration(
+              milliseconds:
+                  ((entry.value['duration'] ?? recordFt?['duration'])
+                      as int?) ??
+                  0,
+            )
+          : null,
     );
     return res;
   }
@@ -65,14 +72,14 @@ class VoiceNoteFt extends Feature {
   Map<String, dynamic> serialize() => {
     ...super.serialize(),
     'path': path,
-    'duration': duration,
+    if (duration != null) 'duration': duration?.inMilliseconds,
   };
 
   @override
   Map<String, dynamic> makeRec() => {
     ...super.makeRec(),
     'path': path,
-    'duration': duration,
+    if (duration != null) 'duration': duration!.inMilliseconds,
   };
 
   String genFileName() =>
@@ -101,6 +108,9 @@ class VoiceNoteFt extends Feature {
     }
 
     try {
+      final player = AudioPlayer();
+      duration = await player.setFilePath(tmpPath!);
+
       final file = File(tmpPath!);
       final dir = await getApplicationDocumentsDirectory();
       path = '${dir.path}/${genFileName()}';

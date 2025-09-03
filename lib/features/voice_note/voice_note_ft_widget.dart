@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:logbloc/features/feature_widget.dart';
 import 'package:logbloc/features/voice_note/voice_note_ft_class.dart';
+import 'package:logbloc/utils/fmt_duration.dart';
 import 'package:logbloc/widgets/design/txt.dart';
 import 'package:logbloc/widgets/design/txt_field.dart';
 import 'package:path_provider/path_provider.dart';
@@ -13,7 +14,7 @@ class VoiceNoteFtWidget extends StatelessWidget {
   final bool detailed;
   final void Function()? dirt;
 
-  const VoiceNoteFtWidget({
+  VoiceNoteFtWidget({
     super.key,
     required this.ft,
     required this.lock,
@@ -21,19 +22,26 @@ class VoiceNoteFtWidget extends StatelessWidget {
     this.dirt,
   });
 
+  final recorder = AudioRecorder();
+  final player = AudioPlayer();
+
   @override
   Widget build(BuildContext context) {
-    final recorder = AudioRecorder();
-    final player = AudioPlayer();
-    Duration? duration;
-
     Duration counter = Duration();
-
     bool isRecording = false;
     bool isPlaying = false;
 
     return StatefulBuilder(
       builder: (context, setState) {
+        player.playerStateStream.listen((state) {
+          if (state.processingState == ProcessingState.completed) {
+            if (!isRecording) counter = Duration();
+            setState(() {
+              isPlaying = false;
+            });
+          }
+        });
+
         Future startRecording() async {
           if (!(await ft.requestPermissions())) return;
 
@@ -43,23 +51,28 @@ class VoiceNoteFtWidget extends StatelessWidget {
           setState(() => isRecording = true);
         }
 
+        Future<void> playRecording() async {
+          await player.setFilePath(ft.tmpPath ?? ft.path!);
+          counter = Duration();
+          setState(() => isPlaying = true);
+          await player.play();
+        }
+
+        Future pause() async {
+          await player.pause();
+          setState(() => isPlaying = false);
+        }
+
         Future stopRecording() async {
           final path = await recorder.stop();
           if (path != null) {
+            ft.duration = Duration(milliseconds: counter.inMilliseconds);
             setState(() {
               ft.tmpPath = path;
               isRecording = false;
               dirt?.call();
             });
           }
-        }
-
-        Future<void> playRecording() async {
-          duration = await player.setFilePath(ft.tmpPath ?? ft.path!);
-          setState(() => isPlaying = true);
-          await player.play();
-          counter = Duration();
-          setState(() => isPlaying = false);
         }
 
         return Column(
@@ -74,44 +87,52 @@ class VoiceNoteFtWidget extends StatelessWidget {
                 initialValue: ft.title,
               ),
 
-            if (!lock.record)
+            if (lock.model)
               Row(
                 children: [
-                  if (isRecording)
-                    IconButton(
-                      onPressed: stopRecording,
-                      icon: Icon(Icons.square),
-                    )
-                  else
-                    IconButton(
-                      onPressed: startRecording,
-                      icon: Icon(Icons.circle, color: Colors.red),
-                    ),
+                  if (!detailed) ...[
+                    if (isRecording)
+                      IconButton(
+                        onPressed: stopRecording,
+                        icon: Icon(Icons.square),
+                      )
+                    else if (!isPlaying && !lock.record)
+                      IconButton(
+                        onPressed: startRecording,
+                        icon: Icon(Icons.circle, color: Colors.red),
+                      ),
 
-                  if (!isRecording &&
-                      (ft.tmpPath != null || ft.path != null))
-                    IconButton(
-                      onPressed: playRecording,
-                      icon: Icon(Icons.play_arrow),
-                    ),
+                    if (isPlaying)
+                      IconButton(
+                        onPressed: pause,
+                        icon: Icon(Icons.pause),
+                      ),
 
-                  if (isPlaying)
-                    StatefulBuilder(
-                      builder: (context, ss) {
-                        Future.delayed(
-                          Duration(milliseconds: 1),
-                          () => ss(() {
-                            counter = Duration(
-                              milliseconds: counter.inMilliseconds + 1,
-                            );
-                          }),
-                        );
-                        return Txt(
-                          '${counter.inMinutes}:${counter.inSeconds}:${counter.inMilliseconds}/'
-                          '${duration!.inMinutes}:${duration!.inSeconds}:${duration!.inMilliseconds}',
-                        );
-                      },
-                    ),
+                    if ((!isRecording && !isPlaying) &&
+                        (ft.tmpPath != null || ft.path != null))
+                      IconButton(
+                        onPressed: playRecording,
+                        icon: Icon(Icons.play_arrow),
+                      ),
+
+                    if (isPlaying || isRecording)
+                      StatefulBuilder(
+                        builder: (context, ss) {
+                          Future.delayed(
+                            Duration(seconds: 1),
+                            () => ss(() {
+                              counter = Duration(
+                                seconds: counter.inSeconds + 1,
+                              );
+                            }),
+                          );
+                          return Txt(fmtDuration(counter));
+                        },
+                      ),
+                  ],
+
+                  if (!isRecording && ft.duration != null)
+                    Txt(fmtDuration(ft.duration!)),
                 ],
               ),
           ],
