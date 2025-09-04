@@ -51,7 +51,7 @@ class TaskListFtStatsWidget extends StatelessWidget {
                     'tasks': getTasks,
                     'done tasks': getDone,
                     'pending tasks': getPending,
-                    'done task rate': getDoneRate,
+                    'done %': getDoneRate,
                   },
                   chartOpts: ChartOpts(
                     operation: ChartOperation.average,

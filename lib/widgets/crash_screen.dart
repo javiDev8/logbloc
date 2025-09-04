@@ -13,8 +13,8 @@ class CrashScreen extends StatelessWidget {
   const CrashScreen(this.details, {super.key});
 
   static showError(FlutterErrorDetails details) {
-    print('$details');
-    //throw Exception(details.exception);
+    // ignore: avoid_print
+    if (kDebugMode) print('$details');
   }
 
   @override
@@ -40,7 +40,9 @@ class CrashScreen extends StatelessWidget {
                 ),
                 Txt('something went wrong!', w: 7, s: 20),
                 if (status == 'reported')
-                  Txt("The error was successfully reported")
+                  Txt(
+                    "The error was successfully reported, please restart the app",
+                  )
                 else if (status == 'loading')
                   CircularProgressIndicator()
                 else

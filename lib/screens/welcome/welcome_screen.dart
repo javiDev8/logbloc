@@ -110,7 +110,7 @@ class WelcomeScreenState extends State<WelcomeScreen> {
                     child: Column(
                       children: [
                         Txt(
-                          ' Explore the app with 3 free logbooks forever. If you love it,'
+                          'Explore Logbloc with 3 free logbooks. If you like it,'
                           ' get unlimited logbooks with a one-time purchase of \$3 ',
                           s: 20,
                           w: 8,

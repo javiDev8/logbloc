@@ -159,7 +159,7 @@ class Model {
           timestamp: DateTime.now(),
         ),
       );
-      feedback('model deleted', type: FeedbackType.success);
+      feedback('logbook deleted', type: FeedbackType.success);
       return true;
     } catch (e) {
       throw Exception('models delete error $e');

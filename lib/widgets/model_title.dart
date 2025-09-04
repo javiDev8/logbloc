@@ -50,8 +50,8 @@ List<Widget> makeModelTitle({bool? isNew}) => [
                   delete: modelEditPool.data.delete,
                   msg: modelEditPool.data.recordCount > 0
                       ? '${modelEditPool.data.recordCount} records will be deleted,'
-                            ' do you still want to delete the model "${modelEditPool.data.name}"?'
-                      : 'Are yoy sure you want to delete this model?',
+                            ' do you still want to delete the logbook "${modelEditPool.data.name}"?'
+                      : 'Are yoy sure you want to delete this logbook?',
                 );
                 break;
               } catch (e) {
@@ -63,13 +63,6 @@ List<Widget> makeModelTitle({bool? isNew}) => [
         },
 
         options: [
-          //MenuOption(
-          //  value: 'archive',
-          //  widget: ListTile(
-          //    title: Text('archive'),
-          //    leading: Icon(Icons.archive),
-          //  ),
-          //),
           MenuOption(
             value: 'delete',
             widget: ListTile(

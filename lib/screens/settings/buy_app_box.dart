@@ -46,13 +46,13 @@ class BuyAppBox extends StatelessWidget {
                             'Successfully purchased',
                             type: FeedbackType.success,
                           );
-                          setState(() => isLoading = false);
                         } catch (e) {
                           feedback(
                             'Purchase cancelled',
                             type: FeedbackType.error,
                           );
                         }
+                        setState(() => isLoading = false);
                       },
                     ),
                     if (isLoading) ...[

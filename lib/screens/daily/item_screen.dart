@@ -118,7 +118,7 @@ class ItemScreen extends StatelessWidget {
               MenuOption(
                 value: 'go-to-model',
                 widget: ListTile(
-                  title: Text('go to model'),
+                  title: Text('go to logbook'),
                   leading: Icon(Icons.arrow_forward),
                 ),
               ),

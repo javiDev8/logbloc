@@ -40,7 +40,7 @@ class ModelEditPool extends Pool<Model> {
     editingFts = [];
     editingSchs = [];
     dirt(false);
-    feedback('model saved', type: FeedbackType.success);
+    feedback('logbook saved', type: FeedbackType.success);
     return true;
   }
 

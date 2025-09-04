@@ -115,7 +115,7 @@ class TaskWidget extends StatelessWidget {
         .map<Task>((id) => tasks.values.firstWhere((t) => t.id == id))
         .toList();
 
-    final renameTogglePool = Pool<bool>(false);
+    final renameTogglePool = Pool<bool>(task.title.isEmpty);
 
     return Column(
       children: [
