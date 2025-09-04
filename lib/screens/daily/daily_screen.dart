@@ -61,12 +61,12 @@ class DailyScreen extends StatelessWidget {
                       child: Column(
                         children: [
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: ['by tag', 'used', 'empty', 'all']
                                 .map<Widget>(
                                   (opt) => Button(
                                     opt,
-                                    variant: 0,
+                                    variant: 1,
                                     filled: filter.key == opt,
                                     onPressed: () => agendaFilterPool.set(
                                       (f) => MapEntry(opt, f.value),

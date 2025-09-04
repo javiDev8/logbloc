@@ -126,7 +126,6 @@ class WelcomeScreenState extends State<WelcomeScreen> {
                       Expanded(
                         child: Button(
                           'start free trial',
-                          filled: false,
                           onPressed: finish,
                         ),
                       ),

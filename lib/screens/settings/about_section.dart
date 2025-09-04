@@ -13,14 +13,14 @@ class AboutSection extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              HttpLink(
-                name: 'quick guide',
-                url: 'https://logbloc.sweetfeatures.dev/quick-guide',
-              ),
-              HttpLink(
-                name: 'user manual',
-                url: 'https://logbloc.sweetfeatures.dev/user-manual',
-              ),
+              //HttpLink(
+              //  name: 'quick guide',
+              //  url: 'https://logbloc.sweetfeatures.dev/quick-guide',
+              //),
+              //HttpLink(
+              //  name: 'user manual',
+              //  url: 'https://logbloc.sweetfeatures.dev/user-manual',
+              //),
               HttpLink(
                 name: 'privacy policy',
                 url: 'https://logbloc.sweetfeatures.dev/privacy-policy',
