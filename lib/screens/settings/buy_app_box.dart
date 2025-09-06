@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:logbloc/apis/membership.dart';
 import 'package:logbloc/pools/theme_mode_pool.dart';
 import 'package:logbloc/screens/models/model_screen/schedules_view/schedule_widget.dart';
@@ -16,56 +17,71 @@ class BuyAppBox extends StatelessWidget {
     if (membershipApi.currentPlan == 'base') {
       return None();
     }
+
     return ScheduleWrap(
       child: Padding(
         padding: EdgeInsetsGeometry.all(10),
-        child: StatefulBuilder(
-          builder: (context, setState) => Column(
-            children: [
-              if (membershipApi.currentPlan == 'free') ...[
-                Txt('You are currently limited to 3 logbooks'),
-                Txt(
-                  'Unlock unlimited logbooks with a one-time purchase of \$3',
-                  s: 19,
-                  w: 8,
-                  color: seedColor,
-                ),
-              ],
-
-              Row(
-                children: [
-                  if (membershipApi.currentPlan == 'free') ...[
-                    Button(
-                      'buy the app',
-                      disabled: isLoading,
-                      onPressed: () async {
-                        setState(() => isLoading = true);
-                        try {
-                          await membershipApi.upgrade();
-                          feedback(
-                            'Successfully purchased',
-                            type: FeedbackType.success,
-                          );
-                        } catch (e) {
-                          feedback(
-                            'Purchase cancelled',
-                            type: FeedbackType.error,
-                          );
-                        }
-                        setState(() => isLoading = false);
-                      },
-                    ),
-                    if (isLoading) ...[
-                      Txt('loading purchase'),
-                      CircularProgressIndicator(),
+        child: membershipApi.productPrice == null
+            ? Txt(
+                'to get unlimited logbooks first restart the app with internet connection',
+              )
+            : StatefulBuilder(
+                builder: (context, setState) => Column(
+                  children: [
+                    if (membershipApi.currentPlan == 'free') ...[
+                      Txt('You are currently limited to 3 logbooks'),
+                      Txt(
+                        'Unlock unlimited logbooks with a one-time purchase of ${membershipApi.productPrice}',
+                        s: 19,
+                        w: 8,
+                        color: seedColor,
+                      ),
                     ],
-                  ] else if (membershipApi.currentPlan == 'base')
-                    Txt('you own this app for lifetime!'),
-                ],
+
+                    Row(
+                      children: [
+                        if (membershipApi.currentPlan == 'free') ...[
+                          Button(
+                            'buy unlimited logbooks',
+                            disabled: isLoading,
+                            onPressed: () async {
+                              setState(() => isLoading = true);
+                              try {
+                                if (!(await InternetConnection()
+                                    .hasInternetAccess)) {
+                                  setState(() => isLoading = false);
+                                  return feedback(
+                                    'you are offline, connect to internet',
+                                    type: FeedbackType.error,
+                                  );
+                                }
+
+                                await membershipApi.upgrade();
+                                feedback(
+                                  'Successfully purchased',
+                                  type: FeedbackType.success,
+                                );
+                              } catch (e) {
+                                feedback(
+                                  'Purchase cancelled',
+                                  type: FeedbackType.error,
+                                );
+                              }
+                              setState(() => isLoading = false);
+                            },
+                          ),
+                          if (isLoading)
+                            Padding(
+                              padding: EdgeInsetsGeometry.only(left: 20),
+                              child: CircularProgressIndicator(),
+                            ),
+                        ] else if (membershipApi.currentPlan == 'base')
+                          Txt('you own this app for lifetime!'),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
-        ),
       ),
     );
   }

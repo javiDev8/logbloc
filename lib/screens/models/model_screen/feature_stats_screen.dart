@@ -18,7 +18,10 @@ class FeatureStatsScreen extends StatelessWidget {
     return Scaffold(
       appBar: wrapBar(
         backable: true,
-        children: [Txt('${mFt.title} stats')],
+        children: [
+          SizedBox(width: 250, child: Txt('${model.name} / ${mFt.title}')),
+          Icon(featureSwitch(parseType: 'icon', ftType: mFt.type)),
+        ],
       ),
       body: Swimmer<Map<String, Rec>?>(
         pool: recordsPool,

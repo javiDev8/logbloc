@@ -7,6 +7,8 @@ import 'package:logbloc/pools/records/records_pool.dart';
 // needed for average
 // ignore:depend_on_referenced_packages
 import 'package:collection/collection.dart';
+import 'package:logbloc/screens/daily/daily_screen.dart';
+import 'package:logbloc/utils/feedback.dart';
 import 'package:logbloc/utils/fmt_date.dart';
 
 typedef ItemsByDay = Map<String, List<Item>>;
@@ -68,6 +70,9 @@ class ItemsByDayPool extends Pool<ItemsByDay> {
       Item(modelId: model.id, date: dateStr, schedule: sch),
     );
     controller.sink.add('clean-up');
+
+    agendaFilterPool.data = MapEntry('all', null);
+    feedback('${model.name} entry added', type: FeedbackType.success);
   }
 
   reorderItem({

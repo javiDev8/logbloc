@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:logbloc/apis/back.dart';
 import 'package:logbloc/apis/db.dart';
 import 'package:logbloc/apis/membership.dart';
@@ -27,7 +28,9 @@ initLogbloc() async {
   await eventProcessor.init();
   await themeModePool.init();
   await membershipApi.init();
-  if (!membershipApi.welcomed) {
+
+  if (!membershipApi.welcomed &&
+      await InternetConnection().hasInternetAccess) {
     guideVideoId = await backApi.getAsset('guide-video');
   }
 

@@ -2,10 +2,14 @@ import 'dart:async';
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:logbloc/apis/back.dart';
 import 'package:logbloc/main.dart';
 
 class MembershipApi {
+  String? productId;
+  String? productPrice;
+
   String currentPlan = '';
   String deviceId = '';
   bool welcomed = false;
@@ -35,15 +39,31 @@ class MembershipApi {
   Future<void> init() async {
     welcomed = (await sharedPrefs.getBool('welcomed')) ?? false;
 
-    deviceId = await getDeviceId();
+    final diSpSrc = await sharedPrefs.getString('deviceId');
+    if (diSpSrc == null) {
+      deviceId = await getDeviceId();
+      sharedPrefs.setString('deviceId', deviceId);
+    } else {
+      deviceId = diSpSrc;
+    }
+
     final spSrc = await sharedPrefs.getString('plan');
     if (spSrc != null) {
       currentPlan = spSrc;
-      return;
     } else {
-      currentPlan = await backApi.checkPlan(deviceId);
+      if (await InternetConnection().hasInternetAccess) {
+        currentPlan = await backApi.checkPlan(deviceId);
+      } else {
+        currentPlan = 'free';
+      }
+
       await sharedPrefs.setString('plan', currentPlan);
     }
+
+    if (currentPlan == 'free') {
+      await getProduct();
+    }
+    // if app is owned there is no need of getting product details
   }
 
   Future<void> upgrade() async {
@@ -61,8 +81,19 @@ class MembershipApi {
     }
   }
 
+  Future getProduct() async {
+    try {
+      productId = await backApi.getAsset('product-id');
+      final details = await InAppPurchase.instance.queryProductDetails({
+        productId!,
+      });
+      productPrice = details.productDetails.first.price;
+    } catch (e) {
+      Exception('get product error: $e');
+    }
+  }
+
   Future<void> purchase() async {
-    final String productId = await backApi.getAsset('product-id');
     final completer = Completer<void>();
     late StreamSubscription<List<PurchaseDetails>> subscription;
 
@@ -89,7 +120,7 @@ class MembershipApi {
     });
 
     final ProductDetailsResponse productDetailsResponse =
-        await InAppPurchase.instance.queryProductDetails({productId});
+        await InAppPurchase.instance.queryProductDetails({productId!});
 
     if (productDetailsResponse.productDetails.isNotEmpty) {
       final ProductDetails productDetails =
