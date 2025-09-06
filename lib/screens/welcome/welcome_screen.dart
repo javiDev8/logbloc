@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:logbloc/apis/membership.dart';
 import 'package:logbloc/main.dart';
 import 'package:logbloc/pools/theme_mode_pool.dart';
-import 'package:logbloc/screens/welcome/quick_start.dart';
 import 'package:logbloc/screens/welcome/welcome_page.dart';
 import 'package:logbloc/widgets/design/button.dart';
 import 'package:logbloc/widgets/design/txt.dart';
-
-String? guideVideoId;
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -68,15 +65,6 @@ class WelcomeScreenState extends State<WelcomeScreen> {
             ),
           ),
 
-          if (guideVideoId != null)
-            WelcomePage(
-              title: 'Quick Start',
-              withNextBtn: true,
-              index: 1,
-              controller: controller,
-              child: QuickStart(),
-            ),
-
           WelcomePage(
             title: 'Ready?',
             withNextBtn: false,
@@ -91,8 +79,8 @@ class WelcomeScreenState extends State<WelcomeScreen> {
                       children: [
                         Txt(
                           'Explore Logbloc with 3 free logbooks. If you like it,'
-                          ' get unlimited logbooks with a one-time purchase '
-                          '${membershipApi.productPrice == null ? '' : 'of ${membershipApi.productPrice} '}',
+                          ' get unlimited logbooks with a one-time purchase'
+                          '${membershipApi.productPrice == null ? '.' : ' of ${membershipApi.productPrice} '}',
                           s: 20,
                           w: 8,
                         ),
