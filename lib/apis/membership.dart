@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:logbloc/apis/back.dart';
 import 'package:logbloc/main.dart';
+import 'package:uuid/uuid.dart';
 
 class MembershipApi {
   String? productId;
@@ -15,25 +17,38 @@ class MembershipApi {
   bool welcomed = false;
 
   Future<String> getDeviceId() async {
-    try {
-      final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
-      if (Platform.isAndroid) {
-        final AndroidDeviceInfo androidInfo =
-            await deviceInfoPlugin.androidInfo;
-        return androidInfo.id;
-      } else if (Platform.isIOS) {
-        final IosDeviceInfo iosInfo = await deviceInfoPlugin.iosInfo;
-        final iosId = iosInfo.identifierForVendor;
-        if (iosId == null) {
-          throw Exception('id failed');
-        }
-        return iosId;
-      } else {
-        throw Exception('id failed: unsupported platform');
-      }
-    } catch (e) {
-      throw Exception('error on get device id: $e');
+    const FlutterSecureStorage storage = FlutterSecureStorage();
+    final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+
+    String? storedId = await storage.read(key: 'device_id');
+    if (storedId != null && storedId.isNotEmpty) {
+      return storedId;
     }
+
+    String? deviceId;
+    if (Platform.isAndroid) {
+      final AndroidDeviceInfo androidInfo =
+          await deviceInfoPlugin.androidInfo;
+      deviceId = androidInfo.id;
+    } else if (Platform.isIOS) {
+      final IosDeviceInfo iosInfo = await deviceInfoPlugin.iosInfo;
+      final String? iosId = iosInfo.identifierForVendor;
+      if (iosId != null &&
+          iosId.isNotEmpty &&
+          iosId != '00000000-0000-0000-0000-000000000000') {
+        deviceId = iosId;
+      }
+    }
+
+    if (deviceId == null ||
+        deviceId.isEmpty ||
+        deviceId == '00000000-0000-0000-0000-000000000000') {
+      deviceId = const Uuid().v4();
+    }
+
+    await storage.write(key: 'device_id', value: deviceId);
+
+    return deviceId;
   }
 
   Future<void> init() async {
