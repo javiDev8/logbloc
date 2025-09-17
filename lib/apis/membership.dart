@@ -1,84 +1,19 @@
 import 'dart:async';
-import 'dart:io';
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
-import 'package:logbloc/apis/back.dart';
 import 'package:logbloc/main.dart';
-import 'package:uuid/uuid.dart';
+import 'package:logbloc/pools/theme_mode_pool.dart';
+import 'package:logbloc/utils/feedback.dart';
 
 class MembershipApi {
-  String? productId;
+  //String? productId;
   String? productPrice;
 
   String currentPlan = '';
-  String deviceId = '';
   bool welcomed = false;
 
-  Future<String> getDeviceId() async {
-    const FlutterSecureStorage storage = FlutterSecureStorage();
-    final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
-
-    String? storedId = await storage.read(key: 'device_id');
-    if (storedId != null && storedId.isNotEmpty) {
-      return storedId;
-    }
-
-    String? deviceId;
-    if (Platform.isAndroid) {
-      final AndroidDeviceInfo androidInfo =
-          await deviceInfoPlugin.androidInfo;
-      deviceId = androidInfo.id;
-    } else if (Platform.isIOS) {
-      final IosDeviceInfo iosInfo = await deviceInfoPlugin.iosInfo;
-      final String? iosId = iosInfo.identifierForVendor;
-      if (iosId != null &&
-          iosId.isNotEmpty &&
-          iosId != '00000000-0000-0000-0000-000000000000') {
-        deviceId = iosId;
-      }
-    }
-
-    if (deviceId == null ||
-        deviceId.isEmpty ||
-        deviceId == '00000000-0000-0000-0000-000000000000') {
-      deviceId = const Uuid().v4();
-    }
-
-    await storage.write(key: 'device_id', value: deviceId);
-
-    return deviceId;
-  }
-
   Future<void> init() async {
-    welcomed = (await sharedPrefs.getBool('welcomed')) ?? false;
-
-    final diSpSrc = await sharedPrefs.getString('deviceId');
-    if (diSpSrc == null) {
-      deviceId = await getDeviceId();
-      sharedPrefs.setString('deviceId', deviceId);
-    } else {
-      deviceId = diSpSrc;
-    }
-
-    final spSrc = await sharedPrefs.getString('plan');
-    if (spSrc != null) {
-      currentPlan = spSrc;
-    } else {
-      if (await InternetConnection().hasInternetAccess) {
-        currentPlan = await backApi.checkPlan(deviceId);
-      } else {
-        currentPlan = 'free';
-      }
-
-      await sharedPrefs.setString('plan', currentPlan);
-    }
-
-    if (currentPlan == 'free') {
-      await getProduct();
-    }
-    // if app is owned there is no need of getting product details
+    welcomed = await sharedPrefs.getBool('welcomed') ?? false;
+    currentPlan = await sharedPrefs.getString('plan') ?? 'free';
   }
 
   Future<void> upgrade() async {
@@ -90,21 +25,26 @@ class MembershipApi {
       await purchase();
       currentPlan = 'base';
       await sharedPrefs.setString('plan', 'base');
-      await backApi.upgradePlan(deviceId);
     } catch (e) {
       throw Exception('upgrade error: $e');
     }
   }
 
-  Future getProduct() async {
+  restorePurchase() async {
     try {
-      productId = await backApi.getAsset('product-id');
-      final details = await InAppPurchase.instance.queryProductDetails({
-        productId!,
-      });
-      productPrice = details.productDetails.first.price;
+      await InAppPurchase.instance.restorePurchases();
+      await sharedPrefs.setString('plan', 'base');
+      membershipApi.currentPlan = 'base';
+      feedback(
+        'purchase successfully restored',
+        type: FeedbackType.success,
+      );
+      themeModePool.emit();
     } catch (e) {
-      Exception('get product error: $e');
+      feedback(
+        'There is no purchase to restore!',
+        type: FeedbackType.error,
+      );
     }
   }
 
@@ -135,7 +75,7 @@ class MembershipApi {
     });
 
     final ProductDetailsResponse productDetailsResponse =
-        await InAppPurchase.instance.queryProductDetails({productId!});
+        await InAppPurchase.instance.queryProductDetails({'12'});
 
     if (productDetailsResponse.productDetails.isNotEmpty) {
       final ProductDetails productDetails =

@@ -9,7 +9,9 @@ import 'package:logbloc/widgets/design/none.dart';
 import 'package:logbloc/widgets/design/txt.dart';
 
 class BuyAppBox extends StatelessWidget {
-  const BuyAppBox({super.key});
+  final Function reload;
+
+  const BuyAppBox({super.key, required this.reload});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +41,7 @@ class BuyAppBox extends StatelessWidget {
                 children: [
                   if (membershipApi.currentPlan == 'free') ...[
                     Button(
-                      'buy unlimited logbooks',
+                      'purchase',
                       disabled: isLoading,
                       onPressed: () async {
                         setState(() => isLoading = true);
@@ -48,13 +50,9 @@ class BuyAppBox extends StatelessWidget {
                               .hasInternetAccess)) {
                             setState(() => isLoading = false);
                             return feedback(
-                              'you are offline, connect to internet',
+                              'connect to internet to purchase',
                               type: FeedbackType.error,
                             );
-                          }
-
-                          if (membershipApi.productId == null) {
-                            await membershipApi.getProduct();
                           }
 
                           await membershipApi.upgrade();
@@ -72,11 +70,16 @@ class BuyAppBox extends StatelessWidget {
                         setState(() => isLoading = false);
                       },
                     ),
-                    if (isLoading)
-                      Padding(
-                        padding: EdgeInsetsGeometry.only(left: 20),
-                        child: CircularProgressIndicator(),
-                      ),
+
+                    Button(
+                      'restore purchase',
+                      disabled: isLoading,
+                      onPressed: () async {
+                        setState(() => isLoading = true);
+                        await membershipApi.restorePurchase();
+                        setState(() => isLoading = false);
+                      },
+                    ),
                   ] else if (membershipApi.currentPlan == 'base')
                     Txt('you own this app for lifetime!'),
                 ],

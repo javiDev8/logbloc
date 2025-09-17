@@ -1,8 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
-import 'package:logbloc/apis/back.dart';
 import 'package:logbloc/pools/theme_mode_pool.dart';
 import 'package:logbloc/widgets/design/button.dart';
 import 'package:logbloc/widgets/design/txt.dart';
@@ -48,23 +46,6 @@ class CrashScreen extends StatelessWidget {
                 else
                   Row(
                     children: [
-                      Expanded(
-                        child: Button(
-                          'report error',
-                          filled: false,
-                          onPressed: () async {
-                            try {
-                              setState(() => status = 'loading');
-                              await backApi.reportError(
-                                '${details.exception}',
-                              );
-                              setState(() => status = 'reported');
-                            } catch (e) {
-                              SystemNavigator.pop();
-                            }
-                          },
-                        ),
-                      ),
                       Expanded(
                         child: Button(
                           'restart app',

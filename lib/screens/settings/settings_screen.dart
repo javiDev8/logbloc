@@ -19,7 +19,10 @@ class SettingsScreen extends StatelessWidget {
         padding: EdgeInsets.only(left: 20, right: 10),
         child: ListView(
           children: [
-            BuyAppBox(),
+            StatefulBuilder(
+              builder: (context, setState) =>
+                  BuyAppBox(reload: () => setState(() {})),
+            ),
 
             SectionDivider(string: Tr.preferences.getString(context)),
             PreferencesSettings(),
