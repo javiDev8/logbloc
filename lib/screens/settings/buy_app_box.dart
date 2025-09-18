@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:logbloc/apis/membership.dart';
 import 'package:logbloc/screens/models/model_screen/schedules_view/schedule_widget.dart';
 import 'package:logbloc/utils/feedback.dart';
-import 'package:logbloc/utils/noticable_print.dart';
 import 'package:logbloc/widgets/design/button.dart';
 import 'package:logbloc/widgets/design/none.dart';
 import 'package:logbloc/widgets/design/txt.dart';
@@ -46,13 +44,8 @@ class BuyAppBox extends StatelessWidget {
                       onPressed: () async {
                         setState(() => loading = 'purchasing ');
                         try {
-                          if (!(await InternetConnection()
-                              .hasInternetAccess)) {
-                            setState(() => loading = null);
-                            return feedback(
-                              'connect to internet to purchase',
-                              type: FeedbackType.error,
-                            );
+                          if (!(await membershipApi.theresInternet())) {
+                            return setState(() => loading = null);
                           }
 
                           await membershipApi.upgrade();
@@ -61,7 +54,6 @@ class BuyAppBox extends StatelessWidget {
                             type: FeedbackType.success,
                           );
                         } catch (e) {
-                          nPrint('purchase error: $e');
                           feedback(
                             'Purchase cancelled',
                             type: FeedbackType.error,
@@ -73,9 +65,13 @@ class BuyAppBox extends StatelessWidget {
 
                     Button(
                       'restore purchase',
+                      filled: false,
                       disabled: loading != null,
                       onPressed: () async {
                         setState(() => loading = 'restoring purchase');
+                        if (!(await membershipApi.theresInternet())) {
+                          return setState(() => loading = null);
+                        }
                         await membershipApi.restorePurchase();
                         setState(() => loading = null);
                       },

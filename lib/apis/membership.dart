@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:logbloc/main.dart';
 import 'package:logbloc/pools/theme_mode_pool.dart';
 import 'package:logbloc/utils/feedback.dart';
 import 'package:logbloc/utils/noticable_print.dart';
 
 class MembershipApi {
-  //String? productId;
+  static const String productId = '10';
   String? productPrice;
 
   String currentPlan = '';
@@ -17,12 +18,22 @@ class MembershipApi {
     currentPlan = await sharedPrefs.getString('plan') ?? 'free';
   }
 
+  Future<bool> theresInternet() async {
+    if (!(await InternetConnection().hasInternetAccess)) {
+      feedback(
+        'You are offline, connect to internet',
+        type: FeedbackType.error,
+      );
+      return false;
+    }
+    return true;
+  }
+
   Future<void> upgrade() async {
     try {
       if (currentPlan == 'base') {
         throw Exception('already on base plan!');
       }
-
       await purchase();
       currentPlan = 'base';
       await sharedPrefs.setString('plan', 'base');
@@ -31,8 +42,8 @@ class MembershipApi {
     }
   }
 
-  Future<void> ultimateRestorePurchase() async {
-    final Completer<void> completer = Completer<void>();
+  Future<bool> ultimateRestorePurchase() async {
+    final Completer<bool> completer = Completer<bool>();
     StreamSubscription<List<PurchaseDetails>>? subscription;
 
     subscription = InAppPurchase.instance.purchaseStream.listen(
@@ -40,37 +51,56 @@ class MembershipApi {
         for (final PurchaseDetails purchaseDetails
             in purchaseDetailsList) {
           if (purchaseDetails.status == PurchaseStatus.restored &&
-              purchaseDetails.productID == '13') {
+              purchaseDetails.productID == productId) {
             await InAppPurchase.instance.completePurchase(purchaseDetails);
-            completer.complete();
-            break;
+
+            if (!completer.isCompleted) {
+              completer.complete(true);
+              await subscription?.cancel();
+            }
+            return;
           }
         }
+
+        completer.complete(false);
       },
       onError: (Object error) {
+        if (!completer.isCompleted) {
+          completer.completeError(error);
+        }
         subscription?.cancel();
-        completer.completeError(error);
       },
       onDone: () {
-        subscription?.cancel();
+        nPrint('on done');
+        if (!completer.isCompleted) {
+          completer.complete(false);
+        }
       },
     );
 
     await InAppPurchase.instance.restorePurchases();
 
     try {
-      await completer.future.timeout(const Duration(seconds: 10));
-    } on TimeoutException {
-      subscription.cancel();
-      throw Exception("not-purchased");
+      return await completer.future.timeout(
+        const Duration(seconds: 10),
+        onTimeout: () {
+          subscription?.cancel();
+          throw Exception('Restore purchase timed out');
+        },
+      );
     } finally {
-      subscription.cancel();
+      await subscription.cancel();
     }
   }
 
   restorePurchase() async {
     try {
-      await ultimateRestorePurchase();
+      if (!await ultimateRestorePurchase()) {
+        return feedback(
+          'You have not purchased it',
+          type: FeedbackType.error,
+        );
+      }
       await sharedPrefs.setString('plan', 'base');
       membershipApi.currentPlan = 'base';
       feedback(
@@ -79,18 +109,11 @@ class MembershipApi {
       );
       themeModePool.emit();
     } catch (e) {
-      nPrint('exception: ${e.toString()}');
-      if (e.toString() == 'Exception: not-purchased') {
-        feedback(
-          'You haven\'t purchased it!',
-          type: FeedbackType.error,
-        );
-      } else {
-        feedback(
-          'purchase restore has failed! try again',
-          type: FeedbackType.error,
-        );
-      }
+      nPrint('$e');
+      feedback(
+        'purchase restore has failed! try again',
+        type: FeedbackType.error,
+      );
     }
   }
 
@@ -121,7 +144,7 @@ class MembershipApi {
     });
 
     final ProductDetailsResponse productDetailsResponse =
-        await InAppPurchase.instance.queryProductDetails({'13'});
+        await InAppPurchase.instance.queryProductDetails({productId});
 
     if (productDetailsResponse.productDetails.isNotEmpty) {
       final ProductDetails productDetails =
