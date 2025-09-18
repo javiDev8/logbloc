@@ -15,7 +15,7 @@ class BuyAppBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isLoading = false;
+    String? loading;
     if (membershipApi.currentPlan == 'base') {
       return None();
     }
@@ -42,13 +42,13 @@ class BuyAppBox extends StatelessWidget {
                   if (membershipApi.currentPlan == 'free') ...[
                     Button(
                       'purchase',
-                      disabled: isLoading,
+                      disabled: loading != null,
                       onPressed: () async {
-                        setState(() => isLoading = true);
+                        setState(() => loading = 'purchasing ');
                         try {
                           if (!(await InternetConnection()
                               .hasInternetAccess)) {
-                            setState(() => isLoading = false);
+                            setState(() => loading = null);
                             return feedback(
                               'connect to internet to purchase',
                               type: FeedbackType.error,
@@ -67,23 +67,38 @@ class BuyAppBox extends StatelessWidget {
                             type: FeedbackType.error,
                           );
                         }
-                        setState(() => isLoading = false);
+                        setState(() => loading = null);
                       },
                     ),
 
                     Button(
                       'restore purchase',
-                      disabled: isLoading,
+                      disabled: loading != null,
                       onPressed: () async {
-                        setState(() => isLoading = true);
+                        setState(() => loading = 'restoring purchase');
                         await membershipApi.restorePurchase();
-                        setState(() => isLoading = false);
+                        setState(() => loading = null);
                       },
                     ),
                   ] else if (membershipApi.currentPlan == 'base')
                     Txt('you own this app for lifetime!'),
                 ],
               ),
+
+              if (loading != null)
+                Padding(
+                  padding: EdgeInsetsGeometry.all(20),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text('$loading'),
+                      Padding(
+                        padding: EdgeInsetsGeometry.all(10),
+                        child: CircularProgressIndicator(),
+                      ),
+                    ],
+                  ),
+                ),
             ],
           ),
         ),

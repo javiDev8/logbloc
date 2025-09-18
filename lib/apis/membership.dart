@@ -3,6 +3,7 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:logbloc/main.dart';
 import 'package:logbloc/pools/theme_mode_pool.dart';
 import 'package:logbloc/utils/feedback.dart';
+import 'package:logbloc/utils/noticable_print.dart';
 
 class MembershipApi {
   //String? productId;
@@ -30,9 +31,46 @@ class MembershipApi {
     }
   }
 
+  Future<void> ultimateRestorePurchase() async {
+    final Completer<void> completer = Completer<void>();
+    StreamSubscription<List<PurchaseDetails>>? subscription;
+
+    subscription = InAppPurchase.instance.purchaseStream.listen(
+      (List<PurchaseDetails> purchaseDetailsList) async {
+        for (final PurchaseDetails purchaseDetails
+            in purchaseDetailsList) {
+          if (purchaseDetails.status == PurchaseStatus.restored &&
+              purchaseDetails.productID == '13') {
+            await InAppPurchase.instance.completePurchase(purchaseDetails);
+            completer.complete();
+            break;
+          }
+        }
+      },
+      onError: (Object error) {
+        subscription?.cancel();
+        completer.completeError(error);
+      },
+      onDone: () {
+        subscription?.cancel();
+      },
+    );
+
+    await InAppPurchase.instance.restorePurchases();
+
+    try {
+      await completer.future.timeout(const Duration(seconds: 10));
+    } on TimeoutException {
+      subscription.cancel();
+      throw Exception("not-purchased");
+    } finally {
+      subscription.cancel();
+    }
+  }
+
   restorePurchase() async {
     try {
-      await InAppPurchase.instance.restorePurchases();
+      await ultimateRestorePurchase();
       await sharedPrefs.setString('plan', 'base');
       membershipApi.currentPlan = 'base';
       feedback(
@@ -41,10 +79,18 @@ class MembershipApi {
       );
       themeModePool.emit();
     } catch (e) {
-      feedback(
-        'There is no purchase to restore!',
-        type: FeedbackType.error,
-      );
+      nPrint('exception: ${e.toString()}');
+      if (e.toString() == 'Exception: not-purchased') {
+        feedback(
+          'You haven\'t purchased it!',
+          type: FeedbackType.error,
+        );
+      } else {
+        feedback(
+          'purchase restore has failed! try again',
+          type: FeedbackType.error,
+        );
+      }
     }
   }
 
@@ -75,7 +121,7 @@ class MembershipApi {
     });
 
     final ProductDetailsResponse productDetailsResponse =
-        await InAppPurchase.instance.queryProductDetails({'12'});
+        await InAppPurchase.instance.queryProductDetails({'13'});
 
     if (productDetailsResponse.productDetails.isNotEmpty) {
       final ProductDetails productDetails =
