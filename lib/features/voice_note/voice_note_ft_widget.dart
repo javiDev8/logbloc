@@ -129,11 +129,7 @@ class VoiceNoteFtWidget extends StatelessWidget {
                         builder: (context, ss) {
                           Future.delayed(
                             Duration(seconds: 1),
-                            () => ss(() {
-                              //counter = Duration(
-                              //  seconds: counter.inSeconds + 1,
-                              //);
-                            }),
+                            () => ss(() {}),
                           );
                           return Txt(
                             fmtDuration(

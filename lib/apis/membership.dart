@@ -7,8 +7,7 @@ import 'package:logbloc/utils/feedback.dart';
 import 'package:logbloc/utils/noticable_print.dart';
 
 class MembershipApi {
-  static const String productId = '10';
-  String? productPrice;
+  static const String productId = '13';
 
   String currentPlan = '';
   bool welcomed = false;

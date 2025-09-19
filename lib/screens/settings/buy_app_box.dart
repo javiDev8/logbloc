@@ -27,8 +27,7 @@ class BuyAppBox extends StatelessWidget {
               if (membershipApi.currentPlan == 'free') ...[
                 Txt('You are currently limited to 3 logbooks'),
                 Txt(
-                  'Unlock unlimited logbooks with a one-time purchase'
-                  '${membershipApi.productPrice == null ? '.' : ' of ${membershipApi.productPrice}'}',
+                  'Unlock unlimited logbooks with a one-time purchase.',
                   s: 19,
                   w: 8,
                   color: Theme.of(context).colorScheme.primary,
