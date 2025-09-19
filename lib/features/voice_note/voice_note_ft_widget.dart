@@ -45,7 +45,7 @@ class VoiceNoteFtWidget extends StatelessWidget {
         });
 
         Future startRecording() async {
-          if (!(await ft.requestPermissions())) return;
+          if (!(await ft.requestPermissions(context))) return;
 
           final tmpDir = await getTemporaryDirectory();
           final tmpPath = '${tmpDir.path}/${ft.genFileName()}';

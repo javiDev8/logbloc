@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:io';
-
+import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:logbloc/features/feature_class.dart';
 import 'package:logbloc/utils/feedback.dart';
+import 'package:logbloc/widgets/design/button.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -85,10 +86,38 @@ class VoiceNoteFt extends Feature {
   String genFileName() =>
       'logbloc-audio-${DateTime.now().millisecondsSinceEpoch}';
 
-  Future<bool> requestPermissions() async {
+  Future<bool> requestPermissions(BuildContext context) async {
     var status = await Permission.microphone.request();
     if (status.isGranted) {
       return true;
+    } else if (status.isPermanentlyDenied) {
+      await showDialog(
+        // ignore: use_build_context_synchronously
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Microphone Access Required'),
+          content: const Text(
+            'To record voice notes in your logbook, this app needs access to your microphone. '
+            'You can enable this by going to Settings > Privacy > Microphone, and toggling on the setting for Logbloc.',
+          ),
+	  actionsAlignment: MainAxisAlignment.spaceAround,
+          actions: <Widget>[
+            Button(
+	      'cancel',
+	      filled: false,
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            Button(
+	      'open settings',
+              onPressed: () {
+                Navigator.of(context).pop();
+                openAppSettings();
+              },
+            ),
+          ],
+        ),
+      );
+      return false;
     } else {
       return false;
     }
