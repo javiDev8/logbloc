@@ -1,11 +1,8 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:logbloc/features/feature_class.dart';
 import 'package:logbloc/utils/feedback.dart';
 import 'package:logbloc/widgets/design/button.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class VoiceNoteFt extends Feature {
@@ -84,7 +81,7 @@ class VoiceNoteFt extends Feature {
   };
 
   String genFileName() =>
-      'logbloc-audio-${DateTime.now().millisecondsSinceEpoch}';
+      'logbloc-audio-${DateTime.now().millisecondsSinceEpoch}.m4a';
 
   Future<bool> requestPermissions(BuildContext context) async {
     var status = await Permission.microphone.request();
@@ -136,17 +133,7 @@ class VoiceNoteFt extends Feature {
       return true;
     }
 
-    try {
-      final player = AudioPlayer();
-      duration = await player.setFilePath(tmpPath!);
-
-      final file = File(tmpPath!);
-      final dir = await getApplicationDocumentsDirectory();
-      path = '${dir.path}/${genFileName()}';
-      await file.copy(path!);
-      return true;
-    } catch (e) {
-      throw Exception('audio saving failed error: $e');
-    }
+    path = tmpPath;
+    return true;
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:logbloc/features/feature_widget.dart';
@@ -69,15 +71,21 @@ class VoiceNoteFtWidget extends StatelessWidget {
           setState(() => isPlaying = false);
         }
 
-        Future stopRecording() async {
-          //counter = Duration();
-
-          final duration = DateTime.now().difference(start!);
+        Future<void> stopRecording() async {
           final path = await recorder.stop();
           if (path != null) {
+            final tmpFile = File(path);
+            final dir = await getApplicationDocumentsDirectory();
+            final permanentPath = '${dir.path}/${ft.genFileName()}';
+            await tmpFile.copy(permanentPath);
+
+            final player = AudioPlayer();
+            final duration = await player.setFilePath(permanentPath);
+
+            ft.tmpPath = permanentPath;
             ft.duration = duration;
+
             setState(() {
-              ft.tmpPath = path;
               isRecording = false;
               dirt?.call();
             });
@@ -112,10 +120,7 @@ class VoiceNoteFtWidget extends StatelessWidget {
                       ),
 
                     if (isPlaying)
-                      IconButton(
-                        onPressed: pause,
-                        icon: Icon(Icons.pause),
-                      ),
+                      IconButton(onPressed: pause, icon: Icon(Icons.pause)),
 
                     if ((!isRecording && !isPlaying) &&
                         (ft.tmpPath != null || ft.path != null))
@@ -127,10 +132,7 @@ class VoiceNoteFtWidget extends StatelessWidget {
                     if (isPlaying || isRecording)
                       StatefulBuilder(
                         builder: (context, ss) {
-                          Future.delayed(
-                            Duration(seconds: 1),
-                            () => ss(() {}),
-                          );
+                          Future.delayed(Duration(seconds: 1), () => ss(() {}));
                           return Txt(
                             fmtDuration(
                               DateTime.now().difference(start!),
