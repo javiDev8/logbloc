@@ -198,6 +198,7 @@ class FeatureWidget extends StatelessWidget {
                               preventPop: true,
                               delete: () {
                                 modelEditPool.removeFeature(feature.key);
+				dirt!();
                                 return true;
                               },
                               msg: 'Delete feature?',
