@@ -145,7 +145,9 @@ class ItemBox extends StatelessWidget {
                             child: Wrap(
                               alignment: WrapAlignment.end,
                               children: [
-                                if (pinnedFts.length > 1) Text('...  '),
+                                if (pinnedFts.isNotEmpty &&
+                                    unpinnedFts.isNotEmpty)
+                                  Text('...  '),
                                 ...unPinnedFtsWids,
                               ],
                             ),
