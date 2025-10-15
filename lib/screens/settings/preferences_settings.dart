@@ -1,10 +1,19 @@
 import 'package:logbloc/config/locales.dart';
 import 'package:logbloc/pools/pools.dart';
 import 'package:logbloc/pools/theme_mode_pool.dart';
+import 'package:logbloc/screens/root_screen_switch.dart';
 import 'package:logbloc/widgets/design/button.dart';
 //import 'package:logbloc/widgets/design/dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
+
+changeTheme(bool dark) {
+  rootScreens[0].nav.currentState!.popUntil(
+    (route) => route.settings.name == '/',
+  );
+
+  themeModePool.changeMode(dark ? ThemeMode.dark : ThemeMode.light);
+}
 
 class PreferencesSettings extends StatelessWidget {
   const PreferencesSettings({super.key});
@@ -23,15 +32,13 @@ class PreferencesSettings extends StatelessWidget {
                 children: [
                   Button(
                     Tr.light.getString(context),
-                    onPressed: () =>
-                        themeModePool.changeMode(ThemeMode.light),
+                    onPressed: () => changeTheme(false),
                     lead: Icons.light_mode,
                     filled: theme == ThemeMode.light,
                   ),
                   Button(
                     Tr.dark.getString(context),
-                    onPressed: () =>
-                        themeModePool.changeMode(ThemeMode.dark),
+                    onPressed: () => changeTheme(true),
 
                     lead: Icons.dark_mode,
                     filled: theme == ThemeMode.dark,
