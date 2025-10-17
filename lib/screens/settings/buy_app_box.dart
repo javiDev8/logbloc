@@ -54,7 +54,7 @@ class BuyAppBox extends StatelessWidget {
                           );
                         } catch (e) {
                           feedback(
-                            'Purchase cancelled',
+                            'Purchase cancelled, reason: ${e.toString()}',
                             type: FeedbackType.error,
                           );
                         }
