@@ -81,7 +81,7 @@ class ModelsScreen extends StatelessWidget {
                             s: 18,
                             w: 8,
                           ),
-                          Txt('Buy the app to get unlimited logbooks'),
+                          Txt('Buy unlimited logbooks to use more'),
                           Row(
                             children: [
                               Expanded(
