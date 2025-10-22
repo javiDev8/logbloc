@@ -3,6 +3,7 @@ import 'package:flutter_material_design_icons/flutter_material_design_icons.dart
 import 'package:logbloc/apis/notifications.dart';
 import 'package:logbloc/features/feature_widget.dart';
 import 'package:logbloc/features/reminder/reminder_ft_class.dart';
+import 'package:logbloc/utils/feedback.dart';
 import 'package:logbloc/widgets/design/button.dart';
 import 'package:logbloc/widgets/design/exp.dart';
 import 'package:logbloc/widgets/design/txt.dart';
@@ -45,7 +46,14 @@ class ReminderFtWidget extends StatelessWidget {
                   '${ft.time.hour}:${ft.time.minute}',
                   lead: MdiIcons.clockOutline,
                   onPressed: () async {
-                    await notif.requestNotifPermission();
+                    if ((await notif.requestNotifPermission()) != true) {
+                      feedback(
+                        'this feature needs permission to send notifications,'
+                        ' give it from your device settings',
+                        type: FeedbackType.error,
+                      );
+                      return;
+                    }
 
                     final time = await showTimePicker(
                       // ignore: use_build_context_synchronously

@@ -69,19 +69,23 @@ class Notif {
     NotificationResponse notificationResponse,
   ) async {}
 
-  Future requestNotifPermission() async {
+  Future<bool?> requestNotifPermission() async {
     if (Platform.isAndroid) {
-      await plugin
+      return await plugin
           .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin
           >()!
           .requestNotificationsPermission();
     } else if (Platform.isIOS) {
-      await plugin
+      return await plugin
           .resolvePlatformSpecificImplementation<
             IOSFlutterLocalNotificationsPlugin
           >()!
           .requestPermissions();
+
+    } else {
+      // no supported platform
+      return null;
     }
   }
 
