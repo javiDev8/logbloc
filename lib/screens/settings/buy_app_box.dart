@@ -48,13 +48,9 @@ class BuyAppBox extends StatelessWidget {
                           }
 
                           await membershipApi.upgrade();
-                          feedback(
-                            'Successfully purchased',
-                            type: FeedbackType.success,
-                          );
                         } catch (e) {
                           feedback(
-                            'Purchase cancelled, reason: ${e.toString()}',
+                            'Purchase cancelled',
                             type: FeedbackType.error,
                           );
                         }

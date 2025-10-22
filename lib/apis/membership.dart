@@ -28,14 +28,20 @@ class MembershipApi {
     return true;
   }
 
+  grantUnlimited() async {
+    currentPlan = 'base';
+    await sharedPrefs.setString('plan', 'base');
+    themeModePool.emit();
+  }
+
   Future<void> upgrade() async {
     try {
       if (currentPlan == 'base') {
         throw Exception('already on base plan!');
       }
       await purchase();
-      currentPlan = 'base';
-      await sharedPrefs.setString('plan', 'base');
+      await grantUnlimited();
+      feedback('Successfully purchased', type: FeedbackType.success);
     } catch (e) {
       throw Exception('upgrade error: $e');
     }
@@ -100,13 +106,11 @@ class MembershipApi {
           type: FeedbackType.error,
         );
       }
-      await sharedPrefs.setString('plan', 'base');
-      membershipApi.currentPlan = 'base';
+      await grantUnlimited();
       feedback(
         'purchase successfully restored',
         type: FeedbackType.success,
       );
-      themeModePool.emit();
     } catch (e) {
       nPrint('$e');
       feedback(
