@@ -8,6 +8,7 @@ import 'package:logbloc/pools/models/model_class.dart';
 import 'package:logbloc/pools/models/models_pool.dart';
 import 'package:logbloc/utils/fmt_date.dart';
 import 'package:logbloc/utils/parse_map.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:workmanager/workmanager.dart';
@@ -77,12 +78,20 @@ class Notif {
           >()!
           .requestNotificationsPermission();
     } else if (Platform.isIOS) {
-      return await plugin
-          .resolvePlatformSpecificImplementation<
-            IOSFlutterLocalNotificationsPlugin
-          >()!
-          .requestPermissions();
+      final iosPlugin = plugin.resolvePlatformSpecificImplementation<
+	IOSFlutterLocalNotificationsPlugin>();
 
+      await iosPlugin?.requestPermissions(
+	alert: true,
+	badge: true,
+	sound: true,
+      );
+      final permissions = await iosPlugin?.checkPermissions();
+
+      return 
+	permissions?.isAlertEnabled == true ||
+	permissions?.isBadgeEnabled == true ||
+        permissions?.isSoundEnabled == true;
     } else {
       // no supported platform
       return null;
