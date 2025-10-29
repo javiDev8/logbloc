@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:logbloc/features/chronometer/chronometer_ft_class.dart';
 import 'package:logbloc/features/feature_widget.dart';
 import 'package:logbloc/utils/fmt_duration.dart';
+import 'package:logbloc/utils/warn_dialogs.dart';
 import 'package:logbloc/widgets/design/txt.dart';
 import 'package:logbloc/widgets/design/txt_field.dart';
 
@@ -75,20 +76,33 @@ class ChronometerFtWidget extends StatelessWidget {
                   ),
                 ] else if (!lock.record)
                   IconButton(
-                    onPressed: () => setState(() {
-                      if (pauseStart == null) {
-                        ft.start = DateTime.now();
+                    onPressed: () async {
+                      play() => setState(() {
+                        if (pauseStart == null) {
+                          ft.start = DateTime.now();
+                        } else {
+                          pausedTime = Duration(
+                            milliseconds:
+                                pausedTime.inMilliseconds +
+                                (DateTime.now().difference(
+                                  pauseStart!,
+                                )).inMilliseconds,
+                          );
+                        }
+                        isRunning = true;
+                      });
+
+                      if (ft.duration == null) {
+                        play();
                       } else {
-                        pausedTime = Duration(
-                          milliseconds:
-                              pausedTime.inMilliseconds +
-                              (DateTime.now().difference(
-                                pauseStart!,
-                              )).inMilliseconds,
+                        await warnOverwrite(
+                          context,
+                          overwrite: () => play(),
+                          msg:
+                              'This action will overwrite the current value of the chronometer',
                         );
                       }
-                      isRunning = true;
-                    }),
+                    },
                     icon: Icon(Icons.play_arrow),
                   ),
 

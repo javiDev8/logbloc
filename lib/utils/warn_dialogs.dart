@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:logbloc/utils/nav.dart';
 import 'package:logbloc/widgets/design/button.dart';
 
+// TODO: make a single one, more universal warn dialog
+
 FutureOr<bool?> warnUnsavedChanges(
   BuildContext context, {
   required FutureOr<bool> Function() save,
@@ -79,6 +81,42 @@ Future warnDelete(
           if (preventPop != true) {
             navPop();
           }
+        },
+      ),
+    ],
+  ),
+);
+
+Future warnOverwrite(
+  BuildContext context, {
+  required void Function() overwrite,
+  required String msg,
+}) async => await showDialog(
+  context: context,
+  builder: (context) => AlertDialog(
+    content: Padding(
+      padding: EdgeInsetsGeometry.only(top: 10),
+      child: Text(msg, style: TextStyle(fontWeight: FontWeight.w700)),
+    ),
+    actionsAlignment: MainAxisAlignment.spaceEvenly,
+    actionsPadding: EdgeInsets.only(
+      left: 10,
+      right: 10,
+      bottom: 20,
+      top: 0,
+    ),
+    actions: [
+      Button(
+        'cancel',
+        lead: Icons.close,
+        filled: false,
+        onPressed: () => Navigator.of(context).pop(),
+      ),
+      Button(
+        'overwrite',
+        onPressed: () {
+          overwrite();
+          Navigator.of(context).pop();
         },
       ),
     ],
