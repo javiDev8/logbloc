@@ -1,8 +1,12 @@
 import 'package:logbloc/features/feature_class.dart';
 import 'package:logbloc/features/feature_switch.dart';
 import 'package:logbloc/pools/models/model_edit_pool.dart';
+import 'package:logbloc/pools/screen_index_pool.dart';
 import 'package:logbloc/pools/theme_mode_pool.dart';
+import 'package:logbloc/screens/daily/item_screen.dart';
 import 'package:logbloc/screens/models/model_screen/feature_stats_screen.dart';
+import 'package:logbloc/screens/models/model_screen/model_screen.dart';
+import 'package:logbloc/screens/root_screen_switch.dart';
 import 'package:logbloc/utils/nav.dart';
 import 'package:logbloc/utils/warn_dialogs.dart';
 import 'package:logbloc/widgets/design/exp.dart';
@@ -149,6 +153,21 @@ class FeatureWidget extends StatelessWidget {
                       ),
               ),
               Exp(),
+
+              if (!lock.record && lock.model)
+                IconButton(
+                  icon: Icon(Icons.bar_chart),
+                  onPressed: () {
+                    rootScreens[0].nav.currentState!.popUntil(
+                      (route) => route.isFirst,
+                    );
+                    screenIndexPool.set((_) => 0);
+		    modelEditPool.data = globalItem!.model!;
+                    navPush(screen: ModelScreen(model: globalItem!.model));
+                    navPush(screen: FeatureStatsScreen(ftKey: feature.key));
+                  },
+                ),
+
               if (!lock.record && feature.pinned)
                 Icon(Icons.push_pin)
               else if (!lock.model)
@@ -198,7 +217,7 @@ class FeatureWidget extends StatelessWidget {
                               preventPop: true,
                               delete: () {
                                 modelEditPool.removeFeature(feature.key);
-				dirt!();
+                                dirt!();
                                 return true;
                               },
                               msg: 'Delete feature?',

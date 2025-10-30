@@ -15,7 +15,7 @@ class VoiceNoteFtStatsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double getSeconds(Map<String, dynamic> rec) {
-      return rec['duration'] / 1000;
+      return (rec['duration'] ?? 0) / 1000;
     }
 
     return Column(
