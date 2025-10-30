@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logbloc/widgets/design/http_link.dart';
+import 'package:logbloc/widgets/design/txt.dart';
 
 class AboutSection extends StatelessWidget {
   const AboutSection({super.key});
@@ -7,31 +8,18 @@ class AboutSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: EdgeInsetsGeometry.all(20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              //HttpLink(
-              //  name: 'quick guide',
-              //  url: 'https://logbloc.sweetfeatures.dev/quick-guide',
-              //),
-              //HttpLink(
-              //  name: 'user manual',
-              //  url: 'https://logbloc.sweetfeatures.dev/user-manual',
-              //),
-              HttpLink(
-                name: 'privacy policy',
-                url: 'https://logbloc.sweetfeatures.dev/privacy-policy',
-              ),
-            ],
-          ),
+        HttpLink(name: 'guides', url: 'https://logbloc.app/guides'),
+        HttpLink(name: 'contact', url: 'https://logbloc.app/contact'),
+        HttpLink(
+          name: 'privacy policy',
+          url: 'https://logbloc.app/policy',
         ),
 
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [Text('version 1.0.0')],
+          children: [Txt('version 1.0.2')],
         ),
       ],
     );

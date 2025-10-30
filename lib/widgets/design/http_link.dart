@@ -11,23 +11,26 @@ class HttpLink extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RichText(
-      text: TextSpan(
-        text: name,
-        style: TextStyle(
-          color: enbrightColor(detaTheme.colorScheme.tertiary),
-          decoration: TextDecoration.underline,
-          fontWeight: FontWeight.w700,
+    return Padding(
+      padding: EdgeInsetsGeometry.all(5),
+      child: RichText(
+        text: TextSpan(
+          text: name,
+          style: TextStyle(
+            color: enbrightColor(detaTheme.colorScheme.tertiary),
+            decoration: TextDecoration.underline,
+            fontWeight: FontWeight.w700,
+          ),
+          recognizer: TapGestureRecognizer()
+            ..onTap = () async {
+              final Uri u = Uri.parse(url);
+              if (await canLaunchUrl(u)) {
+                await launchUrl(u);
+              } else {
+                throw 'Could not launch $url';
+              }
+            },
         ),
-        recognizer: TapGestureRecognizer()
-          ..onTap = () async {
-            final Uri u = Uri.parse(url);
-            if (await canLaunchUrl(u)) {
-              await launchUrl(u);
-            } else {
-              throw 'Could not launch $url';
-            }
-          },
       ),
     );
   }
