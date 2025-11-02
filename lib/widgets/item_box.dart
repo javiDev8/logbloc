@@ -40,7 +40,7 @@ class ItemBox extends StatelessWidget {
 
     final unPinnedFtsWids = unpinnedFts.map(
       (ft) => Padding(
-        padding: EdgeInsets.all(5),
+        padding: EdgeInsets.only(top: 5, left: 5, right: 5, bottom: 0),
         child: Icon(
           size: 20,
           featureSwitch(parseType: 'icon', ft: ft) as IconData,
