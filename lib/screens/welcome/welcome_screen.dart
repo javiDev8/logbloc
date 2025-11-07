@@ -79,7 +79,7 @@ class WelcomeScreenState extends State<WelcomeScreen> {
                       children: [
                         Txt(
                           'Explore Logbloc with 3 free logbooks. If you like it,'
-                          ' get unlimited logbooks with a one-time purchase.',
+                          ' get unlimited logbooks with a small one-time purchase.',
                           s: 20,
                           w: 8,
                         ),
