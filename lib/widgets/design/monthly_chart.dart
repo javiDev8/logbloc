@@ -3,6 +3,7 @@ import 'package:logbloc/pools/records/record_class.dart';
 import 'package:logbloc/pools/theme_mode_pool.dart';
 import 'package:logbloc/utils/fmt_date.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:logbloc/widgets/design/txt.dart';
 import 'package:logbloc/widgets/dump_ft_records.dart';
 import 'package:logbloc/widgets/dump_records.dart';
 import 'package:logbloc/widgets/time_stats.dart';
@@ -28,7 +29,7 @@ class MonthlyChart extends StatelessWidget {
     final bool? integer = opts.integer;
 
     return SizedBox(
-      height: dump ? 500 : 450,
+      height: dump ? 595 : 450,
       child: PageView.builder(
         controller: pageController,
         itemBuilder: (context, index) {
@@ -67,18 +68,15 @@ class MonthlyChart extends StatelessWidget {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text(
+                      Txt(
                         '${months[firstDayOfMonth.month]}  '
                         '${firstDayOfMonth.year.toString()}',
-                        style: TextStyle(
-                          color: monthColor,
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        color: monthColor,
+                        s: 15,
                       ),
                     ],
                   ),

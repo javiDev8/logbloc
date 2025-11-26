@@ -41,7 +41,7 @@ class WeeklyChart extends StatelessWidget {
     final bool? integer = opts.integer;
 
     return SizedBox(
-      height: dump ? 500 : 450,
+      height: dump ? 595 : 450,
       child: PageView.builder(
         controller: pageController,
         onPageChanged: (index) {},
@@ -72,7 +72,7 @@ class WeeklyChart extends StatelessWidget {
             child: Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.all(20),
+                  padding: EdgeInsets.all(10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [

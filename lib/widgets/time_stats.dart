@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logbloc/features/feature_class.dart';
 import 'package:logbloc/widgets/design/button.dart';
-import 'package:logbloc/widgets/design/daily_chart.dart';
 import 'package:logbloc/widgets/design/dropdown.dart';
 import 'package:logbloc/widgets/design/monthly_chart.dart';
 import 'package:logbloc/widgets/design/weekly_chart.dart';
@@ -22,38 +21,25 @@ class TimeStats extends StatelessWidget {
     return StatefulBuilder(
       builder: (context, setState) => Column(
         children: [
-          Padding(
-            padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: ['dump', 'chart']
-                  .map<Widget>(
-                    (p) => Button(
-                      p,
-                      variant: 0,
-                      filled: p == mode,
-                      onPressed: () => setState(() => mode = p),
-                    ),
-                  )
-                  .toList(),
-            ),
-          ),
-
-          Padding(
-            padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: ['month', 'week']
-                  .map<Widget>(
-                    (p) => Button(
-                      p,
-                      variant: 2,
-                      filled: p == timeLapse,
-                      onPressed: () => setState(() => timeLapse = p),
-                    ),
-                  )
-                  .toList(),
-            ),
+          Row(
+            children: [
+              ...['dump', 'chart'].map<Widget>(
+                (p) => Button(
+                  p,
+                  variant: 0,
+                  filled: p == mode,
+                  onPressed: () => setState(() => mode = p),
+                ),
+              ),
+              ...['month', 'week'].map<Widget>(
+                (p) => Button(
+                  p,
+                  variant: 2,
+                  filled: p == timeLapse,
+                  onPressed: () => setState(() => timeLapse = p),
+                ),
+              ),
+            ],
           ),
 
           if (mode == 'chart')
@@ -109,8 +95,6 @@ class TimeStats extends StatelessWidget {
               ),
             ),
 
-          if (timeLapse == 'day')
-            DailyChart(opts: chartOpts, dump: mode == 'dump'),
           if (timeLapse == 'week')
             WeeklyChart(opts: chartOpts, dump: mode == 'dump')
           else if (timeLapse == 'month')

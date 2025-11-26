@@ -34,33 +34,30 @@ class ModelRecordsScreen extends StatelessWidget {
               a.schedule.day,
             ).compareTo(DateTime.parse(b.schedule.day)),
           );
-          return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 7),
-            child: TimeStats(
-              chartOpts: ChartOpts(
-                isFt: false,
-                integer: true,
-                unit: '%',
-                ft: Feature.empty('text'),
-                getRecordValue: (sr) =>
-                    Rec.fromMap(sr).completenessRate * 100,
-                recordFts: records.map<Map<String, dynamic>>((r) {
-                  final d = DateTime.parse(r.schedule.day);
-                  Map<String, dynamic> sr = r.serialize();
-                  sr['date'] = d;
-                  return sr;
-                }).toList(),
-                operation: ChartOperation.average,
-              ),
-              showOptions: {
-                'rate': (sr) => Rec.fromMap(sr).completenessRate * 100,
-                'complete': (sr) => Rec.fromMap(sr).completeFts.toDouble(),
-                'pending': (sr) =>
-                    (Rec.fromMap(sr).features.length -
-                            Rec.fromMap(sr).completeFts)
-                        .toDouble(),
-              },
+          return TimeStats(
+            chartOpts: ChartOpts(
+              isFt: false,
+              integer: true,
+              unit: '%',
+              ft: Feature.empty('text'),
+              getRecordValue: (sr) =>
+                  Rec.fromMap(sr).completenessRate * 100,
+              recordFts: records.map<Map<String, dynamic>>((r) {
+                final d = DateTime.parse(r.schedule.day);
+                Map<String, dynamic> sr = r.serialize();
+                sr['date'] = d;
+                return sr;
+              }).toList(),
+              operation: ChartOperation.average,
             ),
+            showOptions: {
+              'rate': (sr) => Rec.fromMap(sr).completenessRate * 100,
+              'complete': (sr) => Rec.fromMap(sr).completeFts.toDouble(),
+              'pending': (sr) =>
+                  (Rec.fromMap(sr).features.length -
+                          Rec.fromMap(sr).completeFts)
+                      .toDouble(),
+            },
           );
         },
       ),
