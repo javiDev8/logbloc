@@ -14,6 +14,9 @@ class TextFt extends Feature {
     required this.content,
   });
 
+  @override
+  get isEmpty => content.isEmpty;
+
   factory TextFt.fromBareFt(Feature ft, {required String content}) {
     return TextFt(
       id: ft.id,

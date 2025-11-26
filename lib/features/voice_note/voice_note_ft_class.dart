@@ -23,6 +23,9 @@ class VoiceNoteFt extends Feature {
     this.duration,
   });
 
+  @override
+  get isEmpty => path == null;
+
   factory VoiceNoteFt.fromBareFt(
     Feature ft, {
     required String? path,

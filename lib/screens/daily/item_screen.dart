@@ -7,6 +7,7 @@ import 'package:logbloc/screens/models/model_screen/model_screen.dart';
 import 'package:logbloc/utils/feedback.dart';
 import 'package:logbloc/utils/fmt_date.dart';
 import 'package:logbloc/utils/nav.dart';
+import 'package:logbloc/utils/noticable_print.dart';
 import 'package:logbloc/utils/warn_dialogs.dart';
 import 'package:logbloc/widgets/design/exp.dart';
 import 'package:logbloc/widgets/design/menu_button.dart';
@@ -54,6 +55,8 @@ class ItemScreen extends StatelessWidget {
         },
       );
     }
+
+    nPrint('record: ${ globalItem?.record?.serialize() }');
 
     return Scaffold(
       key: itemScreenKey,

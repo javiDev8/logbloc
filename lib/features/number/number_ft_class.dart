@@ -4,6 +4,9 @@ class NumberFt extends Feature {
   double? value;
   String unit;
 
+  @override
+  get isEmpty => value == null;
+
   NumberFt({
     required super.id,
     required super.type,

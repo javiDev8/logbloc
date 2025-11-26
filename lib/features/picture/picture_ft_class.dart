@@ -10,6 +10,9 @@ class PictureFt extends Feature {
   String? path;
   XFile? tmpFile;
 
+  @override
+  get isEmpty => path == null;
+
   PictureFt({
     required super.id,
     required super.type,

@@ -90,14 +90,6 @@ class ItemBox extends StatelessWidget {
                     ),
                     child: Row(
                       children: [
-                        if (!fromRecords)
-                          Padding(
-                            padding: EdgeInsets.only(right: 10),
-                            child: item.recordId == null
-                                ? Icon(Icons.circle_outlined)
-                                : Icon(Icons.circle),
-                          ),
-
                         fromRecords
                             ? Text(
                                 hdate(
@@ -123,6 +115,19 @@ class ItemBox extends StatelessWidget {
                       ],
                     ),
                   ),
+
+                  if (item.record != null)
+                    Padding(
+                      padding: EdgeInsetsGeometry.only(
+                        top: 0,
+                        left: 20,
+                        right: 20,
+                        bottom: 10,
+                      ),
+                      child: LinearProgressIndicator(
+                        value: item.record!.completenessRate,
+                      ),
+                    ),
 
                   ...pinnedFts.map<Widget>(
                     (ft) => FeatureWidget(

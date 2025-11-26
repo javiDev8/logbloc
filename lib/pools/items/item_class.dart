@@ -91,6 +91,7 @@ class Item {
           id: UniqueKey().toString(),
           modelId: modelId,
           features: serializedFeatures,
+	  completeFts: getCompleteFts(modelId: modelId, features: serializedFeatures)
         ).save();
       } else {
         recordsPool.data![recordId]!.features = serializedFeatures;

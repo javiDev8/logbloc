@@ -2,6 +2,10 @@ import 'package:logbloc/features/feature_class.dart';
 
 class TaskListFt extends Feature {
   final Map<String, Task> tasks;
+
+  @override
+  get isEmpty => tasks.values.where((t) => t.done).isEmpty;
+
   TaskListFt({
     required super.id,
     required super.type,

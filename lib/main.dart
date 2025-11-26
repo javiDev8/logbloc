@@ -4,6 +4,7 @@ import 'package:logbloc/apis/membership.dart';
 import 'package:logbloc/apis/notifications.dart';
 import 'package:logbloc/event_processor.dart';
 import 'package:logbloc/config/locales.dart';
+import 'package:logbloc/pools/models/models_pool.dart';
 import 'package:logbloc/pools/theme_mode_pool.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:logbloc/screens/welcome/welcome_screen.dart';
@@ -28,6 +29,8 @@ initLogbloc() async {
   await eventProcessor.init();
   await themeModePool.init();
   await membershipApi.init();
+
+  await modelsPool.retrieve();
 
   runApp(const Logbloc());
 }
