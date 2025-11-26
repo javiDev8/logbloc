@@ -26,13 +26,13 @@ class TimeStats extends StatelessWidget {
             padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
-              children: ['month', 'week', 'day']
+              children: ['dump', 'chart']
                   .map<Widget>(
                     (p) => Button(
                       p,
-                      variant: 2,
-                      filled: p == timeLapse,
-                      onPressed: () => setState(() => timeLapse = p),
+                      variant: 0,
+                      filled: p == mode,
+                      onPressed: () => setState(() => mode = p),
                     ),
                   )
                   .toList(),
@@ -43,13 +43,13 @@ class TimeStats extends StatelessWidget {
             padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
-              children: ['dump', 'chart']
+              children: ['month', 'week']
                   .map<Widget>(
                     (p) => Button(
                       p,
-                      variant: 1,
-                      filled: p == mode,
-                      onPressed: () => setState(() => mode = p),
+                      variant: 2,
+                      filled: p == timeLapse,
+                      onPressed: () => setState(() => timeLapse = p),
                     ),
                   )
                   .toList(),
@@ -134,7 +134,8 @@ double operate(
       return dayFtRecs.fold<double>(
             0.0,
             (sum, rec) => sum + getRecordValue(rec),
-          ) / dayFtRecs.length;
+          ) /
+          dayFtRecs.length;
 
     case ChartOperation.min:
       return dayFtRecs
@@ -162,6 +163,7 @@ class ChartOpts {
   bool? integer;
   ChartOperation operation;
   final String Function(double)? makeTooltip;
+  bool isFt;
 
   ChartOpts({
     required this.ft,
@@ -171,5 +173,6 @@ class ChartOpts {
     this.unit,
     this.integer,
     this.makeTooltip,
+    this.isFt = true,
   });
 }

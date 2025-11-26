@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:logbloc/pools/records/record_class.dart';
 import 'package:logbloc/pools/theme_mode_pool.dart';
 import 'package:logbloc/utils/fmt_date.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:logbloc/widgets/dump_ft_records.dart';
+import 'package:logbloc/widgets/dump_records.dart';
 import 'package:logbloc/widgets/time_stats.dart';
 
 class MonthlyChart extends StatelessWidget {
@@ -85,23 +87,36 @@ class MonthlyChart extends StatelessWidget {
                 if (dump)
                   Expanded(
                     child: ListView(
-                      children:
-                          dumpFtRecords(
-                                ft: opts.ft,
-                                recordFts: recordFts
-                                    .where(
-                                      (rec) =>
-                                          rec['date'].year ==
-                                              targetMonth.year &&
-                                          rec['date'].month ==
-                                              targetMonth.month,
-                                    )
-                                    .toList(),
-                              )
-                              .map(
-                                (w) => Row(children: [Expanded(child: w)]),
-                              )
-                              .toList(),
+                      children: opts.isFt
+                          ? dumpFtRecords(
+                                  ft: opts.ft,
+                                  recordFts: recordFts
+                                      .where(
+                                        (rec) =>
+                                            rec['date'].year ==
+                                                targetMonth.year &&
+                                            rec['date'].month ==
+                                                targetMonth.month,
+                                      )
+                                      .toList(),
+                                )
+                                .map(
+                                  (w) =>
+                                      Row(children: [Expanded(child: w)]),
+                                )
+                                .toList()
+                          : dumpRecrods(
+                              recordFts
+                                  .where(
+                                    (rec) =>
+                                        rec['date'].year ==
+                                            targetMonth.year &&
+                                        rec['date'].month ==
+                                            targetMonth.month,
+                                  )
+                                  .map((sr) => Rec.fromMap(sr))
+                                  .toList(),
+                            ),
                     ),
                   )
                 else

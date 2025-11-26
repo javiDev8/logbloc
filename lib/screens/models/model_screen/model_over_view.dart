@@ -204,9 +204,8 @@ class ModelOverView extends StatelessWidget {
                     Swimmer<Map<String, Model>?>(
                       pool: modelsPool,
                       builder: (context, allModels) => Button(
-                        'records (${allModels?[modelEditPool.data.id]?.recordCount ?? ''})',
-                        filled: false,
-                        lead: MdiIcons.noteMultiple,
+                        'records ',
+                        lead: Icons.bar_chart,
                         onPressed: () => navPush(
                           screen: ModelRecordsScreen(
                             model: modelEditPool.data,

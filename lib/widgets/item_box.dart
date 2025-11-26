@@ -1,4 +1,3 @@
-import 'package:logbloc/features/feature_switch.dart';
 import 'package:logbloc/features/feature_widget.dart';
 import 'package:logbloc/pools/items/item_class.dart';
 import 'package:logbloc/pools/screen_index_pool.dart';
@@ -38,16 +37,6 @@ class ItemBox extends StatelessWidget {
         unpinnedFts.add(ft);
       }
     }
-
-    final unPinnedFtsWids = unpinnedFts.map(
-      (ft) => Padding(
-        padding: EdgeInsets.only(top: 5, left: 5, right: 5, bottom: 0),
-        child: Icon(
-          size: 20,
-          featureSwitch(parseType: 'icon', ft: ft) as IconData,
-        ),
-      ),
-    );
 
     final splitHead =
         pinnedFts.isNotEmpty ||

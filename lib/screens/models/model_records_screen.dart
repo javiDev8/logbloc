@@ -1,12 +1,12 @@
-import 'package:logbloc/pools/items/item_class.dart';
+import 'package:logbloc/features/feature_class.dart';
 import 'package:logbloc/pools/models/model_class.dart';
 import 'package:logbloc/pools/pools.dart';
 import 'package:logbloc/pools/records/record_class.dart';
 import 'package:logbloc/pools/records/records_pool.dart';
 import 'package:logbloc/widgets/design/topbar_wrap.dart';
 import 'package:logbloc/widgets/design/txt.dart';
-import 'package:logbloc/widgets/item_box.dart';
 import 'package:flutter/material.dart';
+import 'package:logbloc/widgets/time_stats.dart';
 
 class ModelRecordsScreen extends StatelessWidget {
   final Model model;
@@ -36,26 +36,30 @@ class ModelRecordsScreen extends StatelessWidget {
           );
           return Padding(
             padding: EdgeInsets.symmetric(horizontal: 7),
-            child: ListView(
-              children: records
-                  .map<Widget>(
-                    (r) => Row(
-                      children: [
-                        ItemBox(
-                          readOnly: true,
-                          key: UniqueKey(),
-                          fromRecords: true,
-                          item: Item(
-                            modelId: model.id,
-                            recordId: r.id,
-                            schedule: r.schedule,
-                            date: r.schedule.day,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                  .toList(),
+            child: TimeStats(
+              chartOpts: ChartOpts(
+                isFt: false,
+                integer: true,
+                unit: '%',
+                ft: Feature.empty('text'),
+                getRecordValue: (sr) =>
+                    Rec.fromMap(sr).completenessRate * 100,
+                recordFts: records.map<Map<String, dynamic>>((r) {
+                  final d = DateTime.parse(r.schedule.day);
+                  Map<String, dynamic> sr = r.serialize();
+                  sr['date'] = d;
+                  return sr;
+                }).toList(),
+                operation: ChartOperation.average,
+              ),
+              showOptions: {
+                'rate': (sr) => Rec.fromMap(sr).completenessRate * 100,
+                'complete': (sr) => Rec.fromMap(sr).completeFts.toDouble(),
+                'pending': (sr) =>
+                    (Rec.fromMap(sr).features.length -
+                            Rec.fromMap(sr).completeFts)
+                        .toDouble(),
+              },
             ),
           );
         },

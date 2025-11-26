@@ -1,9 +1,11 @@
+import 'package:logbloc/pools/records/record_class.dart';
 import 'package:logbloc/pools/theme_mode_pool.dart';
 import 'package:logbloc/utils/fmt_date.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:logbloc/widgets/design/txt.dart';
 import 'package:logbloc/widgets/dump_ft_records.dart';
+import 'package:logbloc/widgets/dump_records.dart';
 import 'package:logbloc/widgets/time_stats.dart';
 
 class WeeklyChart extends StatelessWidget {
@@ -104,29 +106,48 @@ class WeeklyChart extends StatelessWidget {
                 if (dump) ...[
                   Expanded(
                     child: ListView(
-                      children:
-                          dumpFtRecords(
-                                ft: opts.ft,
-                                recordFts: recordFts
-                                    .where(
-                                      (ft) =>
-                                          ft['date'].isAfter(
-                                            targetMonday.subtract(
-                                              Duration(days: 1),
+                      children: opts.isFt
+                          ? dumpFtRecords(
+                                  ft: opts.ft,
+                                  recordFts: recordFts
+                                      .where(
+                                        (ft) =>
+                                            ft['date'].isAfter(
+                                              targetMonday.subtract(
+                                                Duration(days: 1),
+                                              ),
+                                            ) &&
+                                            ft['date'].isBefore(
+                                              targetMonday.add(
+                                                Duration(days: 7),
+                                              ),
                                             ),
-                                          ) &&
-                                          ft['date'].isBefore(
-                                            targetMonday.add(
-                                              Duration(days: 7),
-                                            ),
+                                      )
+                                      .toList(),
+                                )
+                                .map(
+                                  (w) =>
+                                      Row(children: [Expanded(child: w)]),
+                                )
+                                .toList()
+                          : dumpRecrods(
+                              recordFts
+                                  .where(
+                                    (ft) =>
+                                        ft['date'].isAfter(
+                                          targetMonday.subtract(
+                                            Duration(days: 1),
                                           ),
-                                    )
-                                    .toList(),
-                              )
-                              .map(
-                                (w) => Row(children: [Expanded(child: w)]),
-                              )
-                              .toList(),
+                                        ) &&
+                                        ft['date'].isBefore(
+                                          targetMonday.add(
+                                            Duration(days: 7),
+                                          ),
+                                        ),
+                                  )
+                                  .map((sr) => Rec.fromMap(sr))
+                                  .toList(),
+                            ),
                     ),
                   ),
                 ] else

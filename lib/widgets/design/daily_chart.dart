@@ -1,8 +1,10 @@
+import 'package:logbloc/pools/records/record_class.dart';
 import 'package:logbloc/pools/theme_mode_pool.dart';
 import 'package:logbloc/utils/fmt_date.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:logbloc/widgets/dump_ft_records.dart';
+import 'package:logbloc/widgets/dump_records.dart';
 import 'package:logbloc/widgets/time_stats.dart';
 
 class DailyChart extends StatelessWidget {
@@ -94,29 +96,48 @@ class DailyChart extends StatelessWidget {
                   // Update the date range display to show the current day.
                   Expanded(
                     child: ListView(
-                      children:
-                          dumpFtRecords(
-                                ft: opts.ft,
-                                recordFts: recordFts
-                                    .where(
-                                      (ft) =>
-                                          ft['date'].isAfter(
-                                            targetDay.subtract(
-                                              const Duration(hours: 1),
+                      children: opts.isFt
+                          ? dumpFtRecords(
+                                  ft: opts.ft,
+                                  recordFts: recordFts
+                                      .where(
+                                        (ft) =>
+                                            ft['date'].isAfter(
+                                              targetDay.subtract(
+                                                const Duration(hours: 1),
+                                              ),
+                                            ) &&
+                                            ft['date'].isBefore(
+                                              targetDay.add(
+                                                const Duration(days: 1),
+                                              ),
                                             ),
-                                          ) &&
-                                          ft['date'].isBefore(
-                                            targetDay.add(
-                                              const Duration(days: 1),
-                                            ),
+                                      )
+                                      .toList(),
+                                )
+                                .map(
+                                  (w) =>
+                                      Row(children: [Expanded(child: w)]),
+                                )
+                                .toList()
+                          : dumpRecrods(
+                              recordFts
+                                  .where(
+                                    (ft) =>
+                                        ft['date'].isAfter(
+                                          targetDay.subtract(
+                                            const Duration(hours: 1),
                                           ),
-                                    )
-                                    .toList(),
-                              )
-                              .map(
-                                (w) => Row(children: [Expanded(child: w)]),
-                              )
-                              .toList(),
+                                        ) &&
+                                        ft['date'].isBefore(
+                                          targetDay.add(
+                                            const Duration(days: 1),
+                                          ),
+                                        ),
+                                  )
+                                  .map((sr) => Rec.fromMap(sr))
+                                  .toList(),
+                            ),
                     ),
                   ),
                 ] else
