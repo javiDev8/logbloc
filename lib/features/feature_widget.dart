@@ -204,106 +204,109 @@ class FeatureWidget extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Row(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: Icon(
+          Padding(
+            padding: EdgeInsets.only(top: 5),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(
                   featureSwitch(parseType: 'icon', ft: feature)
                       as IconData,
                 ),
-              ),
-              SizedBox(
-                width: lock.model ? null : 90,
-                child: lock.model
-                    ? Txt(feature.title, w: 8)
-                    : Padding(
-                        padding: EdgeInsetsGeometry.only(left: 7),
-                        child: featureSwitch(
-                          parseType: 'label',
-                          ftType: feature.type,
+                SizedBox(
+                  width: lock.model ? null : 90,
+                  child: lock.model
+                      ? Txt(feature.title, w: 8)
+                      : Padding(
+                          padding: EdgeInsetsGeometry.only(left: 7),
+                          child: featureSwitch(
+                            parseType: 'label',
+                            ftType: feature.type,
+                          ),
                         ),
-                      ),
-              ),
-              Exp(),
-
-              if (!lock.record && lock.model)
-                IconButton(
-                  icon: Icon(Icons.bar_chart),
-                  onPressed: () {
-                    rootScreens[0].nav.currentState!.popUntil(
-                      (route) => route.isFirst,
-                    );
-                    screenIndexPool.set((_) => 0);
-                    modelEditPool.data = globalItem!.model!;
-                    navPush(screen: ModelScreen(model: globalItem!.model));
-                    navPush(
-                      screen: FeatureStatsScreen(ftKey: feature.key),
-                    );
-                  },
                 ),
+                Exp(),
 
-              if (!lock.record && feature.pinned)
-                Icon(Icons.push_pin)
-              else if (!lock.model)
-                StatefulBuilder(
-                  builder: (_, setState) {
-                    return SizedBox(
-                      child: Wrap(
-                        children: [
-                          if (![
-                            // non requirable features
-                            'task_list',
-                            'reminder',
-                          ].contains(feature.type))
+                if (!lock.record && lock.model)
+                  IconButton(
+                    icon: Icon(Icons.bar_chart),
+                    onPressed: () {
+                      rootScreens[0].nav.currentState!.popUntil(
+                        (route) => route.isFirst,
+                      );
+                      screenIndexPool.set((_) => 0);
+                      modelEditPool.data = globalItem!.model!;
+                      navPush(
+                        screen: ModelScreen(model: globalItem!.model),
+                      );
+                      navPush(
+                        screen: FeatureStatsScreen(ftKey: feature.key),
+                      );
+                    },
+                  ),
+
+                if (!lock.record && feature.pinned)
+                  Icon(Icons.push_pin)
+                else if (!lock.model)
+                  StatefulBuilder(
+                    builder: (_, setState) {
+                      return SizedBox(
+                        child: Wrap(
+                          children: [
+                            if (![
+                              // non requirable features
+                              'task_list',
+                              'reminder',
+                            ].contains(feature.type))
+                              IconButton(
+                                onPressed: () {
+                                  setState(
+                                    () => feature.isRequired =
+                                        !feature.isRequired,
+                                  );
+                                  modelEditPool.dirt(true);
+                                },
+                                icon: Icon(
+                                  feature.isRequired
+                                      ? Icons.error
+                                      : Icons.error_outline,
+                                ),
+                              ),
                             IconButton(
                               onPressed: () {
                                 setState(
-                                  () => feature.isRequired =
-                                      !feature.isRequired,
+                                  () => feature.pinned = !feature.pinned,
+                                );
+                                modelEditPool.controller.sink.add(
+                                  'features',
                                 );
                                 modelEditPool.dirt(true);
                               },
                               icon: Icon(
-                                feature.isRequired
-                                    ? Icons.error
-                                    : Icons.error_outline,
+                                feature.pinned
+                                    ? Icons.push_pin
+                                    : Icons.push_pin_outlined,
                               ),
                             ),
-                          IconButton(
-                            onPressed: () {
-                              setState(
-                                () => feature.pinned = !feature.pinned,
-                              );
-                              modelEditPool.controller.sink.add(
-                                'features',
-                              );
-                              modelEditPool.dirt(true);
-                            },
-                            icon: Icon(
-                              feature.pinned
-                                  ? Icons.push_pin
-                                  : Icons.push_pin_outlined,
-                            ),
-                          ),
 
-                          if (modelsPool.data?[modelEditPool.data.id] !=
-                              null)
-                            FtMenuBtn(feature: feature, expanded: true)
-                          else
-                            IconButton(
-                              onPressed: () {
-                                modelEditPool.removeFeature(feature.key);
-                                modelEditPool.dirt(true);
-                              },
-                              icon: Icon(Icons.close),
-                            ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-            ],
+                            if (modelsPool.data?[modelEditPool.data.id] !=
+                                null)
+                              FtMenuBtn(feature: feature, expanded: true)
+                            else
+                              IconButton(
+                                onPressed: () {
+                                  modelEditPool.removeFeature(feature.key);
+                                  modelEditPool.dirt(true);
+                                },
+                                icon: Icon(Icons.close),
+                              ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+              ],
+            ),
           ),
           featureSwitch(
                 parseType: 'widget',

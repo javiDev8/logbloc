@@ -8,8 +8,9 @@ import 'package:logbloc/screens/root_screen_switch.dart';
 import 'package:logbloc/utils/color_convert.dart';
 import 'package:logbloc/utils/fmt_date.dart';
 import 'package:logbloc/utils/nav.dart';
-import 'package:logbloc/widgets/design/exp.dart';
+//import 'package:logbloc/widgets/design/exp.dart';
 import 'package:flutter/material.dart';
+import 'package:logbloc/widgets/design/txt.dart';
 
 class ItemBox extends StatelessWidget {
   final Item item;
@@ -90,76 +91,82 @@ class ItemBox extends StatelessWidget {
                     ),
                     child: Row(
                       children: [
-                        fromRecords
-                            ? Text(
-                                hdate(
-                                  DateTime.parse(
-                                    item.record!.schedule.day,
+                        Expanded(
+                          child: fromRecords
+                              ? Text(
+                                  hdate(
+                                    DateTime.parse(
+                                      item.record!.schedule.day,
+                                    ),
+                                  ),
+                                )
+                              : SizedBox(
+                                  width: splitHead ? 270 : 120,
+                                  child: Text(
+                                    item.model!.name,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 17,
+                                    ),
                                   ),
                                 ),
-                              )
-                            : SizedBox(
-                                width: splitHead ? 270 : 120,
-                                child: Text(
-                                  item.model!.name,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 17,
-                                  ),
-                                ),
-                              ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsetsGeometry.only(left: 20),
+                            child: LinearProgressIndicator(
+                              value: item.record == null
+                                  ? 0
+                                  : item.record!.completenessRate,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
 
-                        Exp(),
+                        Txt(
+                          '${item.record?.completeFts ?? 0}/${item.features.length}',
+                          w: 6,
+                        ),
 
-                        if (!fromRecords && !splitHead) ...unPinnedFtsWids,
+                        //if (!fromRecords && !splitHead) ...unPinnedFtsWids,
                       ],
                     ),
                   ),
 
                   if (item.record != null)
-                    Padding(
-                      padding: EdgeInsetsGeometry.only(
-                        top: 0,
-                        left: 20,
-                        right: 20,
-                        bottom: 10,
-                      ),
-                      child: LinearProgressIndicator(
-                        value: item.record!.completenessRate,
-                      ),
-                    ),
-
-                  ...pinnedFts.map<Widget>(
-                    (ft) => FeatureWidget(
-                      lock: FeatureLock(model: true, record: true),
-                      feature: ft,
-                    ),
-                  ),
-
-                  if (splitHead)
-                    Padding(
-                      padding: EdgeInsetsGeometry.only(
-                        left: 20,
-                        right: 20,
-                        bottom: 15,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Expanded(
-                            child: Wrap(
-                              alignment: WrapAlignment.end,
-                              children: [
-                                if (pinnedFts.isNotEmpty &&
-                                    unpinnedFts.isNotEmpty)
-                                  Text('...  '),
-                                ...unPinnedFtsWids,
-                              ],
-                            ),
+                    ...pinnedFts
+                        .where((ft) => !ft.isEmpty)
+                        .map<Widget>(
+                          (ft) => FeatureWidget(
+                            lock: FeatureLock(model: true, record: true),
+                            feature: ft,
                           ),
-                        ],
-                      ),
-                    ),
+                        ),
+                  //
+                  //if (splitHead)
+                  //  Padding(
+                  //    padding: EdgeInsetsGeometry.only(
+                  //      left: 20,
+                  //      right: 20,
+                  //      bottom: 15,
+                  //    ),
+                  //    child: Row(
+                  //      mainAxisAlignment: MainAxisAlignment.end,
+                  //      children: [
+                  //        Expanded(
+                  //          child: Wrap(
+                  //            alignment: WrapAlignment.end,
+                  //            children: [
+                  //              if (pinnedFts.isNotEmpty &&
+                  //                  unpinnedFts.isNotEmpty)
+                  //                Text('...  '),
+                  //              ...unPinnedFtsWids,
+                  //            ],
+                  //          ),
+                  //        ),
+                  //      ],
+                  //    ),
+                  //  ),
                 ],
               ),
             ),
