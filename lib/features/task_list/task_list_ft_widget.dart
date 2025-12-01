@@ -1,6 +1,7 @@
 import 'package:logbloc/features/feature_widget.dart';
 import 'package:logbloc/features/task_list/task_list_ft_class.dart';
 import 'package:logbloc/pools/pools.dart';
+import 'package:logbloc/widgets/design/exp.dart';
 import 'package:logbloc/widgets/design/menu_button.dart';
 import 'package:logbloc/widgets/design/txt.dart';
 import 'package:logbloc/widgets/design/txt_field.dart';
@@ -56,6 +57,7 @@ class TaskListFtWidget extends StatelessWidget {
             builder: (context, setState) => Column(
               children: [
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     if (lock.model && !lock.record && ft.tasks.isEmpty)
                       Checkbox(
@@ -67,6 +69,7 @@ class TaskListFtWidget extends StatelessWidget {
                           });
                         },
                       ),
+                    if (lock.model && !lock.record) Txt(ft.title, w: 8),
 
                     if (!lock.model)
                       Expanded(
@@ -88,6 +91,9 @@ class TaskListFtWidget extends StatelessWidget {
                         '${ft.getRoots().length})',
                         w: 8,
                       ),
+
+                    if (lock.model && !lock.record) Exp(),
+
                     if (!lock.model || !lock.record)
                       IconButton(
                         onPressed: () {

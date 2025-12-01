@@ -113,7 +113,7 @@ dynamic featureSwitch({
         case 'label':
           return Text('task');
         case 'icon':
-          return MdiIcons.checkboxMultipleMarkedOutline;
+          return MdiIcons.checkboxMarkedOutline;
       }
 
     case 'picture':

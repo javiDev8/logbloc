@@ -70,7 +70,7 @@ class PictureFtWidget extends StatelessWidget {
                     Expanded(
                       child: Button(
                         'from gallery',
-                        lead: MdiIcons.viewGallery,
+                        lead: MdiIcons.folderMultipleImage,
                         filled: false,
                         onPressed: () => pickImg(ImageSource.gallery),
                       ),
