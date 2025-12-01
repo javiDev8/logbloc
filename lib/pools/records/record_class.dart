@@ -12,17 +12,15 @@ class Rec {
   String modelId;
   Map<String, dynamic> features;
   Schedule schedule;
-  int completeFts;
+  double completeness;
 
   Rec({
     required this.id,
     required this.modelId,
     required this.features,
     required this.schedule,
-    required this.completeFts,
+    required this.completeness,
   });
-
-  double get completenessRate => completeFts / features.length;
 
   serialize() {
     return {
@@ -30,7 +28,7 @@ class Rec {
       'modelId': modelId,
       'features': features,
       'schedule': schedule.serialize(),
-      'completeFts': getCompleteFts(modelId: modelId, features: features),
+      'completeness': getCompleteness(modelId: modelId, features: features),
     };
   }
 
@@ -40,9 +38,9 @@ class Rec {
       modelId: map['modelId'] as String,
       features: Map<String, dynamic>.from(map['features'] as Map),
       schedule: Schedule.fromMap(map['schedule']),
-      completeFts:
-          map['completeFts'] ??
-          getCompleteFts(
+      completeness:
+          map['completeness'] ??
+          getCompleteness(
             features: map['features'],
             modelId: map['modelId'],
           ),
@@ -86,12 +84,12 @@ class Rec {
 }
 
 // this truly is an awful patch, but works nice for now
-int getCompleteFts({
+double getCompleteness({
   required String modelId,
   required Map<String, dynamic> features,
 }) {
   try {
-    int doneCount = 0;
+    double total = 0;
     final model = modelsPool.data![modelId]!;
     for (final ftEntry in features.entries) {
       Feature feature = featureSwitch(
@@ -102,10 +100,10 @@ int getCompleteFts({
         ),
         recordFt: ftEntry.value,
       );
-      if (!feature.isEmpty) doneCount++;
+      total += feature.completeness;
     }
 
-    return doneCount;
+    return total / features.length;
   } catch (e) {
     nPrint('fail: $e');
     return 0;

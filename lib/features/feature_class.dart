@@ -21,7 +21,7 @@ class Feature {
 
   get key => '$type-$id';
 
-  bool get isEmpty => true;
+  double get completeness => 0;
 
   FutureOr<bool> onModelSave({String? modelId}) async => true;
 

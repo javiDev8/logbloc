@@ -4,7 +4,31 @@ class TaskListFt extends Feature {
   final Map<String, Task> tasks;
 
   @override
-  get isEmpty => tasks.values.where((t) => t.done).isEmpty;
+  double get completeness {
+    if (tasks.isEmpty) return 0;
+
+    // recursive completeness calculation
+    getTaskCompleteness(Task task) {
+      if (task.childrenIds.isEmpty) {
+        return task.done ? 1.0 : 0.0;
+      } else {
+        double total = 0.0;
+        for (final childId in task.childrenIds) {
+          final childTask = tasks[childId]!;
+          total += getTaskCompleteness(childTask);
+        }
+        return total / task.childrenIds.length;
+      }
+    }
+
+    final rootTasks = tasks.values.where((task) => task.isRoot).toList();
+    double totalCompleteness = 0.0;
+    for (final task in rootTasks) {
+      totalCompleteness += getTaskCompleteness(task);
+    }
+
+    return totalCompleteness / rootTasks.length;
+  }
 
   TaskListFt({
     required super.id,

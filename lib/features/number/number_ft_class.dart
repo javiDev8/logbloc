@@ -5,7 +5,7 @@ class NumberFt extends Feature {
   String unit;
 
   @override
-  get isEmpty => value == null;
+  double get completeness => value == null ? 0 : 1;
 
   NumberFt({
     required super.id,

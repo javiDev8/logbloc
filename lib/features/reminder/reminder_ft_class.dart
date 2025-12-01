@@ -12,6 +12,9 @@ class ReminderFt extends Feature {
   int notifId;
   String content;
 
+  @override
+  double get completeness => dismissed == true ? 1 : 0;
+
   ReminderFt({
     required super.id,
     required super.type,

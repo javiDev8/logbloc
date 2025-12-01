@@ -40,8 +40,7 @@ class ModelRecordsScreen extends StatelessWidget {
               integer: true,
               unit: '%',
               ft: Feature.empty('text'),
-              getRecordValue: (sr) =>
-                  Rec.fromMap(sr).completenessRate * 100,
+              getRecordValue: (sr) => Rec.fromMap(sr).completeness * 100,
               recordFts: records.map<Map<String, dynamic>>((r) {
                 final d = DateTime.parse(r.schedule.day);
                 Map<String, dynamic> sr = r.serialize();
@@ -51,12 +50,7 @@ class ModelRecordsScreen extends StatelessWidget {
               operation: ChartOperation.average,
             ),
             showOptions: {
-              'rate': (sr) => Rec.fromMap(sr).completenessRate * 100,
-              'complete': (sr) => Rec.fromMap(sr).completeFts.toDouble(),
-              'pending': (sr) =>
-                  (Rec.fromMap(sr).features.length -
-                          Rec.fromMap(sr).completeFts)
-                      .toDouble(),
+              'rate': (sr) => Rec.fromMap(sr).completeness * 100,
             },
           );
         },

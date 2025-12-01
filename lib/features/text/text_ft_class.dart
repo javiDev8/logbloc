@@ -15,7 +15,7 @@ class TextFt extends Feature {
   });
 
   @override
-  get isEmpty => content.isEmpty;
+  double get completeness => content.isEmpty ? 0 : 1;
 
   factory TextFt.fromBareFt(Feature ft, {required String content}) {
     return TextFt(

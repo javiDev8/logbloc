@@ -8,7 +8,7 @@ class ChronometerFt extends Feature {
   Duration? duration;
 
   @override
-  get isEmpty => start == null && duration == null;
+  double get completeness => start == null && duration == null ? 0 : 1;
 
   ChronometerFt({
     required super.id,

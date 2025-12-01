@@ -8,7 +8,6 @@ import 'package:logbloc/pools/models/model_class.dart';
 import 'package:logbloc/pools/models/models_pool.dart';
 import 'package:logbloc/utils/fmt_date.dart';
 import 'package:logbloc/utils/parse_map.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:workmanager/workmanager.dart';

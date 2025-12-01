@@ -24,7 +24,7 @@ class VoiceNoteFt extends Feature {
   });
 
   @override
-  get isEmpty => path == null;
+  double get completeness => path == null ? 0 : 1;
 
   factory VoiceNoteFt.fromBareFt(
     Feature ft, {
@@ -100,15 +100,15 @@ class VoiceNoteFt extends Feature {
             'To record voice notes in your logbook, this app needs access to your microphone. '
             'You can enable this by going to Settings > Privacy > Microphone, and toggling on the setting for Logbloc.',
           ),
-	  actionsAlignment: MainAxisAlignment.spaceAround,
+          actionsAlignment: MainAxisAlignment.spaceAround,
           actions: <Widget>[
             Button(
-	      'cancel',
-	      filled: false,
+              'cancel',
+              filled: false,
               onPressed: () => Navigator.of(context).pop(),
             ),
             Button(
-	      'open settings',
+              'open settings',
               onPressed: () {
                 Navigator.of(context).pop();
                 openAppSettings();

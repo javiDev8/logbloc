@@ -106,56 +106,29 @@ class ItemBox extends StatelessWidget {
                             child: LinearProgressIndicator(
                               value: item.record == null
                                   ? 0
-                                  : item.record!.completenessRate,
+                                  : item.record!.completeness,
                               color: Colors.white,
                             ),
                           ),
                         ),
 
                         Txt(
-                          '${item.record?.completeFts ?? 0}/${item.features.length}',
+                          '${((item.record?.completeness ?? 0) * 100).toInt()}%',
                           w: 6,
                         ),
-
-                        //if (!fromRecords && !splitHead) ...unPinnedFtsWids,
                       ],
                     ),
                   ),
 
                   if (item.record != null)
                     ...pinnedFts
-                        .where((ft) => !ft.isEmpty)
+                        .where((ft) => ft.completeness < 0)
                         .map<Widget>(
                           (ft) => FeatureWidget(
                             lock: FeatureLock(model: true, record: true),
                             feature: ft,
                           ),
                         ),
-                  //
-                  //if (splitHead)
-                  //  Padding(
-                  //    padding: EdgeInsetsGeometry.only(
-                  //      left: 20,
-                  //      right: 20,
-                  //      bottom: 15,
-                  //    ),
-                  //    child: Row(
-                  //      mainAxisAlignment: MainAxisAlignment.end,
-                  //      children: [
-                  //        Expanded(
-                  //          child: Wrap(
-                  //            alignment: WrapAlignment.end,
-                  //            children: [
-                  //              if (pinnedFts.isNotEmpty &&
-                  //                  unpinnedFts.isNotEmpty)
-                  //                Text('...  '),
-                  //              ...unPinnedFtsWids,
-                  //            ],
-                  //          ),
-                  //        ),
-                  //      ],
-                  //    ),
-                  //  ),
                 ],
               ),
             ),
