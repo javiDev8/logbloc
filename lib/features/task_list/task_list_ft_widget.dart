@@ -57,6 +57,17 @@ class TaskListFtWidget extends StatelessWidget {
               children: [
                 Row(
                   children: [
+                    if (lock.model && !lock.record && ft.tasks.isEmpty)
+                      Checkbox(
+                        value: ft.done,
+                        onChanged: (val) {
+                          dirt!();
+                          setState(() {
+                            ft.done = val ?? false;
+                          });
+                        },
+                      ),
+
                     if (!lock.model)
                       Expanded(
                         child: TxtField(
@@ -71,11 +82,12 @@ class TaskListFtWidget extends StatelessWidget {
                           },
                         ),
                       ),
-                    Txt(
-                      '(${lock.model ? '${ft.getRoots(done: true).length} / ' : ''}'
-                      '${ft.getRoots().length})',
-                      w: 8,
-                    ),
+                    if (ft.tasks.isNotEmpty)
+                      Txt(
+                        '(${lock.model ? '${ft.getRoots(done: true).length} / ' : ''}'
+                        '${ft.getRoots().length})',
+                        w: 8,
+                      ),
                     if (!lock.model || !lock.record)
                       IconButton(
                         onPressed: () {

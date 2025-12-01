@@ -111,9 +111,9 @@ dynamic featureSwitch({
             ft: ft as TaskListFt,
           );
         case 'label':
-          return Text('task list');
+          return Text('task');
         case 'icon':
-          return MdiIcons.formatListChecks;
+          return MdiIcons.checkboxMultipleMarkedOutline;
       }
 
     case 'picture':

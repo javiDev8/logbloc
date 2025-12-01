@@ -2,9 +2,23 @@ import 'package:logbloc/features/feature_class.dart';
 
 class TaskListFt extends Feature {
   final Map<String, Task> tasks;
+  bool done;
+
+  TaskListFt({
+    required super.id,
+    required super.type,
+    required super.title,
+    required super.pinned,
+    required super.isRequired,
+    required super.position,
+
+    required this.tasks,
+    required this.done,
+  });
 
   @override
   double get completeness {
+    if (done) return 1;
     if (tasks.isEmpty) return 0;
 
     // recursive completeness calculation
@@ -30,20 +44,10 @@ class TaskListFt extends Feature {
     return totalCompleteness / rootTasks.length;
   }
 
-  TaskListFt({
-    required super.id,
-    required super.type,
-    required super.title,
-    required super.pinned,
-    required super.isRequired,
-    required super.position,
-
-    required this.tasks,
-  });
-
   factory TaskListFt.fromBareFt(
     Feature ft, {
     required Map<String, Task> tasks,
+    required bool done,
   }) {
     return TaskListFt(
       id: ft.id,
@@ -54,41 +58,63 @@ class TaskListFt extends Feature {
       position: ft.position,
 
       tasks: tasks,
+      done: done,
     );
   }
 
   @override
-  factory TaskListFt.empty() =>
-      TaskListFt.fromBareFt(Feature.empty('task_list'), tasks: {});
+  factory TaskListFt.empty() => TaskListFt.fromBareFt(
+    Feature.empty('task_list'),
+    tasks: {},
+    done: false,
+  );
 
   @override
   factory TaskListFt.fromEntry(
     MapEntry<String, dynamic> entry,
     Map<String, dynamic>? recordFt,
-  ) => TaskListFt.fromBareFt(
-    Feature.fromEntry(entry),
-    tasks: Map.fromEntries(
+  ) {
+    final tasks = Map.fromEntries(
       (recordFt == null
               ? entry.value['tasks'] as Map<String, dynamic>
               : recordFt['tasks'] as Map<String, dynamic>)
           .entries
           .map((entry) => MapEntry(entry.key, Task.fromEntry(entry))),
-    ),
-  );
+    );
+    return TaskListFt.fromBareFt(
+      Feature.fromEntry(entry),
+      done: recordFt != null
+          ? (recordFt['done'] as bool)
+          : entry.value['done'] ??
+                (tasks.isEmpty
+                    ? false
+                    : tasks.values.where((t) => t.done).length ==
+                          tasks.length),
+      tasks: tasks,
+    );
+  }
 
   @override
-  serialize() => {
-    ...super.serialize(),
-    'tasks': Map<String, dynamic>.fromEntries(
-      tasks.values.map((task) => task.serialize()),
-    ),
-  };
+  serialize() {
+    return {
+      ...super.serialize(),
+      'done': done,
+      'tasks': Map<String, dynamic>.fromEntries(
+        tasks.values.map((task) => task.serialize()),
+      ),
+    };
+  }
 
   @override
-  Map<String, dynamic> makeRec() => {
-    ...super.makeRec(),
-    'tasks': Map.fromEntries(tasks.values.map((task) => task.serialize())),
-  };
+  Map<String, dynamic> makeRec() {
+    return {
+      ...super.makeRec(),
+      'done': done,
+      'tasks': Map.fromEntries(
+        tasks.values.map((task) => task.serialize()),
+      ),
+    };
+  }
 
   addTask({required String parentId}) {
     final task = Task.empty(isRoot: false);
