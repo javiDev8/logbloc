@@ -1,3 +1,5 @@
+import 'package:logbloc/features/feature_class.dart';
+import 'package:logbloc/features/feature_switch.dart';
 import 'package:logbloc/features/task_list/task_list_ft_class.dart';
 import 'package:flutter/material.dart';
 import 'package:logbloc/widgets/time_stats.dart';
@@ -20,8 +22,13 @@ class TaskListFtStatsWidget extends StatelessWidget {
   }
 
   double getDoneRate(Map<String, dynamic> ftRec) {
-    final rootTasks = getRootTasks(ftRec);
-    return rootTasks.where((r) => r.done).length / rootTasks.length * 100;
+    final Feature recFt = featureSwitch(
+      ftType: ft.type,
+      parseType: 'class',
+      recordFt: ftRec,
+      entry: MapEntry(ft.key, ft.serialize()),
+    );
+    return recFt.completeness * 100;
   }
 
   double getDone(Map<String, dynamic> ftRec) {
