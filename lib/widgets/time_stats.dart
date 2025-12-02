@@ -23,7 +23,7 @@ class TimeStats extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String timeLapse = 'week';
-    String mode = 'chart';
+    String mode = chartOpts.mode;
 
     return StatefulBuilder(
       builder: (context, setState) {
@@ -73,46 +73,46 @@ class TimeStats extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      Dropdown(
-                        label: Text('show'),
-                        init: chartOpts.operation,
-                        onSelect: (val) =>
-                            setState(() => chartOpts.operation = val),
-                        entries: [
-                          DropdownMenuEntry(
-                            value: ChartOperation.add,
-                            label: 'total',
-                          ),
-                          DropdownMenuEntry(
-                            value: ChartOperation.average,
-                            label: 'average',
-                          ),
-                          DropdownMenuEntry(
-                            value: ChartOperation.min,
-                            label: 'min',
-                          ),
-                          DropdownMenuEntry(
-                            value: ChartOperation.max,
-                            label: 'max',
-                          ),
-                        ],
-                      ),
-
-                      Dropdown(
-                        label: Text('unit'),
-                        init: chartOpts.getRecordValue,
-                        entries: showOptions.entries
-                            .map(
-                              (o) => DropdownMenuEntry(
-                                value: o.value,
-                                label: o.key,
-                              ),
-                            )
-                            .toList(),
-                        onSelect: (val) {
-                          setState(() => chartOpts.getRecordValue = val);
-                        },
-                      ),
+                      //Dropdown(
+                      //  label: Text('show'),
+                      //  init: chartOpts.operation,
+                      //  onSelect: (val) =>
+                      //      setState(() => chartOpts.operation = val),
+                      //  entries: [
+                      //    DropdownMenuEntry(
+                      //      value: ChartOperation.add,
+                      //      label: 'total',
+                      //    ),
+                      //    DropdownMenuEntry(
+                      //      value: ChartOperation.average,
+                      //      label: 'average',
+                      //    ),
+                      //    DropdownMenuEntry(
+                      //      value: ChartOperation.min,
+                      //      label: 'min',
+                      //    ),
+                      //    DropdownMenuEntry(
+                      //      value: ChartOperation.max,
+                      //      label: 'max',
+                      //    ),
+                      //  ],
+                      //),
+                      if (showOptions.length > 1)
+                        Dropdown(
+                          label: Text('unit'),
+                          init: chartOpts.getRecordValue,
+                          entries: showOptions.entries
+                              .map(
+                                (o) => DropdownMenuEntry(
+                                  value: o.value,
+                                  label: o.key,
+                                ),
+                              )
+                              .toList(),
+                          onSelect: (val) {
+                            setState(() => chartOpts.getRecordValue = val);
+                          },
+                        ),
                     ],
                   ),
                 ),
@@ -197,6 +197,6 @@ class ChartOpts {
     this.integer,
     this.makeTooltip,
     this.isFt = true,
-    this.mode = 'bar',
+    this.mode = 'chart',
   });
 }

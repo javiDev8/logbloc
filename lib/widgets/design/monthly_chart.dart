@@ -79,6 +79,7 @@ class MonthlyChart extends StatelessWidget {
                         '${firstDayOfMonth.year.toString()}',
                         color: monthColor,
                         s: 15,
+			w: 8,
                       ),
                     ],
                   ),

@@ -42,7 +42,10 @@ class ItemScreen extends StatelessWidget {
       ),
     );
 
-    final sortedFts = item.getSortedFts(staged: true);
+    final sortedFts = item.getSortedFts(staged: true).where((ft) {
+      if (readOnly && ft.completeness == 0) return false;
+      return true;
+    });
 
     paintFt(Feature ft) {
       return FeatureWidget(

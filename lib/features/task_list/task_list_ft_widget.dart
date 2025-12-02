@@ -59,17 +59,19 @@ class TaskListFtWidget extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    if (lock.model && !lock.record && ft.tasks.isEmpty)
+                    if (lock.model && ft.tasks.isEmpty)
                       Checkbox(
                         value: ft.done,
-                        onChanged: (val) {
-                          dirt!();
-                          setState(() {
-                            ft.done = val ?? false;
-                          });
-                        },
+                        onChanged: lock.record
+                            ? null
+                            : (val) {
+                                dirt!();
+                                setState(() {
+                                  ft.done = val ?? false;
+                                });
+                              },
                       ),
-                    if (lock.model && !lock.record) Txt(ft.title, w: 8),
+                    if (lock.model) Txt(ft.title, w: 8),
 
                     if (!lock.model)
                       Expanded(

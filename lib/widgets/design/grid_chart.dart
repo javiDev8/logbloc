@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:logbloc/pools/theme_mode_pool.dart';
 import 'package:logbloc/utils/fmt_date.dart';
 import 'package:logbloc/widgets/design/none.dart';
+import 'package:logbloc/widgets/design/txt.dart';
 import 'package:logbloc/widgets/time_stats.dart';
 
 class GridChart extends StatelessWidget {
@@ -20,6 +22,23 @@ class GridChart extends StatelessWidget {
       firstDayOfMonth.month,
     );
     final List<Widget> squares = [];
+
+    // add week days labels
+    const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    int i = 0;
+    for (final day in weekDays) {
+      i++;
+      squares.add(
+        Container(
+          alignment: Alignment.center,
+          child: Txt(
+            w: 6,
+            day,
+            color: DateTime.now().weekday == i ? seedColor : null,
+          ),
+        ),
+      );
+    }
 
     for (int i = 0; i < leadingBlanks; i++) {
       squares.add(const SizedBox.shrink());
@@ -44,7 +63,15 @@ class GridChart extends StatelessWidget {
         Container(
           decoration: BoxDecoration(
             color: dayColor,
-            borderRadius: BorderRadius.circular(4.0),
+            borderRadius: BorderRadius.circular(10.0),
+
+            // if square date match today set border of primary color
+            border: strDate(DateTime.now()) == strDate(date)
+                ? Border.all(
+                    color: seedColor,
+                    width: 4.0,
+                  )
+                : null,
           ),
           alignment: Alignment.center,
           child: None(),

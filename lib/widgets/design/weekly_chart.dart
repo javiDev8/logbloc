@@ -247,7 +247,7 @@ class WeeklyChart extends StatelessWidget {
                         maxY: null,
                       ),
                     ),
-                  )
+                  ),
               ],
             ),
           );
