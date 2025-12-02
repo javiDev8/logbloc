@@ -10,11 +10,10 @@ import 'package:logbloc/widgets/time_stats.dart';
 
 class WeeklyChart extends StatelessWidget {
   final ChartOpts opts;
-  final bool dump;
 
   final PageController pageController = PageController(initialPage: 1000);
 
-  WeeklyChart({super.key, required this.opts, required this.dump});
+  WeeklyChart({super.key, required this.opts});
 
   DateTime _getMondayOfWeek(DateTime date) {
     int daysToSubtract = date.weekday == 1 ? 0 : date.weekday - 1;
@@ -41,7 +40,7 @@ class WeeklyChart extends StatelessWidget {
     final bool? integer = opts.integer;
 
     return SizedBox(
-      height: dump ? 595 : 450,
+      height: opts.mode == 'dump' ? 595 : 450,
       child: PageView.builder(
         controller: pageController,
         onPageChanged: (index) {},
@@ -103,7 +102,7 @@ class WeeklyChart extends StatelessWidget {
                   ),
                 ),
 
-                if (dump) ...[
+                if (opts.mode == 'dump') ...[
                   Expanded(
                     child: ListView(
                       children: opts.isFt
@@ -150,7 +149,7 @@ class WeeklyChart extends StatelessWidget {
                             ),
                     ),
                   ),
-                ] else
+                ] else if (opts.mode == 'chart')
                   SizedBox(
                     height: 300,
                     child: BarChart(
@@ -248,7 +247,7 @@ class WeeklyChart extends StatelessWidget {
                         maxY: null,
                       ),
                     ),
-                  ),
+                  )
               ],
             ),
           );

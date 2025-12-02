@@ -18,89 +18,105 @@ class TimeStats extends StatelessWidget {
   Widget build(BuildContext context) {
     String timeLapse = 'week';
     String mode = 'chart';
+
     return StatefulBuilder(
-      builder: (context, setState) => Column(
-        children: [
-          Row(
-            children: [
-              ...['dump', 'chart'].map<Widget>(
-                (p) => Button(
-                  p,
-                  variant: 0,
-                  filled: p == mode,
-                  onPressed: () => setState(() => mode = p),
-                ),
-              ),
-              ...['month', 'week'].map<Widget>(
-                (p) => Button(
-                  p,
-                  variant: 2,
-                  filled: p == timeLapse,
-                  onPressed: () => setState(() => timeLapse = p),
-                ),
-              ),
-            ],
-          ),
-
-          if (mode == 'chart')
+      builder: (context, setState) {
+        chartOpts.mode = mode;
+        if (mode == 'grid') timeLapse = 'month';
+        return Column(
+          children: [
             Padding(
-              padding: EdgeInsetsGeometry.only(
-                top: 5,
-                left: 10,
-                right: 10,
-              ),
+              padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
               child: Row(
-                children: [
-                  Dropdown(
-                    label: Text('show'),
-                    init: chartOpts.operation,
-                    onSelect: (val) =>
-                        setState(() => chartOpts.operation = val),
-                    entries: [
-                      DropdownMenuEntry(
-                        value: ChartOperation.add,
-                        label: 'total',
+                children: ['dump', 'grid', 'chart']
+                    .map<Widget>(
+                      (p) => Button(
+                        p,
+                        variant: 0,
+                        filled: p == mode,
+                        onPressed: () => setState(() => mode = p),
                       ),
-                      DropdownMenuEntry(
-                        value: ChartOperation.average,
-                        label: 'average',
-                      ),
-                      DropdownMenuEntry(
-                        value: ChartOperation.min,
-                        label: 'min',
-                      ),
-                      DropdownMenuEntry(
-                        value: ChartOperation.max,
-                        label: 'max',
-                      ),
-                    ],
-                  ),
-
-                  Dropdown(
-                    label: Text('unit'),
-                    init: chartOpts.getRecordValue,
-                    entries: showOptions.entries
-                        .map(
-                          (o) => DropdownMenuEntry(
-                            value: o.value,
-                            label: o.key,
-                          ),
-                        )
-                        .toList(),
-                    onSelect: (val) {
-                      setState(() => chartOpts.getRecordValue = val);
-                    },
-                  ),
-                ],
+                    )
+                    .toList(),
               ),
             ),
+            if (mode != 'grid')
+              Padding(
+                padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
+                child: Row(
+                  children: ['month', 'week']
+                      .map<Widget>(
+                        (p) => Button(
+                          p,
+                          variant: 2,
+                          filled: p == timeLapse,
+                          onPressed: () => setState(() => timeLapse = p),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
 
-          if (timeLapse == 'week')
-            WeeklyChart(opts: chartOpts, dump: mode == 'dump')
-          else if (timeLapse == 'month')
-            MonthlyChart(opts: chartOpts, dump: mode == 'dump'),
-        ],
-      ),
+            if (mode == 'chart')
+              Padding(
+                padding: EdgeInsetsGeometry.only(
+                  top: 5,
+                  left: 10,
+                  right: 10,
+                ),
+                child: Row(
+                  children: [
+                    Dropdown(
+                      label: Text('show'),
+                      init: chartOpts.operation,
+                      onSelect: (val) =>
+                          setState(() => chartOpts.operation = val),
+                      entries: [
+                        DropdownMenuEntry(
+                          value: ChartOperation.add,
+                          label: 'total',
+                        ),
+                        DropdownMenuEntry(
+                          value: ChartOperation.average,
+                          label: 'average',
+                        ),
+                        DropdownMenuEntry(
+                          value: ChartOperation.min,
+                          label: 'min',
+                        ),
+                        DropdownMenuEntry(
+                          value: ChartOperation.max,
+                          label: 'max',
+                        ),
+                      ],
+                    ),
+
+                    Dropdown(
+                      label: Text('unit'),
+                      init: chartOpts.getRecordValue,
+                      entries: showOptions.entries
+                          .map(
+                            (o) => DropdownMenuEntry(
+                              value: o.value,
+                              label: o.key,
+                            ),
+                          )
+                          .toList(),
+                      onSelect: (val) {
+                        setState(() => chartOpts.getRecordValue = val);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+
+            if (timeLapse == 'week')
+              WeeklyChart(opts: chartOpts)
+            else if (timeLapse == 'month')
+              MonthlyChart(opts: chartOpts),
+          ],
+        );
+      },
     );
   }
 }
@@ -148,6 +164,7 @@ class ChartOpts {
   ChartOperation operation;
   final String Function(double)? makeTooltip;
   bool isFt;
+  String mode;
 
   ChartOpts({
     required this.ft,
@@ -158,5 +175,6 @@ class ChartOpts {
     this.integer,
     this.makeTooltip,
     this.isFt = true,
+    this.mode = 'bar',
   });
 }

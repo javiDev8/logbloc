@@ -3,6 +3,7 @@ import 'package:logbloc/pools/records/record_class.dart';
 import 'package:logbloc/pools/theme_mode_pool.dart';
 import 'package:logbloc/utils/fmt_date.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:logbloc/widgets/design/grid_chart.dart';
 import 'package:logbloc/widgets/design/txt.dart';
 import 'package:logbloc/widgets/dump_ft_records.dart';
 import 'package:logbloc/widgets/dump_records.dart';
@@ -10,10 +11,9 @@ import 'package:logbloc/widgets/time_stats.dart';
 
 class MonthlyChart extends StatelessWidget {
   final ChartOpts opts;
-  final bool dump;
   final PageController pageController = PageController(initialPage: 1000);
 
-  MonthlyChart({super.key, required this.opts, required this.dump});
+  MonthlyChart({super.key, required this.opts});
 
   DateTime getFirstDayOfMonth(DateTime date) =>
       DateTime(date.year, date.month, 1);
@@ -27,6 +27,8 @@ class MonthlyChart extends StatelessWidget {
     final getRecordValue = opts.getRecordValue;
     final ChartOperation operation = opts.operation;
     final bool? integer = opts.integer;
+
+    final dump = opts.mode == 'dump';
 
     return SizedBox(
       height: dump ? 595 : 450,
@@ -117,7 +119,7 @@ class MonthlyChart extends StatelessWidget {
                             ),
                     ),
                   )
-                else
+                else if (opts.mode == 'chart')
                   SizedBox(
                     height: 300,
                     child: LineChart(
@@ -211,6 +213,14 @@ class MonthlyChart extends StatelessWidget {
                         minY: 0,
                         maxY: null,
                       ),
+                    ),
+                  )
+                else
+                  SizedBox(
+                    height: 350,
+                    child: GridChart(
+                      firstDayOfMonth: firstDayOfMonth,
+                      opts: opts,
                     ),
                   ),
               ],
