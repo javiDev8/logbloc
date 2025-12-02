@@ -40,7 +40,7 @@ class WeeklyChart extends StatelessWidget {
     final bool? integer = opts.integer;
 
     return SizedBox(
-      height: opts.mode == 'dump' ? 595 : 450,
+      height: 400,
       child: PageView.builder(
         controller: pageController,
         onPageChanged: (index) {},

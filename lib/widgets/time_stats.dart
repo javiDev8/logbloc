@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:logbloc/features/feature_class.dart';
+import 'package:logbloc/features/feature_switch.dart';
+import 'package:logbloc/pools/models/model_edit_pool.dart';
+import 'package:logbloc/screens/models/model_screen/feature_stats_screen.dart';
+import 'package:logbloc/utils/nav.dart';
 import 'package:logbloc/widgets/design/button.dart';
 import 'package:logbloc/widgets/design/dropdown.dart';
 import 'package:logbloc/widgets/design/monthly_chart.dart';
+import 'package:logbloc/widgets/design/section_divider.dart';
 import 'package:logbloc/widgets/design/weekly_chart.dart';
 
 class TimeStats extends StatelessWidget {
   final ChartOpts chartOpts;
   final Map<String, double Function(Map<String, dynamic>)> showOptions;
+
   const TimeStats({
     super.key,
     required this.chartOpts,
@@ -23,30 +29,31 @@ class TimeStats extends StatelessWidget {
       builder: (context, setState) {
         chartOpts.mode = mode;
         if (mode == 'grid') timeLapse = 'month';
-        return Column(
-          children: [
-            Padding(
-              padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
-              child: Row(
-                children: ['dump', 'grid', 'chart']
-                    .map<Widget>(
-                      (p) => Button(
-                        p,
-                        variant: 0,
-                        filled: p == mode,
-                        onPressed: () => setState(() => mode = p),
-                      ),
-                    )
-                    .toList(),
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
+                child: Row(
+                  children: ['dump', 'grid', 'chart']
+                      .map<Widget>(
+                        (p) => Button(
+                          p,
+                          variant: 0,
+                          filled: p == mode,
+                          onPressed: () => setState(() => mode = p),
+                        ),
+                      )
+                      .toList(),
+                ),
               ),
-            ),
-            if (mode != 'grid')
               Padding(
                 padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
                 child: Row(
                   children: ['month', 'week']
                       .map<Widget>(
                         (p) => Button(
+                          disabled: mode == 'grid',
                           p,
                           variant: 2,
                           filled: p == timeLapse,
@@ -57,64 +64,79 @@ class TimeStats extends StatelessWidget {
                 ),
               ),
 
-            if (mode == 'chart')
-              Padding(
-                padding: EdgeInsetsGeometry.only(
-                  top: 5,
-                  left: 10,
-                  right: 10,
-                ),
-                child: Row(
-                  children: [
-                    Dropdown(
-                      label: Text('show'),
-                      init: chartOpts.operation,
-                      onSelect: (val) =>
-                          setState(() => chartOpts.operation = val),
-                      entries: [
-                        DropdownMenuEntry(
-                          value: ChartOperation.add,
-                          label: 'total',
-                        ),
-                        DropdownMenuEntry(
-                          value: ChartOperation.average,
-                          label: 'average',
-                        ),
-                        DropdownMenuEntry(
-                          value: ChartOperation.min,
-                          label: 'min',
-                        ),
-                        DropdownMenuEntry(
-                          value: ChartOperation.max,
-                          label: 'max',
-                        ),
-                      ],
-                    ),
+              if (mode == 'chart')
+                Padding(
+                  padding: EdgeInsetsGeometry.only(
+                    top: 5,
+                    left: 10,
+                    right: 10,
+                  ),
+                  child: Row(
+                    children: [
+                      Dropdown(
+                        label: Text('show'),
+                        init: chartOpts.operation,
+                        onSelect: (val) =>
+                            setState(() => chartOpts.operation = val),
+                        entries: [
+                          DropdownMenuEntry(
+                            value: ChartOperation.add,
+                            label: 'total',
+                          ),
+                          DropdownMenuEntry(
+                            value: ChartOperation.average,
+                            label: 'average',
+                          ),
+                          DropdownMenuEntry(
+                            value: ChartOperation.min,
+                            label: 'min',
+                          ),
+                          DropdownMenuEntry(
+                            value: ChartOperation.max,
+                            label: 'max',
+                          ),
+                        ],
+                      ),
 
-                    Dropdown(
-                      label: Text('unit'),
-                      init: chartOpts.getRecordValue,
-                      entries: showOptions.entries
-                          .map(
-                            (o) => DropdownMenuEntry(
-                              value: o.value,
-                              label: o.key,
-                            ),
-                          )
-                          .toList(),
-                      onSelect: (val) {
-                        setState(() => chartOpts.getRecordValue = val);
-                      },
-                    ),
-                  ],
+                      Dropdown(
+                        label: Text('unit'),
+                        init: chartOpts.getRecordValue,
+                        entries: showOptions.entries
+                            .map(
+                              (o) => DropdownMenuEntry(
+                                value: o.value,
+                                label: o.key,
+                              ),
+                            )
+                            .toList(),
+                        onSelect: (val) {
+                          setState(() => chartOpts.getRecordValue = val);
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-              ),
 
-            if (timeLapse == 'week')
-              WeeklyChart(opts: chartOpts)
-            else if (timeLapse == 'month')
-              MonthlyChart(opts: chartOpts),
-          ],
+              if (timeLapse == 'week')
+                WeeklyChart(opts: chartOpts)
+              else if (timeLapse == 'month')
+                MonthlyChart(opts: chartOpts),
+
+              if (!chartOpts.isFt) ...[
+                SectionDivider(string: 'Feature records'),
+                ...modelEditPool.data.features.values.map(
+                  (ft) => ListTile(
+                    onTap: () =>
+                        navPush(screen: FeatureStatsScreen(ftKey: ft.key)),
+                    title: Text(ft.title),
+                    leading: Icon(
+                      featureSwitch(parseType: 'icon', ftType: ft.type),
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          ),
         );
       },
     );

@@ -31,7 +31,7 @@ class MonthlyChart extends StatelessWidget {
     final dump = opts.mode == 'dump';
 
     return SizedBox(
-      height: dump ? 595 : 450,
+      height: 400,
       child: PageView.builder(
         controller: pageController,
         itemBuilder: (context, index) {
@@ -217,7 +217,7 @@ class MonthlyChart extends StatelessWidget {
                   )
                 else
                   SizedBox(
-                    height: 350,
+                    height: 300,
                     child: GridChart(
                       firstDayOfMonth: firstDayOfMonth,
                       opts: opts,
