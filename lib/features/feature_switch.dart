@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:logbloc/config/locales.dart';
 import 'package:logbloc/features/chronometer/chronometer_ft_class.dart';
@@ -5,6 +6,9 @@ import 'package:logbloc/features/chronometer/chronometer_ft_stats.dart';
 import 'package:logbloc/features/chronometer/chronometer_ft_widget.dart';
 import 'package:logbloc/features/feature_class.dart';
 import 'package:logbloc/features/feature_widget.dart';
+import 'package:logbloc/features/mood/mood_ft_class.dart';
+import 'package:logbloc/features/mood/mood_ft_stats_.dart';
+import 'package:logbloc/features/mood/mood_ft_widget.dart';
 import 'package:logbloc/features/number/number_ft_class.dart';
 import 'package:logbloc/features/number/number_ft_stats_widget.dart';
 import 'package:logbloc/features/number/number_ft_widget.dart';
@@ -28,6 +32,7 @@ import 'package:logbloc/features/voice_note/voice_note_ft_widget.dart';
 final List<String> availableFtTypes = [
   'text',
   'task_list',
+  'mood',
   'reminder',
   'picture',
   'voice_note',
@@ -210,6 +215,30 @@ dynamic featureSwitch({
           return Text('chronomter');
         case 'icon':
           return MdiIcons.timerOutline;
+      }
+
+    case 'mood':
+      switch (parseType) {
+        case 'class':
+          return entry == null
+              ? MoodFt.empty()
+              : MoodFt.fromEntry(entry, recordFt);
+
+        case 'stats':
+          return MoodFtStats(ftRecs: ftRecs!, ft: ft as MoodFt);
+
+        case 'widget':
+          return MoodFtWidget(
+            lock: lock!,
+            ft: ft as MoodFt,
+            detailed: detailed,
+            dirt: dirt,
+          );
+
+        case 'label':
+          return Text('mood');
+        case 'icon':
+          return FluentIcons.emoji_multiple_24_regular;
       }
 
     default:
