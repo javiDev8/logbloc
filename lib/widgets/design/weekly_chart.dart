@@ -160,9 +160,13 @@ class WeeklyChart extends StatelessWidget {
                             barRods: [
                               BarChartRodData(
                                 toY: weekData[i],
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.tertiaryContainer,
+                                color:
+                                    opts.getDayColor == null ||
+                                        opts.getDayColor!(null) == null
+                                    ? Theme.of(
+                                        context,
+                                      ).colorScheme.tertiaryContainer
+                                    : opts.getDayColor!(null),
                                 width: 40,
                                 borderRadius: BorderRadius.circular(10),
                               ),

@@ -16,7 +16,15 @@ class MoodFtStats extends StatelessWidget {
             : TimeStats(
                 showOptions: {'all': (r) => 1},
                 chartOpts: ChartOpts(
+                  mode: 'grid',
                   operation: ChartOperation.add,
+                  getDayColor: (r) => r == null
+                      ? null
+                      : (moods[r['moodId']]!['color'] as Color).withAlpha(
+                          ((r['intensity'] as int).toDouble() * 12.55 +
+                                  125.5)
+                              .toInt(),
+                        ),
                   ft: ft,
                   integer: true,
                   recordFts: ftRecs,

@@ -180,6 +180,8 @@ double operate(
 class ChartOpts {
   Feature ft;
   double Function(Map<String, dynamic>) getRecordValue;
+  Color? Function(Map<String, dynamic>?)? getDayColor;
+
   List<Map<String, dynamic>> recordFts;
   String? unit;
   bool? integer;
@@ -198,5 +200,6 @@ class ChartOpts {
     this.makeTooltip,
     this.isFt = true,
     this.mode = 'chart',
+    this.getDayColor,
   });
 }

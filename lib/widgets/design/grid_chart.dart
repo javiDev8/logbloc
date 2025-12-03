@@ -56,7 +56,9 @@ class GridChart extends StatelessWidget {
       if (matches.isEmpty) {
         dayColor = Colors.white.withAlpha(0);
       } else {
-        dayColor = Theme.of(context).colorScheme.tertiaryContainer;
+        dayColor = opts.getDayColor == null
+            ? Theme.of(context).colorScheme.tertiaryContainer
+            : opts.getDayColor!(matches.first)!;
       }
 
       squares.add(
@@ -67,10 +69,7 @@ class GridChart extends StatelessWidget {
 
             // if square date match today set border of primary color
             border: strDate(DateTime.now()) == strDate(date)
-                ? Border.all(
-                    color: seedColor,
-                    width: 4.0,
-                  )
+                ? Border.all(color: seedColor, width: 4.0)
                 : null,
           ),
           alignment: Alignment.center,
