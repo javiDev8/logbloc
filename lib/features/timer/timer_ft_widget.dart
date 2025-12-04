@@ -4,6 +4,7 @@ import 'package:logbloc/features/feature_widget.dart';
 import 'package:logbloc/features/timer/timer_ft_class.dart';
 import 'package:logbloc/utils/fmt_duration.dart';
 import 'package:logbloc/widgets/design/button.dart';
+import 'package:logbloc/widgets/design/exp.dart';
 import 'package:logbloc/widgets/design/txt.dart';
 import 'package:logbloc/widgets/design/txt_field.dart';
 import 'package:logbloc/apis/notifications.dart';
@@ -119,6 +120,18 @@ class _TimerFtWidgetState extends State<TimerFtWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
+        if (widget.lock.model && widget.lock.record)
+          Row(
+            children: [
+              Txt(
+                '${fmtDuration(widget.ft.passedTime)} / ${fmtDuration(widget.ft.duration)}',
+                w: 7,
+              ),
+              Exp(),
+              Txt('${(widget.ft.completeness * 100).toInt()}%'),
+            ],
+          ),
+
         if (!widget.lock.model)
           Row(
             children: [
@@ -194,7 +207,7 @@ class _TimerFtWidgetState extends State<TimerFtWidget> {
                       Txt(
                         fmtDuration(remainingTime, exact: false),
                         s: 24,
-                        w: 8, // bold weight
+                        w: 7, // bold weight
                       ),
 
                       Expanded(

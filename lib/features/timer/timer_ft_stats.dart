@@ -5,7 +5,11 @@ import 'package:logbloc/widgets/time_stats.dart';
 class TimerFtStatsWidget extends StatelessWidget {
   final List<Map<String, dynamic>> ftRecs;
   final TimerFt ft;
-  const TimerFtStatsWidget({super.key, required this.ftRecs, required this.ft});
+  const TimerFtStatsWidget({
+    super.key,
+    required this.ftRecs,
+    required this.ft,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +24,10 @@ class TimerFtStatsWidget extends StatelessWidget {
     double getCompleteness(Map<String, dynamic> rec) {
       final passed = rec['passedTime'] as int? ?? 0;
       final duration = rec['duration'] as int? ?? 1;
-      return duration > 0
-          ? (passed >= duration ? 1.0 : passed / duration)
-          : 0.0;
+      return 100 *
+          (duration > 0
+              ? (passed >= duration ? 1.0 : passed / duration)
+              : 0.0);
     }
 
     return Column(
@@ -31,9 +36,9 @@ class TimerFtStatsWidget extends StatelessWidget {
             ? Center(child: Text('no records'))
             : TimeStats(
                 showOptions: {
-                  'passed time (seconds)': getPassedTime,
-                  'duration (seconds)': getDuration,
-                  'completeness': getCompleteness,
+                  'completeness (%)': getCompleteness,
+                  'timer duration (secs)': getDuration,
+                  'passed time (secs)': getPassedTime,
                 },
                 chartOpts: ChartOpts(
                   operation: ChartOperation.add,

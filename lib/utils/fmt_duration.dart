@@ -1,4 +1,4 @@
-String fmtDuration(Duration duration, {bool exact = true}) {
+String fmtDuration(Duration duration, {bool exact = false}) {
   String twoDigits(int n) => n.toString().padLeft(2, '0');
 
   final hours = twoDigits(duration.inHours);
