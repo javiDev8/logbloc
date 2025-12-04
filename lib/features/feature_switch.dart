@@ -26,6 +26,7 @@ import 'package:logbloc/features/text/text_ft_stats.dart';
 import 'package:logbloc/features/text/text_ft_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:logbloc/features/timer/timer_ft_class.dart';
+import 'package:logbloc/features/timer/timer_ft_stats.dart';
 import 'package:logbloc/features/timer/timer_ft_widget.dart';
 import 'package:logbloc/features/voice_note/voice_note_ft_class.dart';
 import 'package:logbloc/features/voice_note/voice_note_ft_stats.dart';
@@ -55,8 +56,7 @@ dynamic featureSwitch({
   List<Map<String, dynamic>>? ftRecs,
   void Function()? dirt,
 }) {
-  final type =
-      ftType ?? (entry == null ? ft!.type : entry.key.split('-')[0]);
+  final type = ftType ?? (entry == null ? ft!.type : entry.key.split('-')[0]);
   switch (type) {
     case 'number':
       switch (parseType) {
@@ -114,10 +114,7 @@ dynamic featureSwitch({
             dirt: dirt,
           );
         case 'stats':
-          return TaskListFtStatsWidget(
-            ftRecs: ftRecs!,
-            ft: ft as TaskListFt,
-          );
+          return TaskListFtStatsWidget(ftRecs: ftRecs!, ft: ft as TaskListFt);
         case 'label':
           return Text('task');
         case 'icon':
@@ -174,10 +171,7 @@ dynamic featureSwitch({
               : VoiceNoteFt.fromEntry(entry, recordFt);
 
         case 'stats':
-          return VoiceNoteFtStatsWidget(
-            ftRecs: ftRecs!,
-            ft: ft as VoiceNoteFt,
-          );
+          return VoiceNoteFtStatsWidget(ftRecs: ftRecs!, ft: ft as VoiceNoteFt);
 
         case 'widget':
           return VoiceNoteFtWidget(
@@ -201,10 +195,7 @@ dynamic featureSwitch({
               : ChronometerFt.fromEntry(entry, recordFt);
 
         case 'stats':
-          return ChronometerFtStats(
-            ftRecs: ftRecs!,
-            ft: ft as ChronometerFt,
-          );
+          return ChronometerFtStats(ftRecs: ftRecs!, ft: ft as ChronometerFt);
 
         case 'widget':
           return ChronometerFtWidget(
@@ -251,8 +242,8 @@ dynamic featureSwitch({
               ? TimerFt.empty()
               : TimerFt.fromEntry(entry, recordFt);
 
-        //case 'stats':
-        //  return TimerFtStats(ftRecs: ftRecs!, ft: ft as TimerFt);
+        case 'stats':
+          return TimerFtStatsWidget(ftRecs: ftRecs!, ft: ft as TimerFt);
 
         case 'widget':
           return TimerFtWidget(
