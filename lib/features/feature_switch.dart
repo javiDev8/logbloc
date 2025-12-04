@@ -25,6 +25,8 @@ import 'package:logbloc/features/text/text_ft_class.dart';
 import 'package:logbloc/features/text/text_ft_stats.dart';
 import 'package:logbloc/features/text/text_ft_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:logbloc/features/timer/timer_ft_class.dart';
+import 'package:logbloc/features/timer/timer_ft_widget.dart';
 import 'package:logbloc/features/voice_note/voice_note_ft_class.dart';
 import 'package:logbloc/features/voice_note/voice_note_ft_stats.dart';
 import 'package:logbloc/features/voice_note/voice_note_ft_widget.dart';
@@ -33,6 +35,7 @@ final List<String> availableFtTypes = [
   'text',
   'task_list',
   'mood',
+  'timer',
   'reminder',
   'picture',
   'voice_note',
@@ -239,6 +242,30 @@ dynamic featureSwitch({
           return Text('mood');
         case 'icon':
           return FluentIcons.emoji_multiple_24_regular;
+      }
+
+    case 'timer':
+      switch (parseType) {
+        case 'class':
+          return entry == null
+              ? TimerFt.empty()
+              : TimerFt.fromEntry(entry, recordFt);
+
+        //case 'stats':
+        //  return TimerFtStats(ftRecs: ftRecs!, ft: ft as TimerFt);
+
+        case 'widget':
+          return TimerFtWidget(
+            lock: lock!,
+            ft: ft as TimerFt,
+            detailed: detailed,
+            dirt: dirt,
+          );
+
+        case 'label':
+          return Text('timer');
+        case 'icon':
+          return MdiIcons.timerSand;
       }
 
     default:
