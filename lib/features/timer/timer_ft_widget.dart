@@ -6,6 +6,7 @@ import 'package:logbloc/utils/fmt_duration.dart';
 import 'package:logbloc/widgets/design/button.dart';
 import 'package:logbloc/widgets/design/txt.dart';
 import 'package:logbloc/widgets/design/txt_field.dart';
+import 'package:logbloc/apis/notifications.dart';
 import 'dart:async';
 
 class TimerFtWidget extends StatefulWidget {
@@ -73,6 +74,13 @@ class _TimerFtWidgetState extends State<TimerFtWidget> {
         });
         widget.ft.passedTime = widget.ft.duration;
         widget.dirt?.call();
+
+        // Show notification when timer finishes
+        notif.trigger(
+          title: 'Timer Completed!',
+          body: '"${widget.ft.title}" has finished',
+          id: widget.ft.id.hashCode,
+        );
       }
     });
   }
@@ -109,25 +117,32 @@ class _TimerFtWidgetState extends State<TimerFtWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         if (!widget.lock.model)
-          TxtField(
-            label: 'title',
-            initialValue: widget.ft.title,
-            round: true,
-            onChanged: (txt) {
-              widget.ft.setTitle(txt);
-              widget.dirt!();
-            },
-            validator: (str) => str!.isEmpty ? 'write a title' : null,
-          ),
-
-        if (!widget.lock.model ||
-            (!widget.lock.record && widget.ft.passedTime == Duration.zero))
-          Button(
-            fmtDuration(widget.ft.duration, exact: false),
-            onPressed: () => setState(() => pickerIsToggled = true),
+          Row(
+            children: [
+              Expanded(
+                child: TxtField(
+                  label: 'title',
+                  initialValue: widget.ft.title,
+                  round: true,
+                  onChanged: (txt) {
+                    widget.ft.setTitle(txt);
+                    widget.dirt!();
+                  },
+                  validator: (str) =>
+                      str!.isEmpty ? 'write a title' : null,
+                ),
+              ),
+              if (!pickerIsToggled)
+                Button(
+                  fmtDuration(widget.ft.duration, exact: false),
+                  lead: Icons.timer,
+                  filled: false,
+                  onPressed: () => setState(() => pickerIsToggled = true),
+                ),
+            ],
           ),
 
         if (pickerIsToggled) ...[
@@ -155,11 +170,11 @@ class _TimerFtWidgetState extends State<TimerFtWidget> {
 
         if (widget.lock.model && !widget.lock.record)
           StatefulBuilder(
-            builder: (context, setState) {
+            builder: (context, ss) {
               if (isRunning) {
                 Future.delayed(
                   Duration(milliseconds: 100),
-                  () => setState(() {}),
+                  () => ss(() {}),
                 );
               }
 
@@ -168,6 +183,14 @@ class _TimerFtWidgetState extends State<TimerFtWidget> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      if (widget.ft.passedTime == Duration.zero &&
+                          !isRunning)
+                        IconButton(
+                          onPressed: () =>
+                              setState(() => pickerIsToggled = true),
+                          icon: Icon(Icons.timer),
+                        ),
+
                       Txt(
                         fmtDuration(remainingTime, exact: false),
                         s: 24,
