@@ -5,6 +5,7 @@ import 'package:logbloc/pools/pools.dart';
 import 'package:logbloc/screens/models/model_screen/schedules_view/add_schedule_button.dart';
 import 'package:logbloc/screens/models/model_screen/schedules_view/schedule_widget.dart';
 import 'package:logbloc/screens/models/model_screen/schedules_view/simple_pickers/period_picker_menu_button.dart';
+import 'package:logbloc/utils/noticable_print.dart';
 import 'package:logbloc/widgets/design/button.dart';
 import 'package:logbloc/widgets/design/exp.dart';
 import 'package:logbloc/widgets/design/section_divider.dart';
@@ -33,6 +34,8 @@ class ModelSchedulesView extends StatelessWidget {
                 ),
               );
 
+          nPrint('deserial schs: $deserialSchs');
+
           return StatefulBuilder(
             builder: (context, setState) => Column(
               children: [
@@ -60,24 +63,25 @@ class ModelSchedulesView extends StatelessWidget {
                   child: ListView(
                     children: [
                       if (showing == 'all' || showing == 'periodic')
-                        ...periodPickers.entries.expand<Widget>((ppe) {
-                          if (model.simplePeriods?.contains(ppe.key) ==
+
+		      ...Schedule.periods.expand<Widget>((period) {
+                          if (model.simplePeriods?.contains(period) ==
                               true) {
                             return [
-                              ppe.value.simplePicker(
-                                deserialSchs[ppe.key],
+                              periodPickers[period]!.simplePicker(
+                                deserialSchs[period],
                               ),
                             ];
-                          } else if (deserialSchs[ppe.key]?.isNotEmpty ==
+                          } else if (deserialSchs[period]?.isNotEmpty ==
                               true) {
                             return [
                               SectionDivider(
-                                string: ppe.key,
+                                string: period,
                                 lead: PeriodPickerMenuButton(
-                                  period: ppe.key,
+                                  period: period!,
                                 ),
                               ),
-                              ...deserialSchs[ppe.key]!.map(
+                              ...deserialSchs[period]!.map(
                                 (sch) => ScheduleWidget(
                                   schedule: sch,
                                   locked: true,
@@ -89,7 +93,8 @@ class ModelSchedulesView extends StatelessWidget {
                           } else {
                             return [];
                           }
-                        }),
+
+		      }),
 
                       if ((showing == 'all' || showing == 'puntual') &&
                           deserialSchs['null']?.isNotEmpty == true) ...[

@@ -23,6 +23,9 @@ class ScheduleWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     late final String day;
     switch (schedule.period) {
+      case 'everyday':
+        day = 'everyday';
+        break;
       case null:
         day = hdate(DateTime.parse(schedule.day));
         break;

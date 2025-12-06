@@ -29,7 +29,7 @@ class AddScheduleButton extends StatelessWidget {
     if (date == null) return;
     modelEditPool.addSchedule(Schedule.empty(day: strDate(date)));
     // ignore: use_build_context_synchronously
-    //Navigator.of(context).pop();
+    Navigator.of(context).pop();
   }
 
   @override
@@ -72,6 +72,20 @@ class AddScheduleButton extends StatelessWidget {
                     ListTile(
                       title: Text('one time'),
                       onTap: () => addPuntual(context),
+                    ),
+
+                  if (type != 'puntual')
+                    ListTile(
+                      title: Text('everyday'),
+                      onTap: () {
+                        modelEditPool.addSchedule(
+                          Schedule.empty(
+                            day: 'everyday',
+                            period: 'everyday',
+                          ),
+                        );
+			Navigator.of(context).pop();
+                      },
                     ),
 
                   ...periodPickers.entries

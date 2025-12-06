@@ -196,6 +196,11 @@ class Model {
           case null:
             day = strDate(date);
             break;
+
+          case 'everyday':
+            day = 'everyday';
+            break;
+
           case 'week':
             day = date.weekday.toString();
             break;
@@ -207,6 +212,7 @@ class Model {
           case 'month':
             day = date.day.toString();
             break;
+
           case 'year':
             date.year.toString();
             break;
@@ -256,7 +262,15 @@ class Schedule {
   List<String>? includedFts; // null -> all
   bool? skipMatch;
 
-  static const periods = [null, 'day', 'week', 'bi-week', 'month', 'year'];
+  static const periods = [
+    null,
+    'day',
+    'everyday',
+    'week',
+    'bi-week',
+    'month',
+    'year',
+  ];
 
   Schedule({
     required this.id,
