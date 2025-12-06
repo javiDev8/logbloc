@@ -76,7 +76,7 @@ class Logbloc extends StatelessWidget {
       builder: (context, mode) {
         eventProcessor.listen();
         return MaterialApp(
-	  debugShowCheckedModeBanner: false,
+          debugShowCheckedModeBanner: false,
           title: 'Logbloc',
           scaffoldMessengerKey: scaffoldMessengerKey,
           supportedLocales: FlutterLocalization.instance.supportedLocales,

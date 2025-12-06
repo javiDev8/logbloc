@@ -21,7 +21,7 @@ class WelcomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsetsGeometry.symmetric(vertical: 100, horizontal: 20),
+      padding: EdgeInsetsGeometry.symmetric(vertical: 100, horizontal: 30),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,15 +33,12 @@ class WelcomePage extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: Padding(
-                    padding: EdgeInsetsGeometry.symmetric(horizontal: 20),
-                    child: Button(
-                      'continue',
-                      onPressed: () => controller.animateToPage(
-                        index + 1,
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOutSine,
-                      ),
+                  child: Button(
+                    'continue',
+                    onPressed: () => controller.animateToPage(
+                      index + 1,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOutSine,
                     ),
                   ),
                 ),
