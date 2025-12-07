@@ -34,15 +34,34 @@ class VoiceNoteFtWidget extends StatelessWidget {
     DateTime? start;
     bool isRecording = false;
     bool isPlaying = false;
+    Duration currentPosition = Duration.zero;
+    Duration totalDuration = Duration.zero;
 
     return StatefulBuilder(
       builder: (context, setState) {
+        // Listen to player position updates
+        player.positionStream.listen((position) {
+          setState(() {
+            currentPosition = position;
+          });
+        });
+
+        // Listen to player duration updates
+        player.durationStream.listen((duration) {
+          if (duration != null) {
+            setState(() {
+              totalDuration = duration;
+            });
+          }
+        });
+
         player.playerStateStream.listen((state) {
           if (state.processingState == ProcessingState.completed) {
             //if (!isRecording) counter = Duration();
             if (!isRecording) start = null;
             setState(() {
               isPlaying = false;
+              currentPosition = Duration.zero;
             });
           }
         });
@@ -78,6 +97,13 @@ class VoiceNoteFtWidget extends StatelessWidget {
           start = DateTime.now();
           setState(() => isPlaying = true);
           await player.play();
+        }
+
+        Future<void> seekToPosition(double value) async {
+          final position = Duration(
+            milliseconds: (value * totalDuration.inMilliseconds).round(),
+          );
+          await player.seek(position);
         }
 
         Future pause() async {
@@ -119,52 +145,120 @@ class VoiceNoteFtWidget extends StatelessWidget {
               ),
 
             if (lock.model)
-              Row(
+              Column(
                 children: [
-                  if (!detailed) ...[
-                    if (isRecording)
-                      IconButton(
-                        onPressed: stopRecording,
-                        icon: Icon(Icons.square),
-                      )
-                    else if (!isPlaying && !lock.record)
-                      IconButton(
-                        onPressed: startRecording,
-                        icon: Icon(Icons.circle, color: Colors.red),
-                      ),
+                  // Playback controls row
+                  Row(
+                    children: [
+                      if (!detailed) ...[
+                        if (isRecording)
+                          IconButton(
+                            onPressed: stopRecording,
+                            icon: Icon(Icons.square),
+                          )
+                        else if (!isPlaying && !lock.record)
+                          IconButton(
+                            onPressed: startRecording,
+                            icon: Icon(Icons.circle, color: Colors.red),
+                          ),
 
-                    if (isPlaying)
-                      IconButton(
-                        onPressed: pause,
-                        icon: Icon(Icons.pause),
-                      ),
+                        if (isPlaying)
+                          IconButton(onPressed: pause, icon: Icon(Icons.pause)),
 
-                    if ((!isRecording && !isPlaying) &&
-                        (ft.tmpPath != null || ft.path != null))
-                      IconButton(
-                        onPressed: playRecording,
-                        icon: Icon(Icons.play_arrow),
-                      ),
+                        if ((!isRecording && !isPlaying) &&
+                            (ft.tmpPath != null || ft.path != null))
+                          IconButton(
+                            onPressed: playRecording,
+                            icon: Icon(Icons.play_arrow),
+                          ),
 
-                    if (isPlaying || isRecording)
-                      StatefulBuilder(
-                        builder: (context, ss) {
-                          Future.delayed(
-                            Duration(seconds: 1),
-                            () => ss(() {}),
-                          );
-                          return Txt(
-                            fmtDuration(
-                              DateTime.now().difference(start!),
-                              exact: false,
+                        if (isPlaying || isRecording)
+                          StatefulBuilder(
+                            builder: (context, ss) {
+                              Future.delayed(
+                                Duration(seconds: 1),
+                                () => ss(() {}),
+                              );
+                              return Txt(
+                                fmtDuration(
+                                  DateTime.now().difference(start!),
+                                  exact: false,
+                                ),
+                              );
+                            },
+                          ),
+                      ],
+
+                      if (!isRecording && ft.duration != null)
+                        Txt(fmtDuration(ft.duration!, exact: false)),
+                    ],
+                  ),
+
+                  // Audio slider and time display
+                  if (!isRecording && (ft.tmpPath != null || ft.path != null))
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Column(
+                        children: [
+                          // Time display
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0,
                             ),
-                          );
-                        },
-                      ),
-                  ],
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Txt(
+                                  fmtDuration(
+                                    isPlaying ? currentPosition : Duration.zero,
+                                    exact: false,
+                                  ),
+                                ),
+                                Txt(
+                                  fmtDuration(
+                                    totalDuration.inMilliseconds > 0
+                                        ? totalDuration
+                                        : (ft.duration ?? Duration.zero),
+                                    exact: false,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
 
-                  if (!isRecording && ft.duration != null)
-                    Txt(fmtDuration(ft.duration!, exact: false)),
+                          // Slider
+                          SliderTheme(
+                            data: SliderTheme.of(context).copyWith(
+                              thumbShape: RoundSliderThumbShape(
+                                enabledThumbRadius: 6.0,
+                              ),
+                              trackHeight: 4.0,
+                            ),
+                            child: Slider(
+                              min: 0.0,
+                              max: totalDuration.inMilliseconds > 0
+                                  ? totalDuration.inMilliseconds.toDouble()
+                                  : (ft.duration?.inMilliseconds.toDouble() ??
+                                        1000.0),
+                              value: currentPosition.inMilliseconds.toDouble(),
+                              onChanged: (ft.tmpPath != null || ft.path != null)
+                                  ? (value) {
+                                      seekToPosition(
+                                        value / totalDuration.inMilliseconds,
+                                      );
+                                    }
+                                  : null,
+                              activeColor: Theme.of(
+                                context,
+                              ).colorScheme.primary,
+                              inactiveColor: Theme.of(
+                                context,
+                              ).colorScheme.primary.withValues(alpha: 0.3),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                 ],
               ),
           ],
