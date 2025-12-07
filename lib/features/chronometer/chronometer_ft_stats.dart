@@ -1,13 +1,11 @@
-import 'package:flutter/material.dart';
 import 'package:logbloc/features/chronometer/chronometer_ft_class.dart';
-import 'package:logbloc/utils/fmt_duration.dart';
-import 'package:logbloc/widgets/design/txt.dart';
+import 'package:flutter/material.dart';
 import 'package:logbloc/widgets/time_stats.dart';
 
-class ChronometerFtStats extends StatelessWidget {
+class ChronometerFtStatsWidget extends StatelessWidget {
   final List<Map<String, dynamic>> ftRecs;
   final ChronometerFt ft;
-  const ChronometerFtStats({
+  const ChronometerFtStatsWidget({
     super.key,
     required this.ftRecs,
     required this.ft,
@@ -15,24 +13,29 @@ class ChronometerFtStats extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double getMillisecs(Map<String, dynamic> rec) {
-      return (rec['duration'] as int).toDouble();
+    double getElapsedTime(Map<String, dynamic> rec) {
+      return rec['elapsedTime']?.toDouble() ?? 0.0;
+    }
+
+    bool getIsRunning(Map<String, dynamic> rec) {
+      return rec['isRunning'] ?? false;
     }
 
     return Column(
       children: [
         ftRecs.isEmpty
-            ? Center(child: Txt('no records'))
+            ? Center(child: Text('no records'))
             : TimeStats(
-                showOptions: {'duration': getMillisecs},
+                showOptions: {
+                  'elapsed time (secs)': getElapsedTime,
+                  'was running': (rec) => getIsRunning(rec) ? 1.0 : 0.0,
+                },
                 chartOpts: ChartOpts(
-                  makeTooltip: (val) =>
-                      fmtDuration(Duration(milliseconds: val.toInt())),
-                  operation: ChartOperation.add,
+                  operation: ChartOperation.average,
                   ft: ft,
                   integer: true,
                   recordFts: ftRecs,
-                  getRecordValue: getMillisecs,
+                  getRecordValue: getElapsedTime,
                   unit: 'seconds',
                 ),
               ),

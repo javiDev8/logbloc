@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:logbloc/features/chronometer/chronometer_ft_class.dart';
 import 'package:logbloc/features/feature_widget.dart';
+import 'package:logbloc/features/chronometer/chronometer_ft_class.dart';
 import 'package:logbloc/utils/fmt_duration.dart';
-import 'package:logbloc/utils/warn_dialogs.dart';
+import 'package:logbloc/widgets/design/exp.dart';
 import 'package:logbloc/widgets/design/txt.dart';
 import 'package:logbloc/widgets/design/txt_field.dart';
+import 'dart:async';
 
-class ChronometerFtWidget extends StatelessWidget {
+class ChronometerFtWidget extends StatefulWidget {
   final ChronometerFt ft;
   final FeatureLock lock;
   final bool detailed;
@@ -21,108 +22,145 @@ class ChronometerFtWidget extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    bool isRunning = false;
+  State<ChronometerFtWidget> createState() => _ChronometerFtWidgetState();
+}
 
-    DateTime? pauseStart;
-    Duration pausedTime = Duration();
+class _ChronometerFtWidgetState extends State<ChronometerFtWidget> {
+  Timer? timer;
+  Duration currentElapsed = Duration.zero;
 
-    Duration getTime() {
-      final totalTime = DateTime.now().difference(ft.start!);
-      return Duration(
-        milliseconds: totalTime.inMilliseconds - pausedTime.inMilliseconds,
-      );
+  @override
+  void initState() {
+    super.initState();
+    currentElapsed = widget.ft.elapsedTime;
+    if (widget.ft.isRunning && widget.ft.startTime != null) {
+      _startTimer();
     }
+  }
 
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
+  void _startTimer() {
+    if (widget.ft.isRunning && widget.ft.startTime != null) {
+      timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
+        final now = DateTime.now();
+        final totalElapsed =
+            widget.ft.elapsedTime + now.difference(widget.ft.startTime!);
+
+        setState(() {
+          currentElapsed = totalElapsed;
+        });
+      });
+    }
+  }
+
+  void startChronometer() {
+    setState(() {
+      widget.ft.isRunning = true;
+      widget.ft.startTime = DateTime.now();
+    });
+    _startTimer();
+    widget.dirt?.call();
+  }
+
+  void pauseChronometer() {
+    timer?.cancel();
+    if (widget.ft.startTime != null) {
+      final elapsed = DateTime.now().difference(widget.ft.startTime!);
+      setState(() {
+        widget.ft.elapsedTime = widget.ft.elapsedTime + elapsed;
+        currentElapsed = widget.ft.elapsedTime;
+        widget.ft.isRunning = false;
+        widget.ft.startTime = null;
+      });
+    }
+    widget.dirt?.call();
+  }
+
+  void resetChronometer() {
+    timer?.cancel();
+    setState(() {
+      widget.ft.elapsedTime = Duration.zero;
+      currentElapsed = Duration.zero;
+      widget.ft.isRunning = false;
+      widget.ft.startTime = null;
+    });
+    widget.dirt?.call();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        if (!lock.model)
-          TxtField(
-            label: 'title',
-            initialValue: ft.title,
-            round: true,
-            onChanged: (txt) {
-              ft.setTitle(txt);
-              dirt!();
-            },
-            validator: (str) => str!.isEmpty ? 'write a title' : null,
+        if (widget.lock.model && widget.lock.record)
+          Row(
+            children: [
+              Txt(fmtDuration(currentElapsed), w: 7),
+              Exp(),
+              Txt(widget.ft.isRunning ? 'Running' : 'Stopped'),
+            ],
           ),
 
-        if (lock.model)
+        if (!widget.lock.model)
+          Row(
+            children: [
+              Expanded(
+                child: TxtField(
+                  label: 'title',
+                  initialValue: widget.ft.title,
+                  round: true,
+                  onChanged: (txt) {
+                    widget.ft.setTitle(txt);
+                    widget.dirt!();
+                  },
+                  validator: (str) =>
+                      str!.isEmpty ? 'write a title' : null,
+                ),
+              ),
+            ],
+          ),
+
+        if (widget.lock.model && !widget.lock.record)
           StatefulBuilder(
-            builder: (context, setState) => Row(
-              children: [
-                if (isRunning) ...[
-                  IconButton(
-                    onPressed: () => setState(() {
-                      isRunning = false;
-                      ft.duration = getTime();
-                      pauseStart = DateTime.now();
-                    }),
-                    icon: Icon(Icons.pause),
+            builder: (context, ss) {
+              if (widget.ft.isRunning) {
+                Future.delayed(
+                  Duration(milliseconds: 100),
+                  () => ss(() {}),
+                );
+              }
+
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  if (widget.ft.isRunning)
+                    IconButton(
+                      onPressed: () => pauseChronometer(),
+                      icon: Icon(Icons.pause),
+                    )
+                  else
+                    IconButton(
+                      onPressed: () => startChronometer(),
+                      icon: Icon(Icons.play_arrow),
+                    ),
+                  Txt(
+                    fmtDuration(currentElapsed, exact: false),
+                    s: 20,
+                    w: 6,
                   ),
 
                   IconButton(
-                    onPressed: () {
-                      dirt!();
-                      ft.duration = getTime();
-                      setState(() {
-                        isRunning = false;
-                        pauseStart = null;
-                        pausedTime = Duration();
-                      });
-                    },
-                    icon: Icon(Icons.square),
+                    onPressed: () => resetChronometer(),
+                    icon: Icon(Icons.refresh),
                   ),
-                ] else if (!lock.record)
-                  IconButton(
-                    onPressed: () async {
-                      play() => setState(() {
-                        if (pauseStart == null) {
-                          ft.start = DateTime.now();
-                        } else {
-                          pausedTime = Duration(
-                            milliseconds:
-                                pausedTime.inMilliseconds +
-                                (DateTime.now().difference(
-                                  pauseStart!,
-                                )).inMilliseconds,
-                          );
-                        }
-                        isRunning = true;
-                      });
-
-                      if (ft.duration == null) {
-                        play();
-                      } else {
-                        await warnOverwrite(
-                          context,
-                          overwrite: () => play(),
-                          msg:
-                              'This action will overwrite the current value of the chronometer',
-                        );
-                      }
-                    },
-                    icon: Icon(Icons.play_arrow),
-                  ),
-
-                if ((!detailed && isRunning) || pauseStart != null)
-                  StatefulBuilder(
-                    builder: (context, ss) {
-                      if (isRunning) {
-                        Future.delayed(
-                          Duration(milliseconds: 10),
-                          () => ss(() {}),
-                        );
-                      }
-
-                      return Txt(fmtDuration(getTime()));
-                    },
-                  )
-                else if (ft.duration != null)
-                  Txt(fmtDuration(ft.duration!)),
-              ],
-            ),
+                ],
+              );
+            },
           ),
       ],
     );

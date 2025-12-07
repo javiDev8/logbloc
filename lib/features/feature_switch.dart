@@ -1,9 +1,6 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:logbloc/config/locales.dart';
-import 'package:logbloc/features/chronometer/chronometer_ft_class.dart';
-import 'package:logbloc/features/chronometer/chronometer_ft_stats.dart';
-import 'package:logbloc/features/chronometer/chronometer_ft_widget.dart';
 import 'package:logbloc/features/feature_class.dart';
 import 'package:logbloc/features/feature_widget.dart';
 import 'package:logbloc/features/mood/mood_ft_class.dart';
@@ -31,17 +28,20 @@ import 'package:logbloc/features/timer/timer_ft_widget.dart';
 import 'package:logbloc/features/voice_note/voice_note_ft_class.dart';
 import 'package:logbloc/features/voice_note/voice_note_ft_stats.dart';
 import 'package:logbloc/features/voice_note/voice_note_ft_widget.dart';
+import 'package:logbloc/features/chronometer/chronometer_ft_class.dart';
+import 'package:logbloc/features/chronometer/chronometer_ft_stats.dart';
+import 'package:logbloc/features/chronometer/chronometer_ft_widget.dart';
 
 final List<String> availableFtTypes = [
-  'text',
   'task_list',
-  'mood',
   'timer',
-  'reminder',
+  'chronometer',
+  'mood',
   'picture',
   'voice_note',
-  'chronometer',
+  'reminder',
   'number',
+  'text',
 ];
 
 dynamic featureSwitch({
@@ -56,7 +56,8 @@ dynamic featureSwitch({
   List<Map<String, dynamic>>? ftRecs,
   void Function()? dirt,
 }) {
-  final type = ftType ?? (entry == null ? ft!.type : entry.key.split('-')[0]);
+  final type =
+      ftType ?? (entry == null ? ft!.type : entry.key.split('-')[0]);
   switch (type) {
     case 'number':
       switch (parseType) {
@@ -114,7 +115,10 @@ dynamic featureSwitch({
             dirt: dirt,
           );
         case 'stats':
-          return TaskListFtStatsWidget(ftRecs: ftRecs!, ft: ft as TaskListFt);
+          return TaskListFtStatsWidget(
+            ftRecs: ftRecs!,
+            ft: ft as TaskListFt,
+          );
         case 'label':
           return Text('task');
         case 'icon':
@@ -171,7 +175,10 @@ dynamic featureSwitch({
               : VoiceNoteFt.fromEntry(entry, recordFt);
 
         case 'stats':
-          return VoiceNoteFtStatsWidget(ftRecs: ftRecs!, ft: ft as VoiceNoteFt);
+          return VoiceNoteFtStatsWidget(
+            ftRecs: ftRecs!,
+            ft: ft as VoiceNoteFt,
+          );
 
         case 'widget':
           return VoiceNoteFtWidget(
@@ -185,30 +192,6 @@ dynamic featureSwitch({
           return Text('voice note');
         case 'icon':
           return MdiIcons.microphoneOutline;
-      }
-
-    case 'chronometer':
-      switch (parseType) {
-        case 'class':
-          return entry == null
-              ? ChronometerFt.empty()
-              : ChronometerFt.fromEntry(entry, recordFt);
-
-        case 'stats':
-          return ChronometerFtStats(ftRecs: ftRecs!, ft: ft as ChronometerFt);
-
-        case 'widget':
-          return ChronometerFtWidget(
-            lock: lock!,
-            ft: ft as ChronometerFt,
-            detailed: detailed,
-            dirt: dirt,
-          );
-
-        case 'label':
-          return Text('chronomter');
-        case 'icon':
-          return MdiIcons.timerOutline;
       }
 
     case 'mood':
@@ -257,6 +240,33 @@ dynamic featureSwitch({
           return Text('timer');
         case 'icon':
           return MdiIcons.timerSand;
+      }
+
+    case 'chronometer':
+      switch (parseType) {
+        case 'class':
+          return entry == null
+              ? ChronometerFt.empty()
+              : ChronometerFt.fromEntry(entry, recordFt);
+
+        case 'stats':
+          return ChronometerFtStatsWidget(
+            ftRecs: ftRecs!,
+            ft: ft as ChronometerFt,
+          );
+
+        case 'widget':
+          return ChronometerFtWidget(
+            lock: lock!,
+            ft: ft as ChronometerFt,
+            detailed: detailed,
+            dirt: dirt,
+          );
+
+        case 'label':
+          return Text('chronometer');
+        case 'icon':
+          return MdiIcons.timerOutline;
       }
 
     default:
