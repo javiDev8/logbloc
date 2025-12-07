@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -30,240 +31,279 @@ class VoiceNoteFtWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //Duration counter = Duration();
-    DateTime? start;
-    bool isRecording = false;
-    bool isPlaying = false;
-    Duration currentPosition = Duration.zero;
-    Duration totalDuration = Duration.zero;
+    return VoiceNotePlayer(
+      ft: ft,
+      lock: lock,
+      detailed: detailed,
+      dirt: dirt,
+      recorder: recorder,
+      player: player,
+    );
+  }
+}
 
-    return StatefulBuilder(
-      builder: (context, setState) {
-        // Listen to player position updates
-        player.positionStream.listen((position) {
-          setState(() {
-            currentPosition = position;
-          });
+class VoiceNotePlayer extends StatefulWidget {
+  final VoiceNoteFt ft;
+  final FeatureLock lock;
+  final bool detailed;
+  final void Function()? dirt;
+  final AudioRecorder recorder;
+  final AudioPlayer player;
+
+  const VoiceNotePlayer({
+    super.key,
+    required this.ft,
+    required this.lock,
+    required this.detailed,
+    required this.dirt,
+    required this.recorder,
+    required this.player,
+  });
+
+  @override
+  State<VoiceNotePlayer> createState() => _VoiceNotePlayerState();
+}
+
+class _VoiceNotePlayerState extends State<VoiceNotePlayer> {
+  DateTime? start;
+  bool isRecording = false;
+  bool isPlaying = false;
+  Duration currentPosition = Duration.zero;
+  Duration totalDuration = Duration.zero;
+  late StreamSubscription<Duration> _positionSubscription;
+  late StreamSubscription<Duration?> _durationSubscription;
+  late StreamSubscription<PlayerState> _playerStateSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Listen to player position updates
+    _positionSubscription = widget.player.positionStream.listen((
+      position,
+    ) {
+      if (mounted) {
+        setState(() {
+          currentPosition = position;
         });
+      }
+    });
 
-        // Listen to player duration updates
-        player.durationStream.listen((duration) {
-          if (duration != null) {
-            setState(() {
-              totalDuration = duration;
-            });
-          }
+    // Listen to player duration updates
+    _durationSubscription = widget.player.durationStream.listen((
+      duration,
+    ) {
+      if (duration != null && mounted) {
+        setState(() {
+          totalDuration = duration;
         });
+      }
+    });
 
-        player.playerStateStream.listen((state) {
-          if (state.processingState == ProcessingState.completed) {
-            //if (!isRecording) counter = Duration();
-            if (!isRecording) start = null;
-            setState(() {
-              isPlaying = false;
-              currentPosition = Duration.zero;
-            });
-          }
+    // Listen to player state changes
+    _playerStateSubscription = widget.player.playerStateStream.listen((
+      state,
+    ) {
+      if (state.processingState == ProcessingState.completed && mounted) {
+        setState(() {
+          isPlaying = false;
+          currentPosition = Duration.zero;
         });
+      }
+    });
+  }
 
-        Future startRecording() async {
-          if (!(await ft.requestPermissions(context))) return;
+  @override
+  void dispose() {
+    _positionSubscription.cancel();
+    _durationSubscription.cancel();
+    _playerStateSubscription.cancel();
+    super.dispose();
+  }
 
-          rec() async {
-            final tmpDir = await getTemporaryDirectory();
-            final tmpPath = '${tmpDir.path}/${ft.genFileName()}';
-            await recorder.start(RecordConfig(), path: tmpPath);
-            setState(() {
-              start = DateTime.now();
-              isRecording = true;
-            });
-          }
+  Future startRecording() async {
+    if (!(await widget.ft.requestPermissions(context))) return;
 
-          if (ft.duration == null) {
-            await rec();
-          } else {
-            warnOverwrite(
-              // ignore: use_build_context_synchronously
-              context,
-              overwrite: () => rec(),
-              msg: 'This action will overwirte an already recorded audio',
-            );
-          }
-        }
+    rec() async {
+      final tmpDir = await getTemporaryDirectory();
+      final tmpPath = '${tmpDir.path}/${widget.ft.genFileName()}';
+      await widget.recorder.start(RecordConfig(), path: tmpPath);
+      setState(() {
+        start = DateTime.now();
+        isRecording = true;
+      });
+    }
 
-        Future<void> playRecording() async {
-          await player.setFilePath(ft.tmpPath ?? ft.path!);
-          //counter = Duration();
-          start = DateTime.now();
-          setState(() => isPlaying = true);
-          await player.play();
-        }
+    if (widget.ft.duration == null) {
+      await rec();
+    } else {
+      warnOverwrite(
+        // ignore: use_build_context_synchronously
+        context,
+        overwrite: () => rec(),
+        msg: 'This action will overwirte an already recorded audio',
+      );
+    }
+  }
 
-        Future<void> seekToPosition(double value) async {
-          final position = Duration(
-            milliseconds: (value * totalDuration.inMilliseconds).round(),
-          );
-          await player.seek(position);
-        }
+  Future<void> playRecording() async {
+    await widget.player.setFilePath(widget.ft.tmpPath ?? widget.ft.path!);
+    start = DateTime.now();
+    setState(() => isPlaying = true);
+    await widget.player.play();
+  }
 
-        Future pause() async {
-          await player.pause();
-          setState(() => isPlaying = false);
-        }
+  Future<void> seekToPosition(double value) async {
+    final position = Duration(
+      milliseconds: (value * totalDuration.inMilliseconds).round(),
+    );
+    await widget.player.seek(position);
+  }
 
-        Future<void> stopRecording() async {
-          final path = await recorder.stop();
-          if (path != null) {
-            final tmpFile = File(path);
-            final dir = await getApplicationDocumentsDirectory();
-            final permanentPath = '${dir.path}/${ft.genFileName()}';
-            await tmpFile.copy(permanentPath);
+  Future pause() async {
+    await widget.player.pause();
+    setState(() => isPlaying = false);
+  }
 
-            final player = AudioPlayer();
-            final duration = await player.setFilePath(permanentPath);
+  Future<void> stopRecording() async {
+    final path = await widget.recorder.stop();
+    if (path != null) {
+      final tmpFile = File(path);
+      final dir = await getApplicationDocumentsDirectory();
+      final permanentPath = '${dir.path}/${widget.ft.genFileName()}';
+      await tmpFile.copy(permanentPath);
 
-            ft.tmpPath = permanentPath;
-            ft.duration = duration;
+      final player = AudioPlayer();
+      final duration = await player.setFilePath(permanentPath);
 
-            setState(() {
-              isRecording = false;
-              dirt?.call();
-            });
-          }
-        }
+      widget.ft.tmpPath = permanentPath;
+      widget.ft.duration = duration;
 
-        return Column(
-          children: [
-            if (!lock.model)
-              TxtField(
-                label: 'title',
-                round: true,
-                onChanged: (str) => ft.setTitle(str),
-                validator: (str) =>
-                    str?.isNotEmpty != true ? 'write a title' : null,
-                initialValue: ft.title,
-              ),
+      setState(() {
+        isRecording = false;
+        widget.dirt?.call();
+      });
+    }
+  }
 
-            if (lock.model)
-              Column(
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        if (!widget.lock.model)
+          TxtField(
+            label: 'title',
+            round: true,
+            onChanged: (str) => widget.ft.setTitle(str),
+            validator: (str) =>
+                str?.isNotEmpty != true ? 'write a title' : null,
+            initialValue: widget.ft.title,
+          ),
+
+        if (widget.lock.model)
+          Column(
+            children: [
+              // Main controls row with slider
+              Row(
                 children: [
-                  // Playback controls row
-                  Row(
-                    children: [
-                      if (!detailed) ...[
-                        if (isRecording)
-                          IconButton(
-                            onPressed: stopRecording,
-                            icon: Icon(Icons.square),
-                          )
-                        else if (!isPlaying && !lock.record)
-                          IconButton(
-                            onPressed: startRecording,
-                            icon: Icon(Icons.circle, color: Colors.red),
-                          ),
+                  if (!widget.detailed) ...[
+                    if (isRecording)
+                      IconButton(
+                        onPressed: stopRecording,
+                        icon: Icon(Icons.square),
+                      )
+                    else if (!isPlaying && !widget.lock.record)
+                      IconButton(
+                        onPressed: startRecording,
+                        icon: Icon(Icons.circle, color: Colors.red),
+                      ),
 
-                        if (isPlaying)
-                          IconButton(onPressed: pause, icon: Icon(Icons.pause)),
+                    if (isPlaying)
+                      IconButton(
+                        onPressed: pause,
+                        icon: Icon(Icons.pause),
+                      ),
 
-                        if ((!isRecording && !isPlaying) &&
-                            (ft.tmpPath != null || ft.path != null))
-                          IconButton(
-                            onPressed: playRecording,
-                            icon: Icon(Icons.play_arrow),
-                          ),
+                    if ((!isRecording && !isPlaying) &&
+                        (widget.ft.tmpPath != null ||
+                            widget.ft.path != null))
+                      IconButton(
+                        onPressed: playRecording,
+                        icon: Icon(Icons.play_arrow),
+                      ),
+                  ],
 
-                        if (isPlaying || isRecording)
-                          StatefulBuilder(
-                            builder: (context, ss) {
-                              Future.delayed(
-                                Duration(seconds: 1),
-                                () => ss(() {}),
-                              );
-                              return Txt(
-                                fmtDuration(
-                                  DateTime.now().difference(start!),
-                                  exact: false,
-                                ),
-                              );
-                            },
-                          ),
-                      ],
-
-                      if (!isRecording && ft.duration != null)
-                        Txt(fmtDuration(ft.duration!, exact: false)),
-                    ],
-                  ),
-
-                  // Audio slider and time display
-                  if (!isRecording && (ft.tmpPath != null || ft.path != null))
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Column(
-                        children: [
-                          // Time display
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8.0,
+                  //Time display
+                  if (!isRecording &&
+                      (widget.ft.tmpPath != null ||
+                          widget.ft.path != null))
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0,
+                        ),
+                        child: Row(
+                          mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                          children: [
+                            Txt(
+                              fmtDuration(currentPosition, exact: false),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Txt(
-                                  fmtDuration(
-                                    isPlaying ? currentPosition : Duration.zero,
-                                    exact: false,
-                                  ),
-                                ),
-                                Txt(
-                                  fmtDuration(
-                                    totalDuration.inMilliseconds > 0
-                                        ? totalDuration
-                                        : (ft.duration ?? Duration.zero),
-                                    exact: false,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          // Slider
-                          SliderTheme(
-                            data: SliderTheme.of(context).copyWith(
-                              thumbShape: RoundSliderThumbShape(
-                                enabledThumbRadius: 6.0,
+                            Txt(
+                              fmtDuration(
+                                totalDuration.inMilliseconds > 0
+                                    ? totalDuration
+                                    : (widget.ft.duration ??
+                                          Duration.zero),
+                                exact: false,
                               ),
-                              trackHeight: 4.0,
                             ),
-                            child: Slider(
-                              min: 0.0,
-                              max: totalDuration.inMilliseconds > 0
-                                  ? totalDuration.inMilliseconds.toDouble()
-                                  : (ft.duration?.inMilliseconds.toDouble() ??
-                                        1000.0),
-                              value: currentPosition.inMilliseconds.toDouble(),
-                              onChanged: (ft.tmpPath != null || ft.path != null)
-                                  ? (value) {
-                                      seekToPosition(
-                                        value / totalDuration.inMilliseconds,
-                                      );
-                                    }
-                                  : null,
-                              activeColor: Theme.of(
-                                context,
-                              ).colorScheme.primary,
-                              inactiveColor: Theme.of(
-                                context,
-                              ).colorScheme.primary.withValues(alpha: 0.3),
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                 ],
               ),
-          ],
-        );
-      },
+
+              // Audio slider (only when audio exists and not recording)
+              if (!isRecording &&
+                  (widget.ft.tmpPath != null || widget.ft.path != null))
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                      thumbShape: RoundSliderThumbShape(
+                        enabledThumbRadius: 6.0,
+                      ),
+                      trackHeight: 4.0,
+                    ),
+                    child: Slider(
+                      min: 0.0,
+                      max: totalDuration.inMilliseconds > 0
+                          ? totalDuration.inMilliseconds.toDouble()
+                          : (widget.ft.duration?.inMilliseconds
+                                    .toDouble() ??
+                                1000.0),
+                      value: currentPosition.inMilliseconds.toDouble(),
+                      onChanged:
+                          (widget.ft.tmpPath != null ||
+                              widget.ft.path != null)
+                          ? (value) {
+                              seekToPosition(
+                                value / totalDuration.inMilliseconds,
+                              );
+                            }
+                          : null,
+                      activeColor: Theme.of(context).colorScheme.primary,
+                      inactiveColor: Theme.of(
+                        context,
+                      ).colorScheme.primary.withValues(alpha: 0.3),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+      ],
     );
   }
 }
