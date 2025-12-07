@@ -6,6 +6,7 @@ import 'package:logbloc/pools/models/models_pool.dart';
 import 'package:logbloc/pools/pools.dart';
 import 'package:logbloc/pools/tags/tags_pool.dart';
 import 'package:logbloc/screens/models/model_screen/model_screen.dart';
+import 'package:logbloc/utils/app_review_manager.dart';
 import 'package:logbloc/utils/fmt_date.dart';
 import 'package:logbloc/utils/nav.dart';
 import 'package:logbloc/widgets/design/act_button.dart';
@@ -23,9 +24,7 @@ final currentDatePool = Pool<DateTime>(initDate);
 
 UniqueKey agendaKey = UniqueKey();
 
-final agendaFilterPool = Pool<MapEntry<String, String?>>(
-  MapEntry('all', null),
-);
+final agendaFilterPool = Pool<MapEntry<String, String?>>(MapEntry('all', null));
 
 class DailyScreen extends StatelessWidget {
   DailyScreen({super.key});
@@ -85,10 +84,9 @@ class DailyScreen extends StatelessWidget {
                                       '#$tag',
                                       variant: 1,
                                       filled: filter.value == tag,
-                                      onPressed: () =>
-                                          agendaFilterPool.set(
-                                            (f) => MapEntry(f.key, tag),
-                                          ),
+                                      onPressed: () => agendaFilterPool.set(
+                                        (f) => MapEntry(f.key, tag),
+                                      ),
                                     ),
                                   )
                                   .toList(),
@@ -171,17 +169,14 @@ class DailyScreen extends StatelessWidget {
                                 ),
                                 child: agendaFilterPool.data.key == 'all'
                                     ? ReorderableListView(
-                                        onReorder:
-                                            (oldIndex, newIndex) async {
-                                              final itemToReorder =
-                                                  items[oldIndex];
-                                              await itemsByDayPool
-                                                  .reorderItem(
-                                                    strDay: dateKey,
-                                                    item: itemToReorder,
-                                                    index: newIndex,
-                                                  );
-                                            },
+                                        onReorder: (oldIndex, newIndex) async {
+                                          final itemToReorder = items[oldIndex];
+                                          await itemsByDayPool.reorderItem(
+                                            strDay: dateKey,
+                                            item: itemToReorder,
+                                            index: newIndex,
+                                          );
+                                        },
                                         children: items
                                             .map<Widget>(printItem)
                                             .toList(),
@@ -235,12 +230,18 @@ class DailyScreen extends StatelessWidget {
                               ...modelsPool.data!.values.map<Widget>(
                                 (model) => ListTile(
                                   title: Text(model.name),
-                                  onTap: () {
-                                    itemsByDayPool.scheduleModel(
+                                  onTap: () async {
+                                    await itemsByDayPool.scheduleModel(
                                       model,
                                       currentDatePool.data,
                                     );
                                     navPop();
+                                    // Check for review after creating a new item
+                                    if (context.mounted) {
+                                      AppReviewManager.checkAndRequestReview(
+                                        context,
+                                      );
+                                    }
                                   },
                                 ),
                               ),

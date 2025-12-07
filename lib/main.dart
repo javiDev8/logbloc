@@ -8,6 +8,7 @@ import 'package:logbloc/pools/models/models_pool.dart';
 import 'package:logbloc/pools/theme_mode_pool.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:logbloc/screens/welcome/welcome_screen.dart';
+import 'package:logbloc/utils/app_review_manager.dart';
 import 'package:logbloc/widgets/crash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:logbloc/pools/pools.dart';
@@ -61,10 +62,7 @@ class Logbloc extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     FlutterLocalization.instance.init(
-      mapLocales: [
-        const MapLocale('en', Tr.en),
-        const MapLocale('es', Tr.es),
-      ],
+      mapLocales: [const MapLocale('en', Tr.en), const MapLocale('es', Tr.es)],
       initLanguageCode: 'en',
     );
 
@@ -75,7 +73,7 @@ class Logbloc extends StatelessWidget {
       pool: themeModePool,
       builder: (context, mode) {
         eventProcessor.listen();
-        return MaterialApp(
+        final app = MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Logbloc',
           scaffoldMessengerKey: scaffoldMessengerKey,
@@ -86,12 +84,32 @@ class Logbloc extends StatelessWidget {
           theme: detaTheme,
           darkTheme: detaDarkTheme,
           home: membershipApi.welcomed
-              ? Scaffold(
-                  body: RootScreenSwitch(key: UniqueKey()),
-                  bottomNavigationBar: Navbar(),
+              ? Builder(
+                  builder: (context) {
+                    // Check for review after app starts
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      AppReviewManager.checkAndRequestReview(context);
+                    });
+                    return Scaffold(
+                      body: RootScreenSwitch(key: UniqueKey()),
+                      bottomNavigationBar: Navbar(),
+                    );
+                  },
                 )
               : WelcomeScreen(),
         );
+
+        // Check for review after app starts (for welcome screen case)
+        if (!membershipApi.welcomed) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            final context = scaffoldMessengerKey.currentContext;
+            if (context != null) {
+              AppReviewManager.checkAndRequestReview(context);
+            }
+          });
+        }
+
+        return app;
       },
     );
   }

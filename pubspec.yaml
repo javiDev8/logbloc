@@ -58,6 +58,7 @@ dependencies:
   internet_connection_checker_plus: ^2.7.2
   fluentui_system_icons: ^1.1.273
   syncfusion_flutter_sliders: ^31.2.16
+  in_app_review: ^2.0.10
 
 dev_dependencies:
   flutter_test:

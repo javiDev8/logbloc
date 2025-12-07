@@ -6,6 +6,7 @@ import 'package:logbloc/pools/models/models_pool.dart';
 import 'package:logbloc/pools/pools.dart';
 import 'package:logbloc/pools/screen_index_pool.dart';
 import 'package:logbloc/screens/models/model_screen/model_screen.dart';
+import 'package:logbloc/utils/app_review_manager.dart';
 import 'package:logbloc/utils/nav.dart';
 import 'package:logbloc/widgets/design/act_button.dart';
 import 'package:flutter/material.dart';
@@ -104,6 +105,8 @@ class ModelsScreen extends StatelessWidget {
               }
 
               navPush(screen: ModelScreen());
+              // Check for review after creating a new model
+              AppReviewManager.checkAndRequestReview(context);
             },
           ),
         ],
