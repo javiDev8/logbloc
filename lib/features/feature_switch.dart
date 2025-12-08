@@ -189,7 +189,7 @@ dynamic featureSwitch({
           );
 
         case 'label':
-          return Text('voice note');
+          return Text('audio note');
         case 'icon':
           return MdiIcons.microphoneOutline;
       }

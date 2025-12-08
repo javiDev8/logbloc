@@ -70,6 +70,8 @@ class _VoiceNotePlayerState extends State<VoiceNotePlayer> {
   bool isPlaying = false;
   Duration currentPosition = Duration.zero;
   Duration totalDuration = Duration.zero;
+  Duration recordingDuration = Duration.zero;
+  Timer? _recordingTimer;
   late StreamSubscription<Duration> _positionSubscription;
   late StreamSubscription<Duration?> _durationSubscription;
   late StreamSubscription<PlayerState> _playerStateSubscription;
@@ -79,9 +81,7 @@ class _VoiceNotePlayerState extends State<VoiceNotePlayer> {
     super.initState();
 
     // Listen to player position updates
-    _positionSubscription = widget.player.positionStream.listen((
-      position,
-    ) {
+    _positionSubscription = widget.player.positionStream.listen((position) {
       if (mounted) {
         setState(() {
           currentPosition = position;
@@ -90,9 +90,7 @@ class _VoiceNotePlayerState extends State<VoiceNotePlayer> {
     });
 
     // Listen to player duration updates
-    _durationSubscription = widget.player.durationStream.listen((
-      duration,
-    ) {
+    _durationSubscription = widget.player.durationStream.listen((duration) {
       if (duration != null && mounted) {
         setState(() {
           totalDuration = duration;
@@ -101,9 +99,7 @@ class _VoiceNotePlayerState extends State<VoiceNotePlayer> {
     });
 
     // Listen to player state changes
-    _playerStateSubscription = widget.player.playerStateStream.listen((
-      state,
-    ) {
+    _playerStateSubscription = widget.player.playerStateStream.listen((state) {
       if (state.processingState == ProcessingState.completed && mounted) {
         setState(() {
           isPlaying = false;
@@ -115,6 +111,7 @@ class _VoiceNotePlayerState extends State<VoiceNotePlayer> {
 
   @override
   void dispose() {
+    _recordingTimer?.cancel();
     _positionSubscription.cancel();
     _durationSubscription.cancel();
     _playerStateSubscription.cancel();
@@ -131,6 +128,17 @@ class _VoiceNotePlayerState extends State<VoiceNotePlayer> {
       setState(() {
         start = DateTime.now();
         isRecording = true;
+        recordingDuration = Duration.zero;
+      });
+
+      _recordingTimer = Timer.periodic(const Duration(milliseconds: 100), (
+        timer,
+      ) {
+        if (mounted && isRecording) {
+          setState(() {
+            recordingDuration = DateTime.now().difference(start!);
+          });
+        }
       });
     }
 
@@ -166,21 +174,34 @@ class _VoiceNotePlayerState extends State<VoiceNotePlayer> {
   }
 
   Future<void> stopRecording() async {
-    final path = await widget.recorder.stop();
-    if (path != null) {
-      final tmpFile = File(path);
-      final dir = await getApplicationDocumentsDirectory();
-      final permanentPath = '${dir.path}/${widget.ft.genFileName()}';
-      await tmpFile.copy(permanentPath);
+    _recordingTimer?.cancel();
+    try {
+      final path = await widget.recorder.stop();
+      if (path != null) {
+        final tmpFile = File(path);
 
-      final player = AudioPlayer();
-      final duration = await player.setFilePath(permanentPath);
+        // Check if the temporary file exists before copying
+        if (await tmpFile.exists()) {
+          final dir = await getApplicationDocumentsDirectory();
+          final permanentPath = '${dir.path}/${widget.ft.genFileName()}';
+          await tmpFile.copy(permanentPath);
 
-      widget.ft.tmpPath = permanentPath;
-      widget.ft.duration = duration;
+          final player = AudioPlayer();
+          final duration = await player.setFilePath(permanentPath);
 
+          widget.ft.tmpPath = permanentPath;
+          widget.ft.duration = duration;
+        } else {
+          // File doesn't exist, handle gracefully
+          debugPrint('Warning: Temporary recording file not found at $path');
+        }
+      }
+    } catch (e) {
+      debugPrint('Error stopping recording: $e');
+    } finally {
       setState(() {
         isRecording = false;
+        recordingDuration = Duration.zero;
         widget.dirt?.call();
       });
     }
@@ -219,14 +240,10 @@ class _VoiceNotePlayerState extends State<VoiceNotePlayer> {
                       ),
 
                     if (isPlaying)
-                      IconButton(
-                        onPressed: pause,
-                        icon: Icon(Icons.pause),
-                      ),
+                      IconButton(onPressed: pause, icon: Icon(Icons.pause)),
 
                     if ((!isRecording && !isPlaying) &&
-                        (widget.ft.tmpPath != null ||
-                            widget.ft.path != null))
+                        (widget.ft.tmpPath != null || widget.ft.path != null))
                       IconButton(
                         onPressed: playRecording,
                         icon: Icon(Icons.play_arrow),
@@ -234,30 +251,29 @@ class _VoiceNotePlayerState extends State<VoiceNotePlayer> {
                   ],
 
                   //Time display
-                  if (!isRecording &&
-                      (widget.ft.tmpPath != null ||
-                          widget.ft.path != null))
+                  if (isRecording ||
+                      (!isRecording &&
+                          (widget.ft.tmpPath != null ||
+                              widget.ft.path != null)))
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0,
-                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Row(
-                          mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Txt(
-                              fmtDuration(currentPosition, exact: false),
-                            ),
-                            Txt(
-                              fmtDuration(
-                                totalDuration.inMilliseconds > 0
-                                    ? totalDuration
-                                    : (widget.ft.duration ??
-                                          Duration.zero),
-                                exact: false,
+                            if (isRecording)
+                              Txt(fmtDuration(recordingDuration, exact: false))
+                            else ...[
+                              Txt(fmtDuration(currentPosition, exact: false)),
+                              Txt(
+                                fmtDuration(
+                                  totalDuration.inMilliseconds > 0
+                                      ? totalDuration
+                                      : (widget.ft.duration ?? Duration.zero),
+                                  exact: false,
+                                ),
                               ),
-                            ),
+                            ],
                           ],
                         ),
                       ),
@@ -281,13 +297,17 @@ class _VoiceNotePlayerState extends State<VoiceNotePlayer> {
                       min: 0.0,
                       max: totalDuration.inMilliseconds > 0
                           ? totalDuration.inMilliseconds.toDouble()
-                          : (widget.ft.duration?.inMilliseconds
-                                    .toDouble() ??
+                          : (widget.ft.duration?.inMilliseconds.toDouble() ??
                                 1000.0),
-                      value: currentPosition.inMilliseconds.toDouble(),
+                      value: currentPosition.inMilliseconds.toDouble().clamp(
+                        0.0,
+                        totalDuration.inMilliseconds > 0
+                            ? totalDuration.inMilliseconds.toDouble()
+                            : (widget.ft.duration?.inMilliseconds.toDouble() ??
+                                  1000.0),
+                      ),
                       onChanged:
-                          (widget.ft.tmpPath != null ||
-                              widget.ft.path != null)
+                          (widget.ft.tmpPath != null || widget.ft.path != null)
                           ? (value) {
                               seekToPosition(
                                 value / totalDuration.inMilliseconds,
