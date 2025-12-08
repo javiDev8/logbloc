@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:logbloc/features/feature_widget.dart';
 import 'package:logbloc/features/chronometer/chronometer_ft_class.dart';
 import 'package:logbloc/utils/fmt_duration.dart';
-import 'package:logbloc/widgets/design/exp.dart';
 import 'package:logbloc/widgets/design/txt.dart';
 import 'package:logbloc/widgets/design/txt_field.dart';
 import 'dart:async';
@@ -98,13 +97,7 @@ class _ChronometerFtWidgetState extends State<ChronometerFtWidget> {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         if (widget.lock.model && widget.lock.record)
-          Row(
-            children: [
-              Txt(fmtDuration(currentElapsed), w: 7),
-              Exp(),
-              Txt(widget.ft.isRunning ? 'Running' : 'Stopped'),
-            ],
-          ),
+          Row(children: [Txt(fmtDuration(currentElapsed), w: 7)]),
 
         if (!widget.lock.model)
           Row(

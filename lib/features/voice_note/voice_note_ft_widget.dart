@@ -81,7 +81,9 @@ class _VoiceNotePlayerState extends State<VoiceNotePlayer> {
     super.initState();
 
     // Listen to player position updates
-    _positionSubscription = widget.player.positionStream.listen((position) {
+    _positionSubscription = widget.player.positionStream.listen((
+      position,
+    ) {
       if (mounted) {
         setState(() {
           currentPosition = position;
@@ -90,7 +92,9 @@ class _VoiceNotePlayerState extends State<VoiceNotePlayer> {
     });
 
     // Listen to player duration updates
-    _durationSubscription = widget.player.durationStream.listen((duration) {
+    _durationSubscription = widget.player.durationStream.listen((
+      duration,
+    ) {
       if (duration != null && mounted) {
         setState(() {
           totalDuration = duration;
@@ -99,7 +103,9 @@ class _VoiceNotePlayerState extends State<VoiceNotePlayer> {
     });
 
     // Listen to player state changes
-    _playerStateSubscription = widget.player.playerStateStream.listen((state) {
+    _playerStateSubscription = widget.player.playerStateStream.listen((
+      state,
+    ) {
       if (state.processingState == ProcessingState.completed && mounted) {
         setState(() {
           isPlaying = false;
@@ -149,7 +155,7 @@ class _VoiceNotePlayerState extends State<VoiceNotePlayer> {
         // ignore: use_build_context_synchronously
         context,
         overwrite: () => rec(),
-        msg: 'This action will overwirte an already recorded audio',
+        msg: 'This action will overwrite an already recorded audio',
       );
     }
   }
@@ -193,7 +199,9 @@ class _VoiceNotePlayerState extends State<VoiceNotePlayer> {
           widget.ft.duration = duration;
         } else {
           // File doesn't exist, handle gracefully
-          debugPrint('Warning: Temporary recording file not found at $path');
+          debugPrint(
+            'Warning: Temporary recording file not found at $path',
+          );
         }
       }
     } catch (e) {
@@ -240,10 +248,14 @@ class _VoiceNotePlayerState extends State<VoiceNotePlayer> {
                       ),
 
                     if (isPlaying)
-                      IconButton(onPressed: pause, icon: Icon(Icons.pause)),
+                      IconButton(
+                        onPressed: pause,
+                        icon: Icon(Icons.pause),
+                      ),
 
                     if ((!isRecording && !isPlaying) &&
-                        (widget.ft.tmpPath != null || widget.ft.path != null))
+                        (widget.ft.tmpPath != null ||
+                            widget.ft.path != null))
                       IconButton(
                         onPressed: playRecording,
                         icon: Icon(Icons.play_arrow),
@@ -257,19 +269,81 @@ class _VoiceNotePlayerState extends State<VoiceNotePlayer> {
                               widget.ft.path != null)))
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0,
+                        ),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
                           children: [
                             if (isRecording)
-                              Txt(fmtDuration(recordingDuration, exact: false))
+                              Txt(
+                                fmtDuration(
+                                  recordingDuration,
+                                  exact: false,
+                                ),
+                              )
                             else ...[
-                              Txt(fmtDuration(currentPosition, exact: false)),
+                              Txt(
+                                fmtDuration(currentPosition, exact: false),
+                              ),
+
+                              if (!isRecording &&
+                                  (widget.ft.tmpPath != null ||
+                                      widget.ft.path != null))
+                                Expanded(
+                                  child: Slider(
+                                    min: 0.0,
+                                    max: totalDuration.inMilliseconds > 0
+                                        ? totalDuration.inMilliseconds
+                                              .toDouble()
+                                        : (widget
+                                                  .ft
+                                                  .duration
+                                                  ?.inMilliseconds
+                                                  .toDouble() ??
+                                              1000.0),
+                                    value: currentPosition.inMilliseconds
+                                        .toDouble()
+                                        .clamp(
+                                          0.0,
+                                          totalDuration.inMilliseconds > 0
+                                              ? totalDuration
+                                                    .inMilliseconds
+                                                    .toDouble()
+                                              : (widget
+                                                        .ft
+                                                        .duration
+                                                        ?.inMilliseconds
+                                                        .toDouble() ??
+                                                    1000.0),
+                                        ),
+                                    onChanged:
+                                        (widget.ft.tmpPath != null ||
+                                            widget.ft.path != null)
+                                        ? (value) {
+                                            seekToPosition(
+                                              value /
+                                                  totalDuration
+                                                      .inMilliseconds,
+                                            );
+                                          }
+                                        : null,
+                                    activeColor: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                    inactiveColor: Theme.of(context)
+                                        .colorScheme
+                                        .primary
+                                        .withValues(alpha: 0.3),
+                                  ),
+                                ),
                               Txt(
                                 fmtDuration(
                                   totalDuration.inMilliseconds > 0
                                       ? totalDuration
-                                      : (widget.ft.duration ?? Duration.zero),
+                                      : (widget.ft.duration ??
+                                            Duration.zero),
                                   exact: false,
                                 ),
                               ),
@@ -282,45 +356,6 @@ class _VoiceNotePlayerState extends State<VoiceNotePlayer> {
               ),
 
               // Audio slider (only when audio exists and not recording)
-              if (!isRecording &&
-                  (widget.ft.tmpPath != null || widget.ft.path != null))
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: SliderTheme(
-                    data: SliderTheme.of(context).copyWith(
-                      thumbShape: RoundSliderThumbShape(
-                        enabledThumbRadius: 6.0,
-                      ),
-                      trackHeight: 4.0,
-                    ),
-                    child: Slider(
-                      min: 0.0,
-                      max: totalDuration.inMilliseconds > 0
-                          ? totalDuration.inMilliseconds.toDouble()
-                          : (widget.ft.duration?.inMilliseconds.toDouble() ??
-                                1000.0),
-                      value: currentPosition.inMilliseconds.toDouble().clamp(
-                        0.0,
-                        totalDuration.inMilliseconds > 0
-                            ? totalDuration.inMilliseconds.toDouble()
-                            : (widget.ft.duration?.inMilliseconds.toDouble() ??
-                                  1000.0),
-                      ),
-                      onChanged:
-                          (widget.ft.tmpPath != null || widget.ft.path != null)
-                          ? (value) {
-                              seekToPosition(
-                                value / totalDuration.inMilliseconds,
-                              );
-                            }
-                          : null,
-                      activeColor: Theme.of(context).colorScheme.primary,
-                      inactiveColor: Theme.of(
-                        context,
-                      ).colorScheme.primary.withValues(alpha: 0.3),
-                    ),
-                  ),
-                ),
             ],
           ),
       ],

@@ -25,6 +25,7 @@ class VoiceNoteFtStatsWidget extends StatelessWidget {
             : TimeStats(
                 showOptions: {'seconds': getSeconds},
                 chartOpts: ChartOpts(
+		  mode: 'dump',
                   operation: ChartOperation.add,
                   ft: ft,
                   integer: true,

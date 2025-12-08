@@ -16,7 +16,7 @@ class PictureFtStats extends StatelessWidget {
     return TimeStats(
       showOptions: {},
       chartOpts: ChartOpts(
-	mode: 'grid',
+	mode: 'dump',
         operation: ChartOperation.add,
         ft: ft,
         getRecordValue: ((_) => 1),
