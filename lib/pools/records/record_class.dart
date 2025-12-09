@@ -28,7 +28,10 @@ class Rec {
       'modelId': modelId,
       'features': features,
       'schedule': schedule.serialize(),
-      'completeness': getCompleteness(modelId: modelId, features: features),
+      'completeness': getCompleteness(
+        modelId: modelId,
+        features: features,
+      ),
     };
   }
 
@@ -91,6 +94,9 @@ double getCompleteness({
   try {
     double total = 0;
     final model = modelsPool.data![modelId]!;
+
+    int reminderFts = 0;
+
     for (final ftEntry in features.entries) {
       Feature feature = featureSwitch(
         parseType: 'class',
@@ -100,10 +106,13 @@ double getCompleteness({
         ),
         recordFt: ftEntry.value,
       );
+
+      if (feature.type == 'reminder') reminderFts++;
+
       total += feature.completeness;
     }
 
-    return total / features.length;
+    return total / (features.length - reminderFts);
   } catch (e) {
     nPrint('fail: $e');
     return 0;

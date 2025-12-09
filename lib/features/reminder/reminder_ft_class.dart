@@ -7,13 +7,9 @@ import 'package:logbloc/pools/models/model_edit_pool.dart';
 import 'package:logbloc/utils/noticable_print.dart';
 
 class ReminderFt extends Feature {
-  bool? dismissed;
   TimeOfDay time;
   int notifId;
   String content;
-
-  @override
-  double get completeness => dismissed == true ? 1 : 0;
 
   ReminderFt({
     required super.id,
@@ -26,12 +22,10 @@ class ReminderFt extends Feature {
     required this.notifId,
     required this.time,
     required this.content,
-    this.dismissed,
   });
 
   factory ReminderFt.fromBareFt(
     Feature ft, {
-    bool? dismissed,
     required TimeOfDay time,
     required int notifId,
     required String content,
@@ -46,7 +40,6 @@ class ReminderFt extends Feature {
 
       content: content,
       notifId: notifId,
-      dismissed: dismissed,
       time: time,
     );
   }
@@ -55,7 +48,6 @@ class ReminderFt extends Feature {
     final t = DateTime.now();
     return ReminderFt.fromBareFt(
       Feature.empty('reminder'),
-      dismissed: null,
       time: TimeOfDay.now(),
       content: '',
       notifId: int.parse(
@@ -71,9 +63,6 @@ class ReminderFt extends Feature {
     final ts = (entry.value['time'] as String).split(':');
     return ReminderFt.fromBareFt(
       Feature.fromEntry(entry),
-      dismissed: recordFt != null
-          ? recordFt['dismissed'] as bool?
-          : entry.value['dismissed'] as bool?,
       time: TimeOfDay(hour: int.parse(ts[0]), minute: int.parse(ts[1])),
       content: entry.value['content'],
       notifId: entry.value['notif-id'],
@@ -83,7 +72,6 @@ class ReminderFt extends Feature {
   @override
   serialize() => {
     ...super.serialize(),
-    'dismissed': dismissed,
     'time': '${time.hour}:${time.minute}',
     'notif-id': notifId,
     'content': content,
