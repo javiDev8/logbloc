@@ -51,7 +51,7 @@ class DailyScreen extends StatelessWidget {
         pool: itemsByDayPool,
         listenedEvents: ['clean-up'],
         builder: (context, allItems) {
-          List<String> opts = ['pending', 'done', 'all'];
+          List<String> opts = ['done', 'pending', 'all'];
           if (tagsPool.data?.isNotEmpty == true) {
             opts = ['by tag', ...opts];
           }

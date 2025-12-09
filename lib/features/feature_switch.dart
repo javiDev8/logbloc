@@ -33,15 +33,15 @@ import 'package:logbloc/features/chronometer/chronometer_ft_stats.dart';
 import 'package:logbloc/features/chronometer/chronometer_ft_widget.dart';
 
 final List<String> availableFtTypes = [
+  'text',
   'task_list',
   'timer',
-  'chronometer',
   'mood',
   'picture',
   'voice_note',
   'reminder',
+  'chronometer',
   'number',
-  'text',
 ];
 
 dynamic featureSwitch({

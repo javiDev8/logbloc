@@ -120,49 +120,46 @@ class _ChronometerFtWidgetState extends State<ChronometerFtWidget> {
           ),
 
         if (widget.lock.model && !widget.lock.record)
-          Padding(
-            padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
-            child: StatefulBuilder(
-              builder: (context, ss) {
-                if (widget.ft.isRunning) {
-                  Future.delayed(
-                    Duration(milliseconds: 100),
-                    () => ss(() {}),
-                  );
-                }
-
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        if (widget.ft.isRunning)
-                          IconButton(
-                            onPressed: () => pauseChronometer(),
-                            icon: Icon(Icons.pause),
-                          )
-                        else
-                          IconButton(
-                            onPressed: () => startChronometer(),
-                            icon: Icon(Icons.play_arrow),
-                          ),
-                        Txt(
-                          fmtDuration(currentElapsed, exact: false),
-                          s: 20,
-                          w: 6,
-                        ),
-                      ],
-                    ),
-
-                    if (widget.ft.completeness > 0)
-                      IconButton(
-                        onPressed: () => resetChronometer(),
-                        icon: Icon(MdiIcons.backupRestore),
-                      ),
-                  ],
+          StatefulBuilder(
+            builder: (context, ss) {
+              if (widget.ft.isRunning) {
+                Future.delayed(
+                  Duration(milliseconds: 100),
+                  () => ss(() {}),
                 );
-              },
-            ),
+              }
+
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      if (widget.ft.isRunning)
+                        IconButton(
+                          onPressed: () => pauseChronometer(),
+                          icon: Icon(Icons.pause),
+                        )
+                      else
+                        IconButton(
+                          onPressed: () => startChronometer(),
+                          icon: Icon(Icons.play_arrow),
+                        ),
+                      Txt(
+                        fmtDuration(currentElapsed, exact: false),
+                        s: 20,
+                        w: 6,
+                      ),
+                    ],
+                  ),
+
+                  if (widget.ft.completeness > 0)
+                    IconButton(
+                      onPressed: () => resetChronometer(),
+                      icon: Icon(MdiIcons.backupRestore),
+                    ),
+                ],
+              );
+            },
           ),
       ],
     );
