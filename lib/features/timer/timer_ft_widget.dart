@@ -63,9 +63,7 @@ class _TimerFtWidgetState extends State<TimerFtWidget> {
       final newRemaining = widget.ft.duration - totalElapsed;
 
       setState(() {
-        remainingTime = newRemaining.isNegative
-            ? Duration.zero
-            : newRemaining;
+        remainingTime = newRemaining.isNegative ? Duration.zero : newRemaining;
       });
 
       if (newRemaining.isNegative) {
@@ -77,7 +75,7 @@ class _TimerFtWidgetState extends State<TimerFtWidget> {
         widget.dirt?.call();
 
         // Show notification when timer finishes
-        notif.trigger(
+        notif.triggerTimer(
           title: 'Timer Completed!',
           body: '"${widget.ft.title}" has finished',
           id: widget.ft.id.hashCode,
@@ -144,8 +142,7 @@ class _TimerFtWidgetState extends State<TimerFtWidget> {
                     widget.ft.setTitle(txt);
                     widget.dirt!();
                   },
-                  validator: (str) =>
-                      str!.isEmpty ? 'write a title' : null,
+                  validator: (str) => str!.isEmpty ? 'write a title' : null,
                 ),
               ),
               if (!pickerIsToggled)
@@ -185,10 +182,7 @@ class _TimerFtWidgetState extends State<TimerFtWidget> {
           StatefulBuilder(
             builder: (context, ss) {
               if (isRunning) {
-                Future.delayed(
-                  Duration(milliseconds: 100),
-                  () => ss(() {}),
-                );
+                Future.delayed(Duration(milliseconds: 100), () => ss(() {}));
               }
 
               return Column(
@@ -196,8 +190,7 @@ class _TimerFtWidgetState extends State<TimerFtWidget> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      if (widget.ft.passedTime == Duration.zero &&
-                          !isRunning)
+                      if (widget.ft.passedTime == Duration.zero && !isRunning)
                         IconButton(
                           onPressed: () =>
                               setState(() => pickerIsToggled = true),

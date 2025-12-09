@@ -13,10 +13,8 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:workmanager/workmanager.dart';
 
 class Notif {
-  static const AndroidInitializationSettings
-  initializationSettingsAndroid = AndroidInitializationSettings(
-    'ic_launcher_foreground',
-  );
+  static const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('ic_launcher_foreground');
   static const DarwinInitializationSettings initializationSettingsDarwin =
       DarwinInitializationSettings();
   final plugin = FlutterLocalNotificationsPlugin();
@@ -34,6 +32,36 @@ class Notif {
       'logbloc notification channel',
       channelDescription:
           'The android notifications channel for the logbloc application',
+    ),
+  );
+
+  static const timerDetails = NotificationDetails(
+    iOS: DarwinNotificationDetails(
+      presentSound: true,
+      presentAlert: true,
+      sound: 'timer_notification.wav',
+    ),
+    android: AndroidNotificationDetails(
+      'logbloc-timer-notifs',
+      'logbloc timer notification channel',
+      channelDescription:
+          'The android notifications channel for timer notifications',
+      sound: RawResourceAndroidNotificationSound('timer_notification'),
+    ),
+  );
+
+  static const reminderDetails = NotificationDetails(
+    iOS: DarwinNotificationDetails(
+      presentSound: true,
+      presentAlert: true,
+      sound: 'reminder_notification.wav',
+    ),
+    android: AndroidNotificationDetails(
+      'logbloc-reminder-notifs',
+      'logbloc reminder notification channel',
+      channelDescription:
+          'The android notifications channel for reminder notifications',
+      sound: RawResourceAndroidNotificationSound('reminder_notification'),
     ),
   );
 
@@ -65,9 +93,7 @@ class Notif {
     }
   }
 
-  void notifResponseCallback(
-    NotificationResponse notificationResponse,
-  ) async {}
+  void notifResponseCallback(NotificationResponse notificationResponse) async {}
 
   Future<bool?> requestNotifPermission() async {
     if (Platform.isAndroid) {
@@ -77,20 +103,21 @@ class Notif {
           >()!
           .requestNotificationsPermission();
     } else if (Platform.isIOS) {
-      final iosPlugin = plugin.resolvePlatformSpecificImplementation<
-	IOSFlutterLocalNotificationsPlugin>();
+      final iosPlugin = plugin
+          .resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin
+          >();
 
       await iosPlugin?.requestPermissions(
-	alert: true,
-	badge: true,
-	sound: true,
+        alert: true,
+        badge: true,
+        sound: true,
       );
       final permissions = await iosPlugin?.checkPermissions();
 
-      return 
-	permissions?.isAlertEnabled == true ||
-	permissions?.isBadgeEnabled == true ||
-        permissions?.isSoundEnabled == true;
+      return permissions?.isAlertEnabled == true ||
+          permissions?.isBadgeEnabled == true ||
+          permissions?.isSoundEnabled == true;
     } else {
       // no supported platform
       return null;
@@ -102,6 +129,7 @@ class Notif {
     required TimeOfDay time,
     required String title,
     required String body,
+    NotificationDetails? notificationDetails,
   }) async {
     try {
       final now = tz.TZDateTime.now(tz.local);
@@ -117,7 +145,7 @@ class Notif {
           time.hour,
           time.minute,
         ),
-        details,
+        notificationDetails ?? details,
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       );
     } catch (e) {
@@ -129,8 +157,31 @@ class Notif {
     required String title,
     required String body,
     required int id,
-  }) async =>
-      await plugin.show(id, title, body, details, payload: 'payload');
+  }) async => await plugin.show(id, title, body, details, payload: 'payload');
+
+  triggerTimer({
+    required String title,
+    required String body,
+    required int id,
+  }) async => await plugin.show(
+    id,
+    title,
+    body,
+    timerDetails,
+    payload: 'timer_payload',
+  );
+
+  triggerReminder({
+    required String title,
+    required String body,
+    required int id,
+  }) async => await plugin.show(
+    id,
+    title,
+    body,
+    reminderDetails,
+    payload: 'reminder_payload',
+  );
 }
 
 @pragma('vm:entry-point')
@@ -158,8 +209,9 @@ void workmanagerCallback() {
       final plugin = FlutterLocalNotificationsPlugin();
 
       for (final item in todayItems) {
-        final reminders = modelsPool.data![item.modelId]!.features.values
-            .where((ft) => ft.type == 'reminder');
+        final reminders = modelsPool.data![item.modelId]!.features.values.where(
+          (ft) => ft.type == 'reminder',
+        );
 
         for (final reminder in reminders) {
           final r = reminder as ReminderFt;
@@ -171,7 +223,7 @@ void workmanagerCallback() {
               r.notifId,
               r.title,
               r.content,
-              Notif.details,
+              Notif.reminderDetails,
               payload: 'payload',
             );
             return true;
@@ -194,7 +246,7 @@ void workmanagerCallback() {
               r.time.hour,
               r.time.minute,
             ),
-            Notif.details,
+            Notif.reminderDetails,
             androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
           );
         }

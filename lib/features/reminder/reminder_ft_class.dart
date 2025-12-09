@@ -49,9 +49,7 @@ class ReminderFt extends Feature {
       Feature.empty('reminder'),
       time: TimeOfDay.now(),
       content: '',
-      notifId: int.parse(
-        '${t.month}${t.day}${t.hour}${t.minute}${t.second}',
-      ),
+      notifId: int.parse('${t.month}${t.day}${t.hour}${t.minute}${t.second}'),
     );
   }
 
@@ -98,6 +96,7 @@ class ReminderFt extends Feature {
           time: time,
           title: title,
           body: content,
+          notificationDetails: Notif.reminderDetails,
         );
       }
     } catch (e) {
