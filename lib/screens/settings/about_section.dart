@@ -10,11 +10,20 @@ class AboutSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        HttpLink(name: 'guides', url: 'https://logbloc.app/guides'),
-        HttpLink(name: 'contact', url: 'https://logbloc.app/contact'),
+        HttpLink(
+          name: 'guides',
+          url: 'https://logbloc.app/guides',
+          size: 18,
+        ),
+        HttpLink(
+          name: 'contact',
+          url: 'https://logbloc.app/contact',
+          size: 18,
+        ),
         HttpLink(
           name: 'privacy policy',
           url: 'https://logbloc.app/policy',
+          size: 18,
         ),
 
         Row(

@@ -34,7 +34,7 @@ class WelcomePage extends StatelessWidget {
               children: [
                 Expanded(
                   child: Button(
-                    'continue',
+                    'Continue',
                     onPressed: () => controller.animateToPage(
                       index + 1,
                       duration: const Duration(milliseconds: 300),

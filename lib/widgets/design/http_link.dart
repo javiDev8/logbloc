@@ -34,11 +34,8 @@ class HttpLink extends StatelessWidget {
           recognizer: TapGestureRecognizer()
             ..onTap = () async {
               final Uri u = Uri.parse(url);
-              if (await canLaunchUrl(u)) {
-                await launchUrl(u);
-              } else {
-                throw 'Could not launch $url';
-              }
+              await launchUrl(u);
+              throw 'Could not launch $url';
             },
         ),
       ),

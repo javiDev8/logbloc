@@ -81,7 +81,7 @@ class WelcomeScreenState extends State<WelcomeScreen> {
                   children: [
                     Txt('I Design', s: 20, w: 6, p: EdgeInsets.all(0)),
                     Txt(
-                      'Create a logbook, choose its features, schedule and costumize it',
+                      'Create a logbook, choose its features and schedules',
                       s: 15,
                       w: 5,
                       p: EdgeInsets.all(0),
@@ -93,7 +93,7 @@ class WelcomeScreenState extends State<WelcomeScreen> {
                       p: EdgeInsets.only(top: 5),
                     ),
                     Txt(
-                      'Input data into your daily entries to make logbook records',
+                      'Use the logbook daily entries to create records',
                       s: 15,
                       w: 5,
                       p: EdgeInsets.all(0),
@@ -105,7 +105,7 @@ class WelcomeScreenState extends State<WelcomeScreen> {
                       p: EdgeInsets.only(top: 5),
                     ),
                     Txt(
-                      'Check the logbook records and each feature records in many visual representations',
+                      'Check the records in many visual representations',
                       s: 15,
                       w: 5,
                       p: EdgeInsets.all(0),
@@ -164,8 +164,9 @@ class WelcomeScreenState extends State<WelcomeScreen> {
                             ),
                           ),
                           Txt(
-                            'Explore Logbloc with 3 free logbooks. If you like it,'
-                            ' get unlimited logbooks with a small one-time purchase.',
+                            'Start your journey with 3 free logbooks.'
+                            ' You can unlock unlimited logbooks with a single,'
+                            ' low-cost purchase.',
                             s: 20,
                             w: 6,
                           ),
@@ -175,7 +176,7 @@ class WelcomeScreenState extends State<WelcomeScreen> {
                     Row(
                       children: [
                         Expanded(
-                          child: Button('lets go', onPressed: finish),
+                          child: Button('Start', onPressed: finish),
                         ),
                       ],
                     ),
