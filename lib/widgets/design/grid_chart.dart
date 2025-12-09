@@ -25,18 +25,9 @@ class GridChart extends StatelessWidget {
 
     // add week days labels
     const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    int i = 0;
     for (final day in weekDays) {
-      i++;
       squares.add(
-        Container(
-          alignment: Alignment.center,
-          child: Txt(
-            w: 6,
-            day,
-            color: DateTime.now().weekday == i ? seedColor : null,
-          ),
-        ),
+        Container(alignment: Alignment.center, child: Txt(w: 6, day)),
       );
     }
 
