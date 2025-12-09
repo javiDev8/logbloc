@@ -114,7 +114,11 @@ class ItemScreen extends StatelessWidget {
                 case 'clean':
                   await warnDelete(
                     context,
-                    delete: item.record!.delete,
+                    delete: () async {
+                      final res = await item.record!.delete();
+                      if (res) navPop();
+                      return res;
+                    },
                     msg:
                         'Are you sure you want this record to be deleted?',
                   );
