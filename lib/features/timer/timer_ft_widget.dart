@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:logbloc/features/feature_widget.dart';
 import 'package:logbloc/features/timer/timer_ft_class.dart';
 import 'package:logbloc/utils/fmt_duration.dart';
@@ -63,7 +64,9 @@ class _TimerFtWidgetState extends State<TimerFtWidget> {
       final newRemaining = widget.ft.duration - totalElapsed;
 
       setState(() {
-        remainingTime = newRemaining.isNegative ? Duration.zero : newRemaining;
+        remainingTime = newRemaining.isNegative
+            ? Duration.zero
+            : newRemaining;
       });
 
       if (newRemaining.isNegative) {
@@ -143,7 +146,8 @@ class _TimerFtWidgetState extends State<TimerFtWidget> {
                     widget.ft.setTitle(txt);
                     widget.dirt!();
                   },
-                  validator: (str) => str!.isEmpty ? 'write a title' : null,
+                  validator: (str) =>
+                      str!.isEmpty ? 'write a title' : null,
                 ),
               ),
               if (!pickerIsToggled)
@@ -183,7 +187,10 @@ class _TimerFtWidgetState extends State<TimerFtWidget> {
           StatefulBuilder(
             builder: (context, ss) {
               if (isRunning) {
-                Future.delayed(Duration(milliseconds: 100), () => ss(() {}));
+                Future.delayed(
+                  Duration(milliseconds: 100),
+                  () => ss(() {}),
+                );
               }
 
               return Column(
@@ -191,30 +198,6 @@ class _TimerFtWidgetState extends State<TimerFtWidget> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      if (widget.ft.passedTime == Duration.zero && !isRunning)
-                        IconButton(
-                          onPressed: () =>
-                              setState(() => pickerIsToggled = true),
-                          icon: Icon(Icons.timer),
-                        ),
-
-                      Txt(
-                        fmtDuration(remainingTime, exact: false),
-                        s: 24,
-                        w: 7, // bold weight
-                      ),
-
-                      Expanded(
-                        child: LinearProgressIndicator(
-                          value:
-                              1 -
-                              (remainingTime.inSeconds /
-                                  (widget.ft.duration.inSeconds == 0
-                                      ? 1
-                                      : widget.ft.duration.inSeconds)),
-                        ),
-                      ),
-
                       if (isRunning)
                         IconButton(
                           onPressed: () => pauseTimer(),
@@ -228,9 +211,33 @@ class _TimerFtWidgetState extends State<TimerFtWidget> {
                           icon: Icon(Icons.play_arrow),
                         ),
 
+                      Txt(
+                        fmtDuration(remainingTime, exact: false),
+                        s: 20,
+                        w: 6, // bold weight
+                      ),
+
+                      Expanded(
+                        child: LinearProgressIndicator(
+                          value:
+                              1 -
+                              (remainingTime.inSeconds /
+                                  (widget.ft.duration.inSeconds == 0
+                                      ? 1
+                                      : widget.ft.duration.inSeconds)),
+                        ),
+                      ),
+                      if (widget.ft.passedTime == Duration.zero &&
+                          !isRunning)
+                        IconButton(
+                          onPressed: () =>
+                              setState(() => pickerIsToggled = true),
+                          icon: Icon(Icons.timer),
+                        ),
+
                       IconButton(
                         onPressed: () => resetTimer(),
-                        icon: Icon(Icons.refresh),
+                        icon: Icon(MdiIcons.backupRestore),
                       ),
                     ],
                   ),

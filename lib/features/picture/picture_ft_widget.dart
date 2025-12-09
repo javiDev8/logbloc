@@ -5,7 +5,7 @@ import 'package:flutter_material_design_icons/flutter_material_design_icons.dart
 import 'package:image_picker/image_picker.dart';
 import 'package:logbloc/features/feature_widget.dart';
 import 'package:logbloc/features/picture/picture_ft_class.dart';
-import 'package:logbloc/widgets/design/button.dart';
+import 'package:logbloc/widgets/design/txt.dart';
 import 'package:logbloc/widgets/design/txt_field.dart';
 
 class PictureFtWidget extends StatelessWidget {
@@ -39,17 +39,22 @@ class PictureFtWidget extends StatelessWidget {
                   child: Container(
                     color: Colors.black,
                     child: FutureBuilder<Size>(
-                      future: _getImageSize(File(ft.tmpFile?.path ?? ft.path!)),
+                      future: _getImageSize(
+                        File(ft.tmpFile?.path ?? ft.path!),
+                      ),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           final imageSize = snapshot.data!;
-                          final screenWidth = MediaQuery.of(context).size.width;
+                          final screenWidth = MediaQuery.of(
+                            context,
+                          ).size.width;
                           final screenHeight = MediaQuery.of(
                             context,
                           ).size.height;
 
                           // Determine if image is vertical or horizontal
-                          final isVertical = imageSize.height > imageSize.width;
+                          final isVertical =
+                              imageSize.height > imageSize.width;
 
                           return InteractiveViewer(
                             panEnabled: true,
@@ -92,7 +97,11 @@ class PictureFtWidget extends StatelessWidget {
                       color: Colors.black54,
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(Icons.close, color: Colors.white, size: 28),
+                    child: Icon(
+                      Icons.close,
+                      color: Colors.white,
+                      size: 28,
+                    ),
                   ),
                 ),
               ),
@@ -107,7 +116,10 @@ class PictureFtWidget extends StatelessWidget {
     final bytes = await imageFile.readAsBytes();
     final codec = await ui.instantiateImageCodec(bytes);
     final frame = await codec.getNextFrame();
-    return Size(frame.image.width.toDouble(), frame.image.height.toDouble());
+    return Size(
+      frame.image.width.toDouble(),
+      frame.image.height.toDouble(),
+    );
   }
 
   @override
@@ -157,22 +169,19 @@ class PictureFtWidget extends StatelessWidget {
               Padding(
                 padding: EdgeInsetsGeometry.all(10),
                 child: Row(
+                  mainAxisAlignment: ft.completeness == 0
+                      ? MainAxisAlignment.center
+                      : MainAxisAlignment.end,
                   children: [
-                    Expanded(
-                      child: Button(
-                        'from gallery',
-                        lead: MdiIcons.folderMultipleImage,
-                        filled: false,
-                        onPressed: () => pickImg(ImageSource.gallery),
-                      ),
+                    if (ft.completeness == 0)
+                      Txt('select or take a picture'),
+                    IconButton(
+                      icon: Icon(MdiIcons.folderMultipleImage),
+                      onPressed: () => pickImg(ImageSource.gallery),
                     ),
-                    Expanded(
-                      child: Button(
-                        'from camera',
-                        filled: false,
-                        lead: MdiIcons.camera,
-                        onPressed: () => pickImg(ImageSource.camera),
-                      ),
+                    IconButton(
+                      icon: Icon(MdiIcons.camera),
+                      onPressed: () => pickImg(ImageSource.camera),
                     ),
                   ],
                 ),

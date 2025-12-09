@@ -4,6 +4,7 @@ import 'package:logbloc/apis/notifications.dart';
 import 'package:logbloc/features/feature_widget.dart';
 import 'package:logbloc/features/reminder/reminder_ft_class.dart';
 import 'package:logbloc/utils/feedback.dart';
+import 'package:logbloc/utils/fmt_date.dart';
 import 'package:logbloc/widgets/design/button.dart';
 import 'package:logbloc/widgets/design/exp.dart';
 import 'package:logbloc/widgets/design/txt.dart';
@@ -43,7 +44,8 @@ class ReminderFtWidget extends StatelessWidget {
               ),
               StatefulBuilder(
                 builder: (context, setState) => Button(
-                  '${ft.time.hour}:${ft.time.minute}',
+                  fmtTime(ft.time),
+                  filled: false,
                   lead: MdiIcons.clockOutline,
                   onPressed: () async {
                     if ((await notif.requestNotifPermission()) != true) {

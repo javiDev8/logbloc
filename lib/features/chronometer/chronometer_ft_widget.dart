@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:logbloc/features/feature_widget.dart';
 import 'package:logbloc/features/chronometer/chronometer_ft_class.dart';
 import 'package:logbloc/utils/fmt_duration.dart';
@@ -119,41 +120,49 @@ class _ChronometerFtWidgetState extends State<ChronometerFtWidget> {
           ),
 
         if (widget.lock.model && !widget.lock.record)
-          StatefulBuilder(
-            builder: (context, ss) {
-              if (widget.ft.isRunning) {
-                Future.delayed(
-                  Duration(milliseconds: 100),
-                  () => ss(() {}),
-                );
-              }
+          Padding(
+            padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
+            child: StatefulBuilder(
+              builder: (context, ss) {
+                if (widget.ft.isRunning) {
+                  Future.delayed(
+                    Duration(milliseconds: 100),
+                    () => ss(() {}),
+                  );
+                }
 
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  if (widget.ft.isRunning)
-                    IconButton(
-                      onPressed: () => pauseChronometer(),
-                      icon: Icon(Icons.pause),
-                    )
-                  else
-                    IconButton(
-                      onPressed: () => startChronometer(),
-                      icon: Icon(Icons.play_arrow),
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        if (widget.ft.isRunning)
+                          IconButton(
+                            onPressed: () => pauseChronometer(),
+                            icon: Icon(Icons.pause),
+                          )
+                        else
+                          IconButton(
+                            onPressed: () => startChronometer(),
+                            icon: Icon(Icons.play_arrow),
+                          ),
+                        Txt(
+                          fmtDuration(currentElapsed, exact: false),
+                          s: 20,
+                          w: 6,
+                        ),
+                      ],
                     ),
-                  Txt(
-                    fmtDuration(currentElapsed, exact: false),
-                    s: 20,
-                    w: 6,
-                  ),
 
-                  IconButton(
-                    onPressed: () => resetChronometer(),
-                    icon: Icon(Icons.refresh),
-                  ),
-                ],
-              );
-            },
+                    if (widget.ft.completeness > 0)
+                      IconButton(
+                        onPressed: () => resetChronometer(),
+                        icon: Icon(MdiIcons.backupRestore),
+                      ),
+                  ],
+                );
+              },
+            ),
           ),
       ],
     );

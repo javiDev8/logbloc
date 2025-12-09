@@ -49,16 +49,18 @@ class FeatureWidget extends StatelessWidget {
       ),
       child: Column(
         children: [
-          if (feature.type != 'task_list' ||
-              lock.record) // add more non headed fts as wanted
+          if (feature.type != 'task_list' || !lock.model)
             Padding(
-              padding: EdgeInsets.only(top: 5),
+              padding: EdgeInsets.only(top: lock.model ? 5 : 0),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Icon(
-                    featureSwitch(parseType: 'icon', ft: feature)
-                        as IconData,
+                  Padding(
+                    padding: EdgeInsetsGeometry.only(left: 10),
+                    child: Icon(
+                      featureSwitch(parseType: 'icon', ft: feature)
+                          as IconData,
+                    ),
                   ),
                   SizedBox(
                     width: lock.model ? null : 90,
@@ -82,25 +84,6 @@ class FeatureWidget extends StatelessWidget {
                         return SizedBox(
                           child: Wrap(
                             children: [
-                              if (![
-                                // non requirable features
-                                'task_list',
-                                'reminder',
-                              ].contains(feature.type))
-                                IconButton(
-                                  onPressed: () {
-                                    setState(
-                                      () => feature.isRequired =
-                                          !feature.isRequired,
-                                    );
-                                    modelEditPool.dirt(true);
-                                  },
-                                  icon: Icon(
-                                    feature.isRequired
-                                        ? Icons.error
-                                        : Icons.error_outline,
-                                  ),
-                                ),
                               IconButton(
                                 onPressed: () {
                                   setState(

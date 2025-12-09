@@ -34,6 +34,12 @@ String hdate(DateTime date) {
   return '$dayOfMonth $month $year';
 }
 
+String fmtTime(TimeOfDay time) {
+  final String hourStr = time.hour.toString().padLeft(2, '0');
+  final String minuteStr = time.minute.toString().padLeft(2, '0');
+  return '$hourStr:$minuteStr';
+}
+
 TimeOfDay timeFromString(String timeOfDayString) {
   final int startIndex = timeOfDayString.indexOf('(');
   final int endIndex = timeOfDayString.lastIndexOf(')');

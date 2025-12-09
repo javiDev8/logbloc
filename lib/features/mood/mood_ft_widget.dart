@@ -1,3 +1,4 @@
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:logbloc/features/feature_widget.dart';
 import 'package:logbloc/features/mood/mood_ft_class.dart';
 import 'package:logbloc/widgets/design/txt.dart';
@@ -62,7 +63,7 @@ class MoodFtWidget extends StatelessWidget {
                 );
               } else {
                 return Padding(
-                  padding: EdgeInsetsGeometry.symmetric(horizontal: 20),
+                  padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -74,7 +75,7 @@ class MoodFtWidget extends StatelessWidget {
                       ),
                       Txt(ft.intensity.toString(), w: 7),
 
-                      if (!lock.record)
+                      if (!lock.record) ...[
                         Expanded(
                           child: SfSlider(
                             min: 1.0,
@@ -86,6 +87,14 @@ class MoodFtWidget extends StatelessWidget {
                             },
                           ),
                         ),
+
+                        if (ft.completeness > 0)
+                          IconButton(
+                            onPressed: () =>
+                                setState(() => ft.moodId = null),
+                            icon: Icon(MdiIcons.backupRestore),
+                          ),
+                      ],
                     ],
                   ),
                 );

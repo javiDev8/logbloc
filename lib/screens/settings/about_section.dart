@@ -13,17 +13,17 @@ class AboutSection extends StatelessWidget {
         HttpLink(
           name: 'guides',
           url: 'https://logbloc.app/guides',
-          size: 18,
+          size: 16,
         ),
         HttpLink(
           name: 'contact',
           url: 'https://logbloc.app/contact',
-          size: 18,
+          size: 16,
         ),
         HttpLink(
           name: 'privacy policy',
           url: 'https://logbloc.app/policy',
-          size: 18,
+          size: 16,
         ),
 
         Row(

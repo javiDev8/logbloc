@@ -11,7 +11,7 @@ class PictureFt extends Feature {
   XFile? tmpFile;
 
   @override
-  double get completeness => path == null ? 0 : 1;
+  double get completeness => path == null && tmpFile == null ? 0 : 1;
 
   PictureFt({
     required super.id,
