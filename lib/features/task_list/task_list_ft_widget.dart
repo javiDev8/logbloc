@@ -1,4 +1,3 @@
-import 'package:logbloc/features/feature_switch.dart';
 import 'package:logbloc/features/feature_widget.dart';
 import 'package:logbloc/features/task_list/task_list_ft_class.dart';
 import 'package:logbloc/pools/pools.dart';
@@ -71,12 +70,6 @@ class TaskListFtWidget extends StatelessWidget {
                                   ft.done = val ?? false;
                                 });
                               },
-                      ),
-
-                    if (!lock.model && lock.record)
-                      Icon(
-                        featureSwitch(parseType: 'icon', ftType: ft.type)
-                            as IconData,
                       ),
 
                     if (lock.model) Txt(ft.title, w: 8),

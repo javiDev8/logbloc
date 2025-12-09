@@ -59,15 +59,15 @@ class ModelFeaturesView extends StatelessWidget {
                                     : (ft.pinned != true)),
                         )
                         .map(
-                          (ft) => FtWid(
+                          (ft) => FeatureWidget(
+                            lock: FeatureLock(model: false, record: true),
+                            feature: ft,
                             dirt: () {
                               if (!modelEditPool.dirty) {
                                 modelEditPool.dirt(true);
                               }
                             },
                             key: Key(ft.key),
-                            feature: ft,
-                            lock: FeatureLock(model: false, record: true),
                           ),
                         )
                         .toList(),

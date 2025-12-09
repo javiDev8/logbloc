@@ -126,7 +126,7 @@ class ItemBox extends StatelessWidget {
 
                   if (item.record != null)
                     ...pinnedFts
-                        .where((ft) => ft.completeness < 0)
+                        .where((ft) => ft.completeness > 0)
                         .map<Widget>(
                           (ft) => FeatureWidget(
                             lock: FeatureLock(model: true, record: true),
