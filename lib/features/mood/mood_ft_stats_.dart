@@ -7,6 +7,8 @@ class MoodFtStats extends StatelessWidget {
   final MoodFt ft;
   const MoodFtStats({super.key, required this.ftRecs, required this.ft});
 
+  double getAll(_) => 1;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -14,7 +16,7 @@ class MoodFtStats extends StatelessWidget {
         ftRecs.isEmpty
             ? Center(child: Text('no records'))
             : TimeStats(
-                showOptions: {'all': (r) => 1},
+                showOptions: {'all': getAll},
                 chartOpts: ChartOpts(
                   mode: 'grid',
                   operation: ChartOperation.add,
@@ -28,7 +30,7 @@ class MoodFtStats extends StatelessWidget {
                   ft: ft,
                   integer: true,
                   recordFts: ftRecs,
-                  getRecordValue: (r) => 1,
+                  getRecordValue: getAll,
                   unit: 'characters',
                 ),
               ),

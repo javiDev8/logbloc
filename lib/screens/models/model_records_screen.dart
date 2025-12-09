@@ -14,6 +14,8 @@ class ModelRecordsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double getCompleteRate(sr) => Rec.fromMap(sr).completeness * 100;
+
     return Scaffold(
       appBar: wrapBar(
         backable: true,
@@ -41,7 +43,7 @@ class ModelRecordsScreen extends StatelessWidget {
               integer: true,
               unit: '%',
               ft: Feature.empty('text'),
-              getRecordValue: (sr) => Rec.fromMap(sr).completeness * 100,
+              getRecordValue: getCompleteRate,
               recordFts: records.map<Map<String, dynamic>>((r) {
                 final d = DateTime.parse(r.schedule.day);
                 Map<String, dynamic> sr = r.serialize();
@@ -51,7 +53,8 @@ class ModelRecordsScreen extends StatelessWidget {
               operation: ChartOperation.average,
             ),
             showOptions: {
-              'rate': (sr) => Rec.fromMap(sr).completeness * 100,
+              'complete rate (%)': getCompleteRate,
+              'records': (_) => 1,
             },
           );
         },

@@ -35,6 +35,7 @@ class TimeStats extends StatelessWidget {
               Padding(
                 padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: ['dump', 'grid', 'chart']
                       .map<Widget>(
                         (p) => Button(
@@ -50,6 +51,7 @@ class TimeStats extends StatelessWidget {
               Padding(
                 padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: ['month', 'week']
                       .map<Widget>(
                         (p) => Button(
@@ -97,22 +99,21 @@ class TimeStats extends StatelessWidget {
                       //    ),
                       //  ],
                       //),
-                      if (showOptions.length > 1)
-                        Dropdown(
-                          label: Text('unit'),
-                          init: chartOpts.getRecordValue,
-                          entries: showOptions.entries
-                              .map(
-                                (o) => DropdownMenuEntry(
-                                  value: o.value,
-                                  label: o.key,
-                                ),
-                              )
-                              .toList(),
-                          onSelect: (val) {
-                            setState(() => chartOpts.getRecordValue = val);
-                          },
-                        ),
+                      Dropdown(
+                        label: Text('unit'),
+                        init: chartOpts.getRecordValue,
+                        entries: showOptions.entries
+                            .map(
+                              (o) => DropdownMenuEntry(
+                                value: o.value,
+                                label: o.key,
+                              ),
+                            )
+                            .toList(),
+                        onSelect: (val) {
+                          setState(() => chartOpts.getRecordValue = val);
+                        },
+                      ),
                     ],
                   ),
                 ),

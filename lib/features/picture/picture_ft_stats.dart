@@ -11,15 +11,17 @@ class PictureFtStats extends StatelessWidget {
     required this.ftRecs,
   });
 
+  double getAll(_) => 1;
+
   @override
   Widget build(BuildContext context) {
     return TimeStats(
-      showOptions: {},
+      showOptions: {'all': getAll},
       chartOpts: ChartOpts(
-	mode: 'dump',
+        mode: 'dump',
         operation: ChartOperation.add,
         ft: ft,
-        getRecordValue: ((_) => 1),
+        getRecordValue: getAll,
         recordFts: ftRecs,
         integer: true,
       ),
