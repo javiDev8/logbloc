@@ -5,6 +5,7 @@ import 'package:logbloc/pools/pools.dart';
 import 'package:logbloc/screens/models/model_screen/schedules_view/add_schedule_button.dart';
 import 'package:logbloc/screens/models/model_screen/schedules_view/schedule_widget.dart';
 import 'package:logbloc/screens/models/model_screen/schedules_view/simple_pickers/period_picker_menu_button.dart';
+import 'package:logbloc/utils/fmt_date.dart';
 import 'package:logbloc/widgets/design/button.dart';
 import 'package:logbloc/widgets/design/exp.dart';
 import 'package:logbloc/widgets/design/section_divider.dart';
@@ -28,11 +29,19 @@ class ModelSchedulesView extends StatelessWidget {
                     period ?? 'null',
                     model.schedules?.values
                         .where((sch) => sch.period == period)
+                        .where(
+                          // skip past puntual schedules
+                          (sch) => sch.period != null
+                              ? true
+                              : sch.day == strDate(DateTime.now()) ||
+                                    (DateTime.parse(
+                                      sch.day,
+                                    )).isAfter(DateTime.now()),
+                        )
                         .toList(),
                   ),
                 ),
               );
-
 
           return StatefulBuilder(
             builder: (context, setState) => Column(
@@ -61,8 +70,7 @@ class ModelSchedulesView extends StatelessWidget {
                   child: ListView(
                     children: [
                       if (showing == 'all' || showing == 'periodic')
-
-		      ...Schedule.periods.expand<Widget>((period) {
+                        ...Schedule.periods.expand<Widget>((period) {
                           if (model.simplePeriods?.contains(period) ==
                               true) {
                             return [
@@ -91,8 +99,7 @@ class ModelSchedulesView extends StatelessWidget {
                           } else {
                             return [];
                           }
-
-		      }),
+                        }),
 
                       if ((showing == 'all' || showing == 'puntual') &&
                           deserialSchs['null']?.isNotEmpty == true) ...[

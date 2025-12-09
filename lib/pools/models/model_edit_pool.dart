@@ -80,8 +80,6 @@ class ModelEditPool extends Pool<Model> {
 
   addSchedule(Schedule sch) {
     data.addSchedule(sch);
-    // only everyday sch goes 'closed when added'
-    if (sch.period != 'everyday') editingSchs.add(sch.id);
     controller.sink.add('schedules');
     dirt(true);
   }

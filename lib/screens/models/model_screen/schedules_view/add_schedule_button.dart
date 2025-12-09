@@ -4,6 +4,7 @@ import 'package:logbloc/pools/models/model_edit_pool.dart';
 import 'package:logbloc/screens/models/model_screen/schedules_view/simple_pickers/simple_biweek_picker.dart';
 import 'package:logbloc/screens/models/model_screen/schedules_view/simple_pickers/simple_monthday_picker.dart';
 import 'package:logbloc/screens/models/model_screen/schedules_view/simple_pickers/simple_weekday_picker.dart';
+import 'package:logbloc/utils/feedback.dart';
 import 'package:logbloc/utils/fmt_date.dart';
 import 'package:logbloc/utils/nav.dart';
 import 'package:logbloc/widgets/design/button.dart';
@@ -21,12 +22,19 @@ class AddScheduleButton extends StatelessWidget {
   });
 
   addPuntual(BuildContext context) async {
-    final date = await showDatePicker(
+    final d = await showDatePicker(
       context: context,
       firstDate: DateTime(2020),
       lastDate: DateTime(9999),
     );
-    if (date == null) return;
+    if (d == null) return;
+    final date = DateTime.parse(strDate(d));
+    final nowStr = strDate(DateTime.now());
+    if (nowStr != strDate(date) && date.isBefore(DateTime.parse(nowStr))) {
+      feedback('choosed date is on past', type: FeedbackType.error);
+      return;
+    }
+
     modelEditPool.addSchedule(Schedule.empty(day: strDate(date)));
     // ignore: use_build_context_synchronously
     Navigator.of(context).pop();
@@ -84,7 +92,7 @@ class AddScheduleButton extends StatelessWidget {
                             period: 'everyday',
                           ),
                         );
-			Navigator.of(context).pop();
+                        Navigator.of(context).pop();
                       },
                     ),
 
