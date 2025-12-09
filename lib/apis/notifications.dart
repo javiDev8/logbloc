@@ -16,7 +16,14 @@ class Notif {
   static const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('ic_launcher_foreground');
   static const DarwinInitializationSettings initializationSettingsDarwin =
-      DarwinInitializationSettings();
+      DarwinInitializationSettings(
+        requestAlertPermission: true,
+        requestBadgePermission: true,
+        requestSoundPermission: true,
+        defaultPresentSound: true,
+        defaultPresentAlert: true,
+        defaultPresentBadge: true,
+      );
   final plugin = FlutterLocalNotificationsPlugin();
 
   static Duration timeUntilMidnight() {
@@ -25,43 +32,51 @@ class Notif {
     return nextMidnight.difference(now);
   }
 
+  static NotificationDetails getDetails({String? soundName}) {
+    return NotificationDetails(
+      iOS: DarwinNotificationDetails(
+        presentSound: true,
+        presentAlert: true,
+        sound: soundName ?? 'timer_notification.wav',
+        threadIdentifier: 'logbloc_notifications',
+        categoryIdentifier: 'logbloc_category',
+      ),
+      android: AndroidNotificationDetails(
+        'logbloc-notifs',
+        'logbloc notification channel',
+        channelDescription:
+            'The android notifications channel for the logbloc application',
+        icon: '@drawable/ic_notification',
+        color: Color.fromARGB(255, 40, 109, 173),
+        colorized: true,
+        sound: RawResourceAndroidNotificationSound(
+          soundName ?? 'timer_notification',
+        ),
+        importance: Importance.high,
+        priority: Priority.high,
+      ),
+    );
+  }
+
   static const details = NotificationDetails(
-    iOS: DarwinNotificationDetails(presentSound: true, presentAlert: true),
+    iOS: DarwinNotificationDetails(
+      presentSound: true,
+      presentAlert: true,
+      sound: 'timer_notification.wav',
+      threadIdentifier: 'logbloc_notifications',
+      categoryIdentifier: 'logbloc_category',
+    ),
     android: AndroidNotificationDetails(
       'logbloc-notifs',
       'logbloc notification channel',
       channelDescription:
           'The android notifications channel for the logbloc application',
-    ),
-  );
-
-  static const timerDetails = NotificationDetails(
-    iOS: DarwinNotificationDetails(
-      presentSound: true,
-      presentAlert: true,
-      sound: 'timer_notification.wav',
-    ),
-    android: AndroidNotificationDetails(
-      'logbloc-timer-notifs',
-      'logbloc timer notification channel',
-      channelDescription:
-          'The android notifications channel for timer notifications',
+      icon: '@drawable/ic_notification',
+      color: Color.fromARGB(255, 40, 109, 173),
+      colorized: true,
       sound: RawResourceAndroidNotificationSound('timer_notification'),
-    ),
-  );
-
-  static const reminderDetails = NotificationDetails(
-    iOS: DarwinNotificationDetails(
-      presentSound: true,
-      presentAlert: true,
-      sound: 'reminder_notification.wav',
-    ),
-    android: AndroidNotificationDetails(
-      'logbloc-reminder-notifs',
-      'logbloc reminder notification channel',
-      channelDescription:
-          'The android notifications channel for reminder notifications',
-      sound: RawResourceAndroidNotificationSound('reminder_notification'),
+      importance: Importance.high,
+      priority: Priority.high,
     ),
   );
 
@@ -129,10 +144,12 @@ class Notif {
     required TimeOfDay time,
     required String title,
     required String body,
-    NotificationDetails? notificationDetails,
+    String? soundName,
   }) async {
     try {
       final now = tz.TZDateTime.now(tz.local);
+      final notificationDetails = getDetails(soundName: soundName);
+
       await plugin.zonedSchedule(
         id,
         title,
@@ -145,7 +162,7 @@ class Notif {
           time.hour,
           time.minute,
         ),
-        notificationDetails ?? details,
+        notificationDetails,
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       );
     } catch (e) {
@@ -157,31 +174,49 @@ class Notif {
     required String title,
     required String body,
     required int id,
-  }) async => await plugin.show(id, title, body, details, payload: 'payload');
+    String? soundName,
+  }) async {
+    final notificationDetails = getDetails(soundName: soundName);
 
-  triggerTimer({
-    required String title,
-    required String body,
-    required int id,
-  }) async => await plugin.show(
-    id,
-    title,
-    body,
-    timerDetails,
-    payload: 'timer_payload',
-  );
+    // For iOS, add attachment if available
+    if (Platform.isIOS) {
+      try {
+        final iOSDetails = notificationDetails.iOS as DarwinNotificationDetails;
+        final attachment = DarwinNotificationAttachment(
+          'notif_icon.png',
+          hideThumbnail: false,
+        );
 
-  triggerReminder({
-    required String title,
-    required String body,
-    required int id,
-  }) async => await plugin.show(
-    id,
-    title,
-    body,
-    reminderDetails,
-    payload: 'reminder_payload',
-  );
+        final updatediOSDetails = DarwinNotificationDetails(
+          presentSound: iOSDetails.presentSound,
+          presentAlert: iOSDetails.presentAlert,
+          presentBadge: iOSDetails.presentBadge,
+          sound: iOSDetails.sound,
+          threadIdentifier: iOSDetails.threadIdentifier,
+          categoryIdentifier: iOSDetails.categoryIdentifier,
+          attachments: [attachment],
+        );
+
+        final updatedDetails = NotificationDetails(
+          iOS: updatediOSDetails,
+          android: notificationDetails.android,
+        );
+
+        await plugin.show(id, title, body, updatedDetails, payload: 'payload');
+      } catch (e) {
+        // Fallback to details without attachment if there's an error
+        await plugin.show(id, title, body, details, payload: 'payload');
+      }
+    } else {
+      await plugin.show(
+        id,
+        title,
+        body,
+        notificationDetails,
+        payload: 'payload',
+      );
+    }
+  }
 }
 
 @pragma('vm:entry-point')
@@ -219,11 +254,14 @@ void workmanagerCallback() {
           // trigger now if time is on past
           // (maybe device was off at 00:00)
           if (r.time.compareTo(TimeOfDay.now()) <= 0) {
+            final reminderDetails = Notif.getDetails(
+              soundName: 'reminder_notification',
+            );
             await plugin.show(
               r.notifId,
               r.title,
               r.content,
-              Notif.reminderDetails,
+              reminderDetails,
               payload: 'payload',
             );
             return true;
@@ -234,6 +272,9 @@ void workmanagerCallback() {
             tz.getLocation(await FlutterTimezone.getLocalTimezone()),
           );
           final now = tz.TZDateTime.now(tz.local);
+          final reminderDetails = Notif.getDetails(
+            soundName: 'reminder_notification',
+          );
           await plugin.zonedSchedule(
             r.notifId,
             r.title,
@@ -246,7 +287,7 @@ void workmanagerCallback() {
               r.time.hour,
               r.time.minute,
             ),
-            Notif.reminderDetails,
+            reminderDetails,
             androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
           );
         }

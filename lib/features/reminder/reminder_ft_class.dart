@@ -96,7 +96,7 @@ class ReminderFt extends Feature {
           time: time,
           title: title,
           body: content,
-          notificationDetails: Notif.reminderDetails,
+          soundName: 'reminder_notification',
         );
       }
     } catch (e) {

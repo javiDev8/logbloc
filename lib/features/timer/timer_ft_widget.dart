@@ -75,10 +75,11 @@ class _TimerFtWidgetState extends State<TimerFtWidget> {
         widget.dirt?.call();
 
         // Show notification when timer finishes
-        notif.triggerTimer(
+        notif.trigger(
           title: 'Timer Completed!',
           body: '"${widget.ft.title}" has finished',
           id: widget.ft.id.hashCode,
+          soundName: 'timer_notification',
         );
       }
     });
