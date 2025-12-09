@@ -48,7 +48,7 @@ List<Widget> makeModelTitle({bool? isNew}) => [
                 await warnDelete(
                   context,
                   delete: () {
-                    modelEditPool.data.delete;
+                    modelEditPool.data.delete();
                     navPop();
                     return true;
                   },
