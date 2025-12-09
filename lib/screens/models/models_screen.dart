@@ -73,21 +73,26 @@ class ModelsScreen extends StatelessWidget {
                   context: context,
                   builder: (context) => AlertDialog(
                     content: SizedBox(
-                      height: 220,
+                      height: 230,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Txt(
-                            'You have only 3 free logbooks and are already in use',
+                            'Your 3 free logbooks are already in use!',
                             s: 18,
                             w: 8,
                           ),
-                          Txt('Buy unlimited logbooks to use more'),
+                          Txt(
+                            'Unlock unlimited logbooks forever '
+                            'with a single, low-cost purchase.',
+                            s: 16,
+                            w: 6,
+                          ),
                           Row(
                             children: [
                               Expanded(
                                 child: Button(
-                                  'Buy app',
+                                  'L E T S   G O',
                                   onPressed: () {
                                     screenIndexPool.set((_) => 2);
                                     Navigator.of(context).pop();

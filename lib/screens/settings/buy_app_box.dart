@@ -25,10 +25,10 @@ class BuyAppBox extends StatelessWidget {
           builder: (context, setState) => Column(
             children: [
               if (membershipApi.currentPlan == 'free') ...[
-                Txt('You are currently limited to 3 logbooks'),
+                Txt('You are currently limited to 3 logbooks', s: 16, w: 6),
                 Txt(
-                  'Unlock unlimited logbooks with a small one-time purchase.',
-                  s: 19,
+                  'Unlock unlimited logbooks forever with a single low-cost purchase.',
+                  s: 22,
                   w: 8,
                   color: Theme.of(context).colorScheme.primary,
                 ),
