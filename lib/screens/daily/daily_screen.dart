@@ -24,7 +24,9 @@ final currentDatePool = Pool<DateTime>(initDate);
 
 UniqueKey agendaKey = UniqueKey();
 
-final agendaFilterPool = Pool<MapEntry<String, String?>>(MapEntry('all', null));
+final agendaFilterPool = Pool<MapEntry<String, String?>>(
+  MapEntry('all', null),
+);
 
 class DailyScreen extends StatelessWidget {
   DailyScreen({super.key});
@@ -49,6 +51,10 @@ class DailyScreen extends StatelessWidget {
         pool: itemsByDayPool,
         listenedEvents: ['clean-up'],
         builder: (context, allItems) {
+          List<String> opts = ['pending', 'done', 'all'];
+          if (tagsPool.data?.isNotEmpty == true) {
+            opts = ['by tag', ...opts];
+          }
           return Stack(
             children: [
               Swimmer<MapEntry<String, String?>>(
@@ -61,7 +67,7 @@ class DailyScreen extends StatelessWidget {
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: ['by tag', 'used', 'empty', 'all']
+                            children: opts
                                 .map<Widget>(
                                   (opt) => Button(
                                     opt,
@@ -84,9 +90,10 @@ class DailyScreen extends StatelessWidget {
                                       '#$tag',
                                       variant: 1,
                                       filled: filter.value == tag,
-                                      onPressed: () => agendaFilterPool.set(
-                                        (f) => MapEntry(f.key, tag),
-                                      ),
+                                      onPressed: () =>
+                                          agendaFilterPool.set(
+                                            (f) => MapEntry(f.key, tag),
+                                          ),
                                     ),
                                   )
                                   .toList(),
@@ -142,10 +149,10 @@ class DailyScreen extends StatelessWidget {
                                 switch (agendaFilterPool.data.key) {
                                   case 'all':
                                     return true;
-                                  case 'used':
-                                    return item.record != null;
-                                  case 'empty':
-                                    return item.record == null;
+                                  case 'done':
+                                    return item.record?.completeness == 1;
+                                  case 'pending':
+                                    return item.record?.completeness != 1;
                                   case 'by tag':
                                     return item.model!.tags?.contains(
                                           agendaFilterPool.data.value,
@@ -169,14 +176,17 @@ class DailyScreen extends StatelessWidget {
                                 ),
                                 child: agendaFilterPool.data.key == 'all'
                                     ? ReorderableListView(
-                                        onReorder: (oldIndex, newIndex) async {
-                                          final itemToReorder = items[oldIndex];
-                                          await itemsByDayPool.reorderItem(
-                                            strDay: dateKey,
-                                            item: itemToReorder,
-                                            index: newIndex,
-                                          );
-                                        },
+                                        onReorder:
+                                            (oldIndex, newIndex) async {
+                                              final itemToReorder =
+                                                  items[oldIndex];
+                                              await itemsByDayPool
+                                                  .reorderItem(
+                                                    strDay: dateKey,
+                                                    item: itemToReorder,
+                                                    index: newIndex,
+                                                  );
+                                            },
                                         children: items
                                             .map<Widget>(printItem)
                                             .toList(),
