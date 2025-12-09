@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:logbloc/utils/nav.dart';
 import 'package:logbloc/widgets/design/button.dart';
 
 // TODO: make a single one, more universal warn dialog
@@ -50,7 +49,6 @@ Future warnDelete(
   BuildContext context, {
   required FutureOr<bool> Function() delete,
   required String msg,
-  bool? preventPop,
 }) async => await showDialog(
   context: context,
   builder: (context) => AlertDialog(
@@ -78,9 +76,6 @@ Future warnDelete(
         onPressed: () async {
           // ignore: use_build_context_synchronously
           Navigator.of(context).pop(await delete());
-          if (preventPop != true) {
-            navPop();
-          }
         },
       ),
     ],

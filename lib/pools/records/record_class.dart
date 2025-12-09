@@ -5,7 +5,6 @@ import 'package:logbloc/features/feature_switch.dart';
 import 'package:logbloc/pools/models/model_class.dart';
 import 'package:logbloc/pools/models/models_pool.dart';
 import 'package:logbloc/utils/feedback.dart';
-import 'package:logbloc/utils/noticable_print.dart';
 
 class Rec {
   String id;
@@ -114,7 +113,6 @@ double getCompleteness({
 
     return total / (features.length - reminderFts);
   } catch (e) {
-    nPrint('fail: $e');
     return 0;
   }
 }

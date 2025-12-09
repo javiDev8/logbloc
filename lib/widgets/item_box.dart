@@ -100,22 +100,26 @@ class ItemBox extends StatelessWidget {
                                   ),
                                 ),
                         ),
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsetsGeometry.only(left: 20),
-                            child: LinearProgressIndicator(
-                              value: item.record == null
-                                  ? 0
-                                  : item.record!.completeness,
-                              color: Colors.white,
+
+                        // check that item record completeness is not NaN
+                        if (item.record?.completeness.toString() !=
+                            'NaN') ...[
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsetsGeometry.only(left: 20),
+                              child: LinearProgressIndicator(
+                                value: item.record == null
+                                    ? 0
+                                    : item.record!.completeness,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
-                        ),
-
-                        Txt(
-                          '${((item.record?.completeness ?? 0) * 100).toInt()}%',
-                          w: 6,
-                        ),
+                          Txt(
+                            '${((item.record?.completeness ?? 0) * 100).toInt()}%',
+                            w: 6,
+                          ),
+                        ],
                       ],
                     ),
                   ),

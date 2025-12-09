@@ -49,7 +49,6 @@ class ScheduleWidget extends StatelessWidget {
     remove() {
       warnDelete(
         context,
-        preventPop: true,
         delete: () {
           modelEditPool.removeSchedule(schedule.id);
           return true;

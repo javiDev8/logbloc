@@ -79,8 +79,12 @@ class ItemScreen extends StatelessWidget {
             pool: dirtItemFlagPool,
             builder: (context, dirty) => dirty
                 ? IconButton(
-                    onPressed: () async {
-                      if (await item.save()) navPop();
+                    onPressed: () {
+                      item.save();
+
+                      // for some reason pool.set method doesnt work here
+                      dirtItemFlagPool.data = false;
+                      dirtItemFlagPool.controller.sink.add(true);
                     },
                     icon: Icon(Icons.check_circle_outline),
                   )

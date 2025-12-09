@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:logbloc/apis/notifications.dart';
 import 'package:logbloc/features/feature_class.dart';
 import 'package:logbloc/pools/models/model_edit_pool.dart';
-import 'package:logbloc/utils/noticable_print.dart';
 
 class ReminderFt extends Feature {
   TimeOfDay time;
@@ -102,7 +101,7 @@ class ReminderFt extends Feature {
         );
       }
     } catch (e) {
-      nPrint('schedule error $e');
+      return false;
     }
     return true;
   }

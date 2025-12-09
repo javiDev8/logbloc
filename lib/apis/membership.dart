@@ -4,7 +4,6 @@ import 'package:internet_connection_checker_plus/internet_connection_checker_plu
 import 'package:logbloc/main.dart';
 import 'package:logbloc/pools/theme_mode_pool.dart';
 import 'package:logbloc/utils/feedback.dart';
-import 'package:logbloc/utils/noticable_print.dart';
 
 class MembershipApi {
   static const String productId = '13';
@@ -76,7 +75,6 @@ class MembershipApi {
         subscription?.cancel();
       },
       onDone: () {
-        nPrint('on done');
         if (!completer.isCompleted) {
           completer.complete(false);
         }
@@ -112,7 +110,6 @@ class MembershipApi {
         type: FeedbackType.success,
       );
     } catch (e) {
-      nPrint('$e');
       feedback(
         'purchase restore has failed! try again',
         type: FeedbackType.error,

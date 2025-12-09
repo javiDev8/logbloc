@@ -15,7 +15,6 @@ class PeriodPickerMenuButton extends StatelessWidget {
           case 'delete':
             warnDelete(
               context,
-              preventPop: true,
               delete: () {
                 modelEditPool.removeSimplePeriod(period: period);
                 return true;

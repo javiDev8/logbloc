@@ -47,7 +47,11 @@ List<Widget> makeModelTitle({bool? isNew}) => [
               try {
                 await warnDelete(
                   context,
-                  delete: modelEditPool.data.delete,
+                  delete: () {
+                    modelEditPool.data.delete;
+                    navPop();
+                    return true;
+                  },
                   msg: modelEditPool.data.recordCount > 0
                       ? '${modelEditPool.data.recordCount} records will be deleted,'
                             ' do you still want to delete the logbook "${modelEditPool.data.name}"?'
