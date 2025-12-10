@@ -93,7 +93,11 @@ class GridChart extends StatelessWidget {
             decoration: BoxDecoration(
               color: dayColor.withAlpha(
                 //max value -> 255
-                maxVal == 0 ? 0 : ((dayValue / maxVal) * 255).toInt(),
+                maxVal == 0
+                    ? 0
+                    : dayValue == 0
+                    ? 0
+                    : (((dayValue / maxVal) * 155).toInt()) + 100,
               ),
 
               borderRadius: BorderRadius.circular(10.0),
