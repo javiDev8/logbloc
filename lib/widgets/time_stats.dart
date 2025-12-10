@@ -28,7 +28,7 @@ class TimeStats extends StatelessWidget {
     return StatefulBuilder(
       builder: (context, setState) {
         chartOpts.mode = mode;
-        if (mode == 'grid') timeLapse = 'month';
+        if (mode == 'calendar') timeLapse = 'month';
         return SingleChildScrollView(
           child: Column(
             children: [
@@ -36,7 +36,7 @@ class TimeStats extends StatelessWidget {
                 padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
-                  children: ['dump', 'grid', 'chart']
+                  children: ['dump', 'calendar', 'chart']
                       .map<Widget>(
                         (p) => Button(
                           p,
@@ -55,7 +55,7 @@ class TimeStats extends StatelessWidget {
                   children: ['month', 'week']
                       .map<Widget>(
                         (p) => Button(
-                          disabled: mode == 'grid',
+                          disabled: mode == 'calendar',
                           p,
                           variant: 2,
                           filled: p == timeLapse,

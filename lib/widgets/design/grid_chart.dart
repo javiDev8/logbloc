@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logbloc/pools/theme_mode_pool.dart';
 import 'package:logbloc/utils/fmt_date.dart';
-import 'package:logbloc/widgets/design/none.dart';
 import 'package:logbloc/widgets/design/txt.dart';
 import 'package:logbloc/widgets/time_stats.dart';
 
@@ -41,8 +40,6 @@ class GridChart extends StatelessWidget {
         (rf) => strDate(rf['date'] as DateTime) == strDate(date),
       );
 
-      //final val = operate(matches, opts.operation, opts.getRecordValue);
-
       late Color dayColor;
       if (matches.isEmpty) {
         dayColor = Colors.white.withAlpha(0);
@@ -63,8 +60,26 @@ class GridChart extends StatelessWidget {
                 ? Border.all(color: seedColor, width: 4.0)
                 : null,
           ),
-          alignment: Alignment.center,
-          child: None(),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: EdgeInsetsGeometry.all(5),
+                    child: Text(
+                      date.day.toString(),
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       );
     }
