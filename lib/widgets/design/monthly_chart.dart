@@ -38,7 +38,7 @@ class MonthlyChart extends StatelessWidget {
         ).colorScheme.tertiaryContainer;
 
         return SizedBox(
-          height: 450,
+          height: 430,
           child: PageView.builder(
             controller: pageController,
             itemBuilder: (context, index) {
@@ -90,7 +90,7 @@ class MonthlyChart extends StatelessWidget {
                       Row(
                         children: [
                           Dropdown(
-                            label: Text('show'),
+                            label: Text('operation on each day'),
                             init: opts.operation,
                             onSelect: (val) =>
                                 setState(() => opts.operation = val),

@@ -71,7 +71,7 @@ class TimeStats extends StatelessWidget {
                 child: Row(
                   children: [
                     Dropdown(
-                      label: Text('unit'),
+                      label: Text('show'),
                       init: chartOpts.getRecordValue,
                       entries: showOptions.entries
                           .map(

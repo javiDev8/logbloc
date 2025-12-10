@@ -3,6 +3,7 @@ import 'package:logbloc/pools/theme_mode_pool.dart';
 import 'package:logbloc/utils/fmt_date.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:logbloc/utils/noticable_print.dart';
 import 'package:logbloc/widgets/design/dropdown.dart';
 import 'package:logbloc/widgets/design/txt.dart';
 import 'package:logbloc/widgets/dump_ft_records.dart';
@@ -35,20 +36,21 @@ class WeeklyChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool manyPerDay = false;
-    return StatefulBuilder(
-      builder: (context, setState) {
-        final recordFts = opts.recordFts;
-        final getRecordValue = opts.getRecordValue;
-        final ChartOperation operation = opts.operation;
-        final bool? integer = opts.integer;
+    final recordFts = opts.recordFts;
+    final getRecordValue = opts.getRecordValue;
+    final bool? integer = opts.integer;
 
-        return SizedBox(
-          height: 450,
-          child: PageView.builder(
-            controller: pageController,
-            onPageChanged: (index) {},
-            itemBuilder: (context, index) {
+    return SizedBox(
+      height: 430,
+      child: PageView.builder(
+        controller: pageController,
+        onPageChanged: (index) {},
+        itemBuilder: (context, index) {
+          bool manyPerDay = false;
+          return StatefulBuilder(
+            builder: (context, setState) {
+              final ChartOperation operation = opts.operation;
+
               final now = DateTime.now();
               final currentMonday = _getMondayOfWeek(now);
               final targetMonday = currentMonday.add(
@@ -66,8 +68,9 @@ class WeeklyChart extends StatelessWidget {
                       ) &&
                       recDate.isBefore(weekDayDate.add(Duration(days: 1)));
                 });
-
-                if (dayFtRecs.length > 1) manyPerDay = true;
+                if (dayFtRecs.length > 1) {
+                  manyPerDay = true;
+                }
 
                 return operate(dayFtRecs, operation, getRecordValue);
               });
@@ -85,7 +88,7 @@ class WeeklyChart extends StatelessWidget {
                       Row(
                         children: [
                           Dropdown(
-                            label: Text('show'),
+                            label: Text('operation on each day'),
                             init: opts.operation,
                             onSelect: (val) =>
                                 setState(() => opts.operation = val),
@@ -302,9 +305,9 @@ class WeeklyChart extends StatelessWidget {
                 ),
               );
             },
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
