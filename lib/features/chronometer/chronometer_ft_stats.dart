@@ -10,26 +10,18 @@ class ChronometerFtStatsWidget extends StatelessWidget {
     required this.ftRecs,
     required this.ft,
   });
+  double getElapsedTime(Map<String, dynamic> rec) {
+    return rec['elapsedTime']?.toDouble() ?? 0.0;
+  }
 
   @override
   Widget build(BuildContext context) {
-    double getElapsedTime(Map<String, dynamic> rec) {
-      return rec['elapsedTime']?.toDouble() ?? 0.0;
-    }
-
-    bool getIsRunning(Map<String, dynamic> rec) {
-      return rec['isRunning'] ?? false;
-    }
-
     return Column(
       children: [
         ftRecs.isEmpty
             ? Center(child: Text('no records'))
             : TimeStats(
-                showOptions: {
-                  'elapsed time (secs)': getElapsedTime,
-                  'was running': (rec) => getIsRunning(rec) ? 1.0 : 0.0,
-                },
+                showOptions: {'elapsed time (seconds)': getElapsedTime},
                 chartOpts: ChartOpts(
                   operation: ChartOperation.average,
                   ft: ft,

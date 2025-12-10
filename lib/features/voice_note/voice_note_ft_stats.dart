@@ -11,21 +11,20 @@ class VoiceNoteFtStatsWidget extends StatelessWidget {
     required this.ftRecs,
     required this.ft,
   });
+  double getSeconds(Map<String, dynamic> rec) {
+    return (rec['duration'] ?? 0) / 1000;
+  }
 
   @override
   Widget build(BuildContext context) {
-    double getSeconds(Map<String, dynamic> rec) {
-      return (rec['duration'] ?? 0) / 1000;
-    }
-
     return Column(
       children: [
         ftRecs.isEmpty
             ? Center(child: Txt('no records'))
             : TimeStats(
-                showOptions: {'seconds': getSeconds},
+                showOptions: {'duration (seconds)': getSeconds},
                 chartOpts: ChartOpts(
-		  mode: 'dump',
+                  mode: 'dump',
                   operation: ChartOperation.add,
                   ft: ft,
                   integer: true,

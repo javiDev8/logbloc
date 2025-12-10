@@ -1,8 +1,12 @@
 import 'package:logbloc/features/feature_class.dart';
+import 'package:logbloc/features/feature_switch.dart';
 import 'package:logbloc/pools/models/model_class.dart';
 import 'package:logbloc/pools/pools.dart';
 import 'package:logbloc/pools/records/record_class.dart';
 import 'package:logbloc/pools/records/records_pool.dart';
+import 'package:logbloc/screens/models/model_screen/feature_stats_screen.dart';
+import 'package:logbloc/utils/nav.dart';
+import 'package:logbloc/widgets/design/section_divider.dart';
 import 'package:logbloc/widgets/design/topbar_wrap.dart';
 import 'package:logbloc/widgets/design/txt.dart';
 import 'package:flutter/material.dart';
@@ -36,26 +40,50 @@ class ModelRecordsScreen extends StatelessWidget {
               a.schedule.day,
             ).compareTo(DateTime.parse(b.schedule.day)),
           );
-          return TimeStats(
-            chartOpts: ChartOpts(
-              makeTooltip: (v) => '$v%',
-              isFt: false,
-              integer: true,
-              unit: '%',
-              ft: Feature.empty('text'),
-              getRecordValue: getCompleteRate,
-              recordFts: records.map<Map<String, dynamic>>((r) {
-                final d = DateTime.parse(r.schedule.day);
-                Map<String, dynamic> sr = r.serialize();
-                sr['date'] = d;
-                return sr;
-              }).toList(),
-              operation: ChartOperation.average,
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                TimeStats(
+                  chartOpts: ChartOpts(
+                    makeTooltip: (v) => '$v%',
+                    isFt: false,
+                    integer: true,
+                    unit: '%',
+                    ft: Feature.empty('text'),
+                    getRecordValue: getCompleteRate,
+                    recordFts: records.map<Map<String, dynamic>>((r) {
+                      final d = DateTime.parse(r.schedule.day);
+                      Map<String, dynamic> sr = r.serialize();
+                      sr['date'] = d;
+                      return sr;
+                    }).toList(),
+                    operation: ChartOperation.average,
+                  ),
+                  showOptions: {
+                    'complete rate (%)': getCompleteRate,
+                    'records': (_) => 1,
+                  },
+                ),
+
+                SectionDivider(string: 'Feature records'),
+                ...model.features.values
+                    .where((f) => f.type != 'reminder')
+                    .map(
+                      (ft) => ListTile(
+                        onTap: () => navPush(
+                          screen: FeatureStatsScreen(ftKey: ft.key),
+                        ),
+                        title: Text(ft.title),
+                        leading: Icon(
+                          featureSwitch(
+                            parseType: 'icon',
+                            ftType: ft.type,
+                          ),
+                        ),
+                      ),
+                    ),
+              ],
             ),
-            showOptions: {
-              'complete rate (%)': getCompleteRate,
-              'records': (_) => 1,
-            },
           );
         },
       ),

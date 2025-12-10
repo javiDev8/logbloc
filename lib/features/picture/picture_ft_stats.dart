@@ -16,7 +16,7 @@ class PictureFtStats extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TimeStats(
-      showOptions: {'all': getAll},
+      showOptions: {'pictures': getAll},
       chartOpts: ChartOpts(
         mode: 'dump',
         operation: ChartOperation.add,

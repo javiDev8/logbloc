@@ -10,17 +10,16 @@ class TextFtStatsWidget extends StatelessWidget {
     required this.ftRecs,
     required this.ft,
   });
+  double getChars(Map<String, dynamic> rec) {
+    return rec['content']?.length.toDouble() ?? 0.0;
+  }
+
+  double getWords(Map<String, dynamic> rec) {
+    return rec['content']?.split(' ').length.toDouble() ?? 0.0;
+  }
 
   @override
   Widget build(BuildContext context) {
-    double getChars(Map<String, dynamic> rec) {
-      return rec['content']?.length.toDouble() ?? 0.0;
-    }
-
-    double getWords(Map<String, dynamic> rec) {
-      return rec['content']?.split(' ').length.toDouble() ?? 0.0;
-    }
-
     return Column(
       children: [
         ftRecs.isEmpty
@@ -32,7 +31,7 @@ class TextFtStatsWidget extends StatelessWidget {
                   ft: ft,
                   integer: true,
                   recordFts: ftRecs,
-                  getRecordValue: getChars,
+                  getRecordValue: getWords,
                   unit: 'characters',
                 ),
               ),

@@ -11,25 +11,25 @@ class TimerFtStatsWidget extends StatelessWidget {
     required this.ft,
   });
 
+  double getPassedTime(Map<String, dynamic> rec) {
+    return rec['passedTime']?.toDouble() ?? 0.0;
+  }
+
+  double getDuration(Map<String, dynamic> rec) {
+    return rec['duration']?.toDouble() ?? 0.0;
+  }
+
+  double getCompleteness(Map<String, dynamic> rec) {
+    final passed = rec['passedTime'] as int? ?? 0;
+    final duration = rec['duration'] as int? ?? 1;
+    return 100 *
+        (duration > 0
+            ? (passed >= duration ? 1.0 : passed / duration)
+            : 0.0);
+  }
+
   @override
   Widget build(BuildContext context) {
-    double getPassedTime(Map<String, dynamic> rec) {
-      return rec['passedTime']?.toDouble() ?? 0.0;
-    }
-
-    double getDuration(Map<String, dynamic> rec) {
-      return rec['duration']?.toDouble() ?? 0.0;
-    }
-
-    double getCompleteness(Map<String, dynamic> rec) {
-      final passed = rec['passedTime'] as int? ?? 0;
-      final duration = rec['duration'] as int? ?? 1;
-      return 100 *
-          (duration > 0
-              ? (passed >= duration ? 1.0 : passed / duration)
-              : 0.0);
-    }
-
     return Column(
       children: [
         ftRecs.isEmpty
@@ -37,8 +37,8 @@ class TimerFtStatsWidget extends StatelessWidget {
             : TimeStats(
                 showOptions: {
                   'completeness (%)': getCompleteness,
-                  'timer duration (secs)': getDuration,
-                  'passed time (secs)': getPassedTime,
+                  'timer duration (seconds)': getDuration,
+                  'passed time (seconds)': getPassedTime,
                 },
                 chartOpts: ChartOpts(
                   operation: ChartOperation.average,

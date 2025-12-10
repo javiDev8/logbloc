@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:logbloc/features/feature_class.dart';
-import 'package:logbloc/features/feature_switch.dart';
-import 'package:logbloc/pools/models/model_edit_pool.dart';
-import 'package:logbloc/screens/models/model_screen/feature_stats_screen.dart';
-import 'package:logbloc/utils/nav.dart';
 import 'package:logbloc/widgets/design/button.dart';
 import 'package:logbloc/widgets/design/dropdown.dart';
 import 'package:logbloc/widgets/design/monthly_chart.dart';
-import 'package:logbloc/widgets/design/section_divider.dart';
 import 'package:logbloc/widgets/design/weekly_chart.dart';
 
 class TimeStats extends StatelessWidget {
@@ -27,96 +22,78 @@ class TimeStats extends StatelessWidget {
 
     return StatefulBuilder(
       builder: (context, setState) {
-
         chartOpts.mode = mode;
         if (mode == 'calendar') timeLapse = 'month';
 
-
-        return SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: ['dump', 'calendar', 'chart']
-                      .map<Widget>(
-                        (p) => Button(
-                          p,
-                          variant: 0,
-                          filled: p == mode,
-                          onPressed: () => setState(() => mode = p),
-                        ),
-                      )
-                      .toList(),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: ['month', 'week']
-                      .map<Widget>(
-                        (p) => Button(
-                          disabled: mode == 'calendar',
-                          p,
-                          variant: 2,
-                          filled: p == timeLapse,
-                          onPressed: () => setState(() => timeLapse = p),
-                        ),
-                      )
-                      .toList(),
-                ),
-              ),
-
-              if (mode != 'dump')
-                Padding(
-                  padding: EdgeInsetsGeometry.only(
-                    top: 5,
-                    left: 10,
-                    right: 10,
-                  ),
-                  child: Row(
-                    children: [
-                      Dropdown(
-                        label: Text('unit'),
-                        init: chartOpts.getRecordValue,
-                        entries: showOptions.entries
-                            .map(
-                              (o) => DropdownMenuEntry(
-                                value: o.value,
-                                label: o.key,
-                              ),
-                            )
-                            .toList(),
-                        onSelect: (val) {
-                          setState(() => chartOpts.getRecordValue = val);
-                        },
+        return Column(
+          children: [
+            Padding(
+              padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: ['dump', 'calendar', 'chart']
+                    .map<Widget>(
+                      (p) => Button(
+                        p,
+                        variant: 0,
+                        filled: p == mode,
+                        onPressed: () => setState(() => mode = p),
                       ),
-                    ],
-                  ),
+                    )
+                    .toList(),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: ['month', 'week']
+                    .map<Widget>(
+                      (p) => Button(
+                        disabled: mode == 'calendar',
+                        p,
+                        variant: 2,
+                        filled: p == timeLapse,
+                        onPressed: () => setState(() => timeLapse = p),
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
+
+            if (mode != 'dump')
+              Padding(
+                padding: EdgeInsetsGeometry.only(
+                  top: 5,
+                  left: 10,
+                  right: 10,
                 ),
-
-              if (timeLapse == 'week')
-                WeeklyChart(opts: chartOpts)
-              else if (timeLapse == 'month')
-                MonthlyChart(opts: chartOpts),
-
-              if (!chartOpts.isFt) ...[
-                SectionDivider(string: 'Feature records'),
-                ...modelEditPool.data.features.values.map(
-                  (ft) => ListTile(
-                    onTap: () =>
-                        navPush(screen: FeatureStatsScreen(ftKey: ft.key)),
-                    title: Text(ft.title),
-                    leading: Icon(
-                      featureSwitch(parseType: 'icon', ftType: ft.type),
+                child: Row(
+                  children: [
+                    Dropdown(
+                      label: Text('unit'),
+                      init: chartOpts.getRecordValue,
+                      entries: showOptions.entries
+                          .map(
+                            (o) => DropdownMenuEntry(
+                              value: o.value,
+                              label: o.key,
+                            ),
+                          )
+                          .toList(),
+                      onSelect: (val) {
+                        setState(() => chartOpts.getRecordValue = val);
+                      },
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ],
-          ),
+              ),
+
+            if (timeLapse == 'week')
+              WeeklyChart(opts: chartOpts)
+            else if (timeLapse == 'month')
+              MonthlyChart(opts: chartOpts),
+          ],
         );
       },
     );

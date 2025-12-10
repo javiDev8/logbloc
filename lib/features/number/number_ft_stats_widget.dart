@@ -11,6 +11,10 @@ class NumberFtStatsWidget extends StatelessWidget {
     required this.ft,
   });
 
+  double getValue(Map<String, dynamic> rec) {
+    return rec['value']?.toDouble() ?? 0.0;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -19,14 +23,15 @@ class NumberFtStatsWidget extends StatelessWidget {
             ? Center(child: Text('no records'))
             : Expanded(
                 child: TimeStats(
-		  showOptions: {},
+                  showOptions: {
+                    'value${ft.unit == '' ? '' : ' (${ft.unit})'}':
+                        getValue,
+                  },
                   chartOpts: ChartOpts(
-		    operation: ChartOperation.add,
+                    operation: ChartOperation.add,
                     ft: ft,
                     recordFts: ftRecs,
-                    getRecordValue: (Map<String, dynamic> rec) {
-                      return rec['value']?.toDouble() ?? 0.0;
-                    },
+                    getRecordValue: getValue,
                     unit: ft.unit,
                   ),
                 ),
