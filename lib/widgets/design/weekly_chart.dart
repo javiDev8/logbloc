@@ -3,7 +3,6 @@ import 'package:logbloc/pools/theme_mode_pool.dart';
 import 'package:logbloc/utils/fmt_date.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:logbloc/utils/noticable_print.dart';
 import 'package:logbloc/widgets/design/dropdown.dart';
 import 'package:logbloc/widgets/design/txt.dart';
 import 'package:logbloc/widgets/dump_ft_records.dart';
