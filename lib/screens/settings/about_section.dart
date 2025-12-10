@@ -28,7 +28,7 @@ class AboutSection extends StatelessWidget {
 
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [Txt('version 1.0.2')],
+          children: [Txt('version 1.1.0')],
         ),
       ],
     );
