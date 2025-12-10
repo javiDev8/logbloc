@@ -27,8 +27,11 @@ class TimeStats extends StatelessWidget {
 
     return StatefulBuilder(
       builder: (context, setState) {
+
         chartOpts.mode = mode;
         if (mode == 'calendar') timeLapse = 'month';
+
+
         return SingleChildScrollView(
           child: Column(
             children: [
@@ -66,7 +69,7 @@ class TimeStats extends StatelessWidget {
                 ),
               ),
 
-              if (mode == 'chart')
+              if (mode != 'dump')
                 Padding(
                   padding: EdgeInsetsGeometry.only(
                     top: 5,
@@ -75,30 +78,6 @@ class TimeStats extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      //Dropdown(
-                      //  label: Text('show'),
-                      //  init: chartOpts.operation,
-                      //  onSelect: (val) =>
-                      //      setState(() => chartOpts.operation = val),
-                      //  entries: [
-                      //    DropdownMenuEntry(
-                      //      value: ChartOperation.add,
-                      //      label: 'total',
-                      //    ),
-                      //    DropdownMenuEntry(
-                      //      value: ChartOperation.average,
-                      //      label: 'average',
-                      //    ),
-                      //    DropdownMenuEntry(
-                      //      value: ChartOperation.min,
-                      //      label: 'min',
-                      //    ),
-                      //    DropdownMenuEntry(
-                      //      value: ChartOperation.max,
-                      //      label: 'max',
-                      //    ),
-                      //  ],
-                      //),
                       Dropdown(
                         label: Text('unit'),
                         init: chartOpts.getRecordValue,
@@ -204,3 +183,28 @@ class ChartOpts {
     this.getDayColor,
   });
 }
+
+//Dropdown(
+//  label: Text('show'),
+//  init: chartOpts.operation,
+//  onSelect: (val) =>
+//      setState(() => chartOpts.operation = val),
+//  entries: [
+//    DropdownMenuEntry(
+//      value: ChartOperation.add,
+//      label: 'total',
+//    ),
+//    DropdownMenuEntry(
+//      value: ChartOperation.average,
+//      label: 'average',
+//    ),
+//    DropdownMenuEntry(
+//      value: ChartOperation.min,
+//      label: 'min',
+//    ),
+//    DropdownMenuEntry(
+//      value: ChartOperation.max,
+//      label: 'max',
+//    ),
+//  ],
+//),

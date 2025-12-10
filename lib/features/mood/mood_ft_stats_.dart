@@ -7,7 +7,16 @@ class MoodFtStats extends StatelessWidget {
   final MoodFt ft;
   const MoodFtStats({super.key, required this.ftRecs, required this.ft});
 
-  double getAll(_) => 1;
+  double getAll(r) => (r['intensity'] as int).toDouble();
+
+  double Function(Map<String, dynamic>) makeMoodGet(String moodId) =>
+      (rec) {
+        if (rec['moodId'] == moodId) {
+          return (rec['intensity'] as int).toDouble();
+        } else {
+          return 0;
+        }
+      };
 
   @override
   Widget build(BuildContext context) {
@@ -16,17 +25,22 @@ class MoodFtStats extends StatelessWidget {
         ftRecs.isEmpty
             ? Center(child: Text('no records'))
             : TimeStats(
-                showOptions: {'all': getAll},
+                showOptions: {
+                  'predominant mood': getAll,
+                  'happy': makeMoodGet('happy'),
+                  'angry': makeMoodGet('angry'),
+                  'fear': makeMoodGet('fear'),
+                  'surprise': makeMoodGet('surprise'),
+                  'disgust': makeMoodGet('disgust'),
+                  'sad': makeMoodGet('sad'),
+                  'neutral': makeMoodGet('neutral'),
+                },
                 chartOpts: ChartOpts(
-                  mode: 'grid',
-                  operation: ChartOperation.add,
+                  mode: 'calendar',
+                  operation: ChartOperation.average,
                   getDayColor: (r) => r == null
                       ? null
-                      : (moods[r['moodId']]!['color'] as Color).withAlpha(
-                          ((r['intensity'] as int).toDouble() * 12.55 +
-                                  125.5)
-                              .toInt(),
-                        ),
+                      : (moods[r['moodId']]!['color'] as Color),
                   ft: ft,
                   integer: true,
                   recordFts: ftRecs,

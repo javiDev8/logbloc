@@ -15,6 +15,8 @@ class GridChart extends StatelessWidget {
   });
 
   List<Widget> _buildGridSquares(BuildContext context) {
+    final defaultColor = Theme.of(context).colorScheme.tertiaryContainer;
+
     final int leadingBlanks = firstDayOfMonth.weekday - 1;
     final int daysInMonth = DateUtils.getDaysInMonth(
       firstDayOfMonth.year,
@@ -34,51 +36,93 @@ class GridChart extends StatelessWidget {
       squares.add(const SizedBox.shrink());
     }
 
+    double maxVal = 0;
+
     for (int i = 0; i < daysInMonth; i++) {
       final date = firstDayOfMonth.add(Duration(days: i));
       final matches = opts.recordFts.where(
-        (rf) => strDate(rf['date'] as DateTime) == strDate(date),
+        (rf) =>
+            strDate(rf['date'] as DateTime) == strDate(date) &&
+            opts.getRecordValue(rf) > 0,
       );
 
+      List<Color> colors = [];
+      List<double> values = [];
+
       late Color dayColor;
+      late double dayValue;
+
       if (matches.isEmpty) {
         dayColor = Colors.white.withAlpha(0);
+        dayValue = 0;
       } else {
-        dayColor = opts.getDayColor == null
-            ? Theme.of(context).colorScheme.tertiaryContainer
-            : opts.getDayColor!(matches.first)!;
+        if (opts.getDayColor == null) {
+          dayColor = defaultColor;
+        } else {
+          for (final m in matches) {
+            final c = opts.getDayColor!(m);
+            if (c != null) {
+              colors.add(c);
+            }
+          }
+
+          // most repeated color
+          dayColor = colors.reduce(
+            (a, b) =>
+                colors.where((c) => c == a).length >=
+                    colors.where((c) => c == b).length
+                ? a
+                : b,
+          );
+        }
+
+        for (final m in matches) {
+          final v = opts.getRecordValue(m);
+          values.add(v);
+        }
+        dayValue = values.reduce((a, b) => a + b) / values.length;
+
+        if (dayValue > maxVal) maxVal = dayValue;
       }
 
       squares.add(
-        Container(
-          decoration: BoxDecoration(
-            color: dayColor,
-            borderRadius: BorderRadius.circular(10.0),
+        Tooltip(
+          triggerMode: TooltipTriggerMode.tap,
+          message: dayValue.toInt().toString(),
+          child: Container(
+            decoration: BoxDecoration(
+              color: dayColor.withAlpha(
+                //max value -> 255
+                maxVal == 0 ? 0 : ((dayValue / maxVal) * 255).toInt(),
+              ),
 
-            // if square date match today set border of primary color
-            border: strDate(DateTime.now()) == strDate(date)
-                ? Border.all(color: seedColor, width: 4.0)
-                : null,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: EdgeInsetsGeometry.all(5),
-                    child: Text(
-                      date.day.toString(),
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w800,
+              borderRadius: BorderRadius.circular(10.0),
+
+              // if square date match today set border of primary color
+              border: strDate(DateTime.now()) == strDate(date)
+                  ? Border.all(color: seedColor, width: 4.0)
+                  : null,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: EdgeInsetsGeometry.all(5),
+                      child: Text(
+                        date.day.toString(),
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       );
