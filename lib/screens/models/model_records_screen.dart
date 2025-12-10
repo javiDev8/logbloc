@@ -45,7 +45,7 @@ class ModelRecordsScreen extends StatelessWidget {
               children: [
                 TimeStats(
                   chartOpts: ChartOpts(
-                    makeTooltip: (v) => '$v%',
+                    mode: 'dump',
                     isFt: false,
                     integer: true,
                     unit: '%',

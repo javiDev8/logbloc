@@ -58,7 +58,7 @@ class ModelOverView extends StatelessWidget {
                             showNextPool.set((_) => true);
                           }
                         },
-                        round: false,
+                        round: true,
                         label: 'logbook name',
                         initialValue: modelEditPool.data.name,
                         enabled: editing,

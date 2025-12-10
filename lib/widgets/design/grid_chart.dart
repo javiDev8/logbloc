@@ -80,7 +80,18 @@ class GridChart extends StatelessWidget {
           final v = opts.getRecordValue(m);
           values.add(v);
         }
-        dayValue = values.reduce((a, b) => a + b) / values.length;
+        //dayValue = values.reduce((a, b) => a + b) / values.length;
+        dayValue = operate(
+          // in case of mood ft or any other thats uses different colors:
+          // get value only from the records of "same color"
+          matches.where(
+            (m) => opts.getDayColor == null
+                ? true
+                : dayColor == opts.getDayColor!(m),
+          ),
+          opts.operation,
+          opts.getRecordValue,
+        );
 
         if (dayValue > maxVal) maxVal = dayValue;
       }

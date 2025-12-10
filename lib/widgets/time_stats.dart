@@ -65,8 +65,8 @@ class TimeStats extends StatelessWidget {
               Padding(
                 padding: EdgeInsetsGeometry.only(
                   top: 5,
-                  left: 10,
-                  right: 10,
+                  left: 15,
+                  right: 15,
                 ),
                 child: Row(
                   children: [
@@ -160,28 +160,3 @@ class ChartOpts {
     this.getDayColor,
   });
 }
-
-//Dropdown(
-//  label: Text('show'),
-//  init: chartOpts.operation,
-//  onSelect: (val) =>
-//      setState(() => chartOpts.operation = val),
-//  entries: [
-//    DropdownMenuEntry(
-//      value: ChartOperation.add,
-//      label: 'total',
-//    ),
-//    DropdownMenuEntry(
-//      value: ChartOperation.average,
-//      label: 'average',
-//    ),
-//    DropdownMenuEntry(
-//      value: ChartOperation.min,
-//      label: 'min',
-//    ),
-//    DropdownMenuEntry(
-//      value: ChartOperation.max,
-//      label: 'max',
-//    ),
-//  ],
-//),
