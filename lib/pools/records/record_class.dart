@@ -106,9 +106,15 @@ double getCompleteness({
         recordFt: ftEntry.value,
       );
 
-      if (feature.type == 'reminder') reminderFts++;
+      if (feature.type == 'reminder') {
+        reminderFts++;
+      } else {
+        total += feature.completeness;
+      }
+    }
 
-      total += feature.completeness;
+    if ((features.length - reminderFts) == 0) {
+      return 1 / 0; //force NaN
     }
 
     return total / (features.length - reminderFts);

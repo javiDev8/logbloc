@@ -7,9 +7,7 @@ import 'package:logbloc/screens/root_screen_switch.dart';
 import 'package:logbloc/utils/color_convert.dart';
 import 'package:logbloc/utils/fmt_date.dart';
 import 'package:logbloc/utils/nav.dart';
-//import 'package:logbloc/widgets/design/exp.dart';
 import 'package:flutter/material.dart';
-import 'package:logbloc/widgets/design/txt.dart';
 
 class ItemBox extends StatelessWidget {
   final Item item;
@@ -74,11 +72,9 @@ class ItemBox extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 15,
-                    ),
+                    padding: EdgeInsets.all(20),
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Expanded(
                           child: fromRecords
@@ -101,9 +97,15 @@ class ItemBox extends StatelessWidget {
                                 ),
                         ),
 
+                        if (item.record?.completeness == 1)
+                          Icon(Icons.check)
+                        else
                         // check that item record completeness is not NaN
                         if (item.record?.completeness.toString() !=
-                            'NaN') ...[
+                                'NaN' &&
+                            !(item.model!.features.length == 1 &&
+                                item.model!.features.values.first.type ==
+                                    'reminder')) ...[
                           Expanded(
                             child: Padding(
                               padding: EdgeInsetsGeometry.only(left: 20),
@@ -115,9 +117,9 @@ class ItemBox extends StatelessWidget {
                               ),
                             ),
                           ),
-                          Txt(
+                          Text(
                             '${((item.record?.completeness ?? 0) * 100).toInt()}%',
-                            w: 6,
+                            style: TextStyle(fontWeight: FontWeight.w800),
                           ),
                         ],
                       ],
