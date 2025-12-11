@@ -82,6 +82,8 @@ class ModelRecordsScreen extends StatelessWidget {
                         ),
                       ),
                     ),
+
+                SizedBox(height: 10),
               ],
             ),
           );

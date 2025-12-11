@@ -37,8 +37,8 @@ class TimerFtStatsWidget extends StatelessWidget {
             : TimeStats(
                 showOptions: {
                   'completeness (%)': getCompleteness,
-                  'timer duration (seconds)': getDuration,
-                  'passed time (seconds)': getPassedTime,
+                  'elapsed time (seconds)': getPassedTime,
+                  'total timer duration (seconds)': getDuration,
                 },
                 chartOpts: ChartOpts(
                   operation: ChartOperation.average,

@@ -7,11 +7,13 @@ import 'package:logbloc/pools/models/models_pool.dart';
 import 'package:logbloc/pools/pools.dart';
 import 'package:logbloc/screens/models/model_records_screen.dart';
 import 'package:logbloc/screens/models/model_screen/add_tag_button.dart';
+import 'package:logbloc/utils/fmt_date.dart';
 import 'package:logbloc/utils/nav.dart';
 import 'package:logbloc/widgets/design/act_button.dart';
 import 'package:logbloc/widgets/design/button.dart';
 import 'package:logbloc/widgets/design/exp.dart';
 import 'package:logbloc/widgets/design/none.dart';
+import 'package:logbloc/widgets/design/section_divider.dart';
 import 'package:logbloc/widgets/design/txt.dart';
 import 'package:logbloc/widgets/design/txt_field.dart';
 
@@ -71,66 +73,6 @@ class ModelOverView extends StatelessWidget {
                         },
                         icon: Icon(Icons.edit),
                       ),
-
-                    // palette button
-                    LazySwimmer<Model>(
-                      pool: modelEditPool,
-                      listenedEvents: ['color'],
-                      builder: (context, model) => IconButton(
-                        onPressed: () async {
-                          Color newColor = Colors.red;
-                          await showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              content: SizedBox(
-                                height: 140,
-                                child: Column(
-                                  children: [
-                                    ColorPicker(
-                                      pickerColor: newColor,
-                                      pickerAreaBorderRadius:
-                                          BorderRadius.all(
-                                            Radius.circular(20),
-                                          ),
-                                      pickerAreaHeightPercent: 0.0,
-                                      paletteType: PaletteType.hsl,
-                                      enableAlpha: false,
-                                      labelTypes: [],
-                                      onColorChanged: (c) => newColor = c,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Button(
-                                          'cancel',
-                                          filled: false,
-                                          onPressed: () =>
-                                              Navigator.of(context).pop(),
-                                        ),
-                                        Expanded(
-                                          child: Button(
-                                            'save',
-                                            lead:
-                                                Icons.check_circle_outline,
-                                            onPressed: () {
-                                              modelEditPool.setColor(
-                                                newColor,
-                                              );
-                                              modelEditPool.dirt(true);
-                                              Navigator.of(context).pop();
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                        icon: Icon(Icons.palette, color: model.color),
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -140,71 +82,182 @@ class ModelOverView extends StatelessWidget {
                 listenedEvents: ['tags'],
                 builder: (context, model) => StatefulBuilder(
                   builder: (context, setSate) {
-                    return Wrap(
-                      crossAxisAlignment: WrapCrossAlignment.center,
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        AddTagButton(),
-                        if (modelEditPool.data.tags?.isNotEmpty ==
-                            true) ...[
-                          ...(model.tags ?? []).map<Widget>(
-                            (t) => editingTags
-                                ? Container(
-                                    margin: EdgeInsets.all(5),
-                                    padding: EdgeInsets.all(1),
-                                    decoration: BoxDecoration(
-                                      //color: t.color,
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(20),
-                                      ),
-                                    ),
-                                    child: Wrap(
-                                      crossAxisAlignment:
-                                          WrapCrossAlignment.center,
-                                      alignment: WrapAlignment.spaceEvenly,
+                        Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: [
+                            AddTagButton(),
+                            if (modelEditPool.data.tags?.isNotEmpty ==
+                                true) ...[
+                              if (!editingTags)
+                                IconButton(
+                                  onPressed: () =>
+                                      setSate(() => editingTags = true),
+                                  icon: Icon(Icons.edit),
+                                ),
+
+                              ...(model.tags ?? []).map<Widget>(
+                                (t) => editingTags
+                                    ? Container(
+                                        margin: EdgeInsets.all(1),
+                                        padding: EdgeInsets.all(1),
+                                        decoration: BoxDecoration(
+                                          //color: t.color,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(20),
+                                          ),
+                                        ),
+                                        child: Wrap(
+                                          crossAxisAlignment:
+                                              WrapCrossAlignment.center,
+                                          alignment:
+                                              WrapAlignment.spaceEvenly,
+                                          children: [
+                                            IconButton(
+                                              padding:
+                                                  EdgeInsetsGeometry.zero,
+                                              onPressed: () =>
+                                                  modelEditPool.removeTag(
+                                                    t,
+                                                  ),
+                                              icon: Icon(
+                                                Icons.close,
+                                                size: 17,
+                                              ),
+                                            ),
+                                            Text(
+                                              '#$t',
+                                              style: TextStyle(
+                                                fontWeight:
+                                                    FontWeight.w800,
+                                              ),
+                                            ),
+                                            SizedBox(width: 20),
+                                          ],
+                                        ),
+                                      )
+                                    : Txt('#$t', w: 7),
+                              ),
+                            ] else
+                              Txt('add tags'),
+                          ],
+                        ),
+
+                        // palette button
+                        LazySwimmer<Model>(
+                          pool: modelEditPool,
+                          listenedEvents: ['color'],
+                          builder: (context, model) => IconButton(
+                            onPressed: () async {
+                              Color newColor = Colors.red;
+                              await showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  content: SizedBox(
+                                    height: 140,
+                                    child: Column(
                                       children: [
-                                        IconButton(
-                                          onPressed: () =>
-                                              modelEditPool.removeTag(t),
-                                          icon: Icon(
-                                            Icons.close,
-                                            size: 17,
-                                          ),
+                                        ColorPicker(
+                                          pickerColor: newColor,
+                                          pickerAreaBorderRadius:
+                                              BorderRadius.all(
+                                                Radius.circular(20),
+                                              ),
+                                          pickerAreaHeightPercent: 0.0,
+                                          paletteType: PaletteType.hsl,
+                                          enableAlpha: false,
+                                          labelTypes: [],
+                                          onColorChanged: (c) =>
+                                              newColor = c,
                                         ),
-                                        Text(
-                                          '#$t',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w800,
-                                          ),
+                                        Row(
+                                          children: [
+                                            Button(
+                                              'cancel',
+                                              filled: false,
+                                              onPressed: () =>
+                                                  Navigator.of(
+                                                    context,
+                                                  ).pop(),
+                                            ),
+                                            Expanded(
+                                              child: Button(
+                                                'save',
+                                                lead: Icons
+                                                    .check_circle_outline,
+                                                onPressed: () {
+                                                  modelEditPool.setColor(
+                                                    newColor,
+                                                  );
+                                                  modelEditPool.dirt(true);
+                                                  Navigator.of(
+                                                    context,
+                                                  ).pop();
+                                                },
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        SizedBox(width: 20),
                                       ],
                                     ),
-                                  )
-                                : Txt('#$t', w: 7),
+                                  ),
+                                ),
+                              );
+                            },
+                            icon: Icon(Icons.palette, color: model.color),
                           ),
-
-                          if (!editingTags)
-                            IconButton(
-                              onPressed: () =>
-                                  setSate(() => editingTags = true),
-                              icon: Icon(Icons.edit),
-                            ),
-                        ] else
-                          Txt('add tags'),
+                        ),
                       ],
                     );
                   },
                 ),
               ),
 
-              if (!isNew)
+              if (!isNew) ...[
+                SectionDivider(string: 'Details'),
+
+                Padding(
+                  padding: EdgeInsetsGeometry.only(
+                    left: 20,
+                    right: 20,
+                    bottom: 40,
+                  ),
+                  child: Column(
+                    children:
+                        ({
+                              'created at': hdate(
+                                modelEditPool.data.createdAt,
+                              ),
+                              'records': modelEditPool.data.recordCount
+                                  .toString(),
+                              'features': modelEditPool
+                                  .data
+                                  .features
+                                  .length
+                                  .toString(),
+                            }.entries.map<Widget>(
+                              (detailEntry) => Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Txt(detailEntry.key),
+                                  Txt(detailEntry.value, w: 8),
+                                ],
+                              ),
+                            ))
+                            .toList(),
+                  ),
+                ),
+
                 Row(
                   children: [
                     Exp(),
                     Swimmer<Map<String, Model>?>(
                       pool: modelsPool,
                       builder: (context, allModels) => Button(
-                        'records ',
+                        'Insight records ',
                         lead: Icons.bar_chart,
                         onPressed: () => navPush(
                           screen: ModelRecordsScreen(
@@ -215,6 +268,7 @@ class ModelOverView extends StatelessWidget {
                     ),
                   ],
                 ),
+              ],
             ],
           ),
         ),

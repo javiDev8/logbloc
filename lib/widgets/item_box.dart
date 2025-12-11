@@ -108,7 +108,9 @@ class ItemBox extends StatelessWidget {
                                     'reminder')) ...[
                           Expanded(
                             child: Padding(
-                              padding: EdgeInsetsGeometry.only(left: 20),
+                              padding: EdgeInsetsGeometry.symmetric(
+                                horizontal: 10,
+                              ),
                               child: LinearProgressIndicator(
                                 value: item.record == null
                                     ? 0

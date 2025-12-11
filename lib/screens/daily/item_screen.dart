@@ -157,11 +157,22 @@ class ItemScreen extends StatelessWidget {
         key: itemFormKey,
         child: ListView(
           children: [
-            Txt(
-              hdate(DateTime.parse(item.date)),
-              s: 17,
-              w: 6,
-              a: TextAlign.center,
+            Padding(
+              padding: EdgeInsetsGeometry.symmetric(
+                horizontal: 20,
+                vertical: 10,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Txt(
+                    hdate(DateTime.parse(item.date)),
+                    s: 24,
+                    w: 8,
+                    a: TextAlign.center,
+                  ),
+                ],
+              ),
             ),
 
             // pinned
