@@ -13,11 +13,6 @@ class FeatureLock {
 
   FeatureLock({required this.model, required this.record});
 }
-//delete: () {
-//  modelEditPool.removeFeature(feature.key);
-//  modelEditPool.dirt(true);
-//  return true;
-//},
 
 class FeatureWidget extends StatelessWidget {
   final FeatureLock lock;
@@ -112,7 +107,7 @@ class FeatureWidget extends StatelessWidget {
                                       modelEditPool.dirt(true);
                                       return true;
                                     },
-                                    msg: 'Remove feature?',
+                                    msg: 'Delete feature?',
                                   );
                                 },
                                 icon: Icon(Icons.close),

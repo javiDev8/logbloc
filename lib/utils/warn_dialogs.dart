@@ -2,8 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:logbloc/widgets/design/button.dart';
 
-// TODO: make a single one, more universal warn dialog
-
 FutureOr<bool?> warnUnsavedChanges(
   BuildContext context, {
   required FutureOr<bool> Function() save,
