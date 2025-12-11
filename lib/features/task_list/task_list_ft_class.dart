@@ -83,8 +83,8 @@ class TaskListFt extends Feature {
     );
     return TaskListFt.fromBareFt(
       Feature.fromEntry(entry),
-      done: recordFt != null
-          ? (recordFt['done'] as bool)
+      done: recordFt?['done'] != null
+          ? (recordFt!['done'] as bool)
           : entry.value['done'] ??
                 (tasks.isEmpty
                     ? false
