@@ -32,9 +32,9 @@ class _ChronometerFtWidgetState extends State<ChronometerFtWidget> {
   @override
   void initState() {
     super.initState();
-    currentElapsed = widget.ft.elapsedTime;
-    if (widget.ft.isRunning && widget.ft.startTime != null) {
-      _startTimer();
+    currentElapsed = widget.ft.duration;
+    if (widget.ft.isRunning && widget.ft.start != null) {
+      _startr();
     }
   }
 
@@ -44,12 +44,12 @@ class _ChronometerFtWidgetState extends State<ChronometerFtWidget> {
     super.dispose();
   }
 
-  void _startTimer() {
-    if (widget.ft.isRunning && widget.ft.startTime != null) {
+  void _startr() {
+    if (widget.ft.isRunning && widget.ft.start != null) {
       timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
         final now = DateTime.now();
         final totalElapsed =
-            widget.ft.elapsedTime + now.difference(widget.ft.startTime!);
+            widget.ft.duration + now.difference(widget.ft.start!);
 
         setState(() {
           currentElapsed = totalElapsed;
@@ -61,21 +61,21 @@ class _ChronometerFtWidgetState extends State<ChronometerFtWidget> {
   void startChronometer() {
     setState(() {
       widget.ft.isRunning = true;
-      widget.ft.startTime = DateTime.now();
+      widget.ft.start = DateTime.now();
     });
-    _startTimer();
+    _startr();
     widget.dirt?.call();
   }
 
   void pauseChronometer() {
     timer?.cancel();
-    if (widget.ft.startTime != null) {
-      final elapsed = DateTime.now().difference(widget.ft.startTime!);
+    if (widget.ft.start != null) {
+      final elapsed = DateTime.now().difference(widget.ft.start!);
       setState(() {
-        widget.ft.elapsedTime = widget.ft.elapsedTime + elapsed;
-        currentElapsed = widget.ft.elapsedTime;
+        widget.ft.duration = widget.ft.duration + elapsed;
+        currentElapsed = widget.ft.duration;
         widget.ft.isRunning = false;
-        widget.ft.startTime = null;
+        widget.ft.start = null;
       });
     }
     widget.dirt?.call();
@@ -84,10 +84,10 @@ class _ChronometerFtWidgetState extends State<ChronometerFtWidget> {
   void resetChronometer() {
     timer?.cancel();
     setState(() {
-      widget.ft.elapsedTime = Duration.zero;
+      widget.ft.duration = Duration.zero;
       currentElapsed = Duration.zero;
       widget.ft.isRunning = false;
-      widget.ft.startTime = null;
+      widget.ft.start = null;
     });
     widget.dirt?.call();
   }

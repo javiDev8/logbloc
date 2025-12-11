@@ -7,6 +7,7 @@ import 'package:logbloc/pools/tags/tags_pool.dart';
 import 'package:logbloc/screens/models/model_screen/schedules_view/simple_pickers/simple_biweek_picker.dart';
 import 'package:logbloc/utils/feedback.dart';
 import 'package:logbloc/utils/fmt_date.dart';
+import 'package:logbloc/utils/noticable_print.dart';
 
 // the num represents a priority for sorting, being
 // 0 the default, so "0" means is there, null means is not
@@ -52,18 +53,19 @@ class Model {
     recordCount: map['record-count'] as int,
     simplePeriods: map['simple-periods'],
 
-    createdAt: DateTime.fromMillisecondsSinceEpoch(
-      map['created-at'] as int,
-    ),
+    createdAt: DateTime.fromMillisecondsSinceEpoch(map['created-at'] as int),
 
     features: Map.fromEntries(
       (map['features'] as Map<String, dynamic>).entries
-          .map<MapEntry<String, Feature>>(
-            (ftEntry) => MapEntry(
-              ftEntry.key,
-              featureSwitch(parseType: 'class', entry: ftEntry) as Feature,
-            ),
-          ),
+          .map<MapEntry<String, Feature>>((ftEntry) {
+            try {
+              final Feature f =
+                  featureSwitch(parseType: 'class', entry: ftEntry) as Feature;
+              return MapEntry(ftEntry.key, f);
+	    } catch (e) {
+	      rethrow;
+	    }
+          }),
     ),
 
     schedules: map['schedules'] == null
@@ -80,13 +82,10 @@ class Model {
     cancelledSchedules: map['cancelled-schedules'] == null
         ? null
         : Map.fromEntries(
-            (map['cancelled-schedules'] as Map<String, dynamic>).entries
-                .map(
-                  (e) => MapEntry(
-                    e.key,
-                    List<String>.from(e.value as List<dynamic>),
-                  ),
-                ),
+            (map['cancelled-schedules'] as Map<String, dynamic>).entries.map(
+              (e) =>
+                  MapEntry(e.key, List<String>.from(e.value as List<dynamic>)),
+            ),
           ),
 
     color: (map['color'] as int?) == null
@@ -100,10 +99,9 @@ class Model {
 
     tags: map['tags'] == null || tagsPool.data == null
         ? null
-        : List.from(map['tags'] as List<dynamic>)
-              .where((t) => tagsPool.data!.contains(t))
-              .cast<String>()
-              .toList(),
+        : List.from(
+            map['tags'] as List<dynamic>,
+          ).where((t) => tagsPool.data!.contains(t)).cast<String>().toList(),
   );
 
   Map<String, dynamic> serialize() => {
@@ -112,13 +110,10 @@ class Model {
     'record-count': recordCount,
     'created-at': createdAt.millisecondsSinceEpoch,
     if (simplePeriods?.isNotEmpty == true) 'simple-periods': simplePeriods,
-    'features': features.map(
-      (key, value) => MapEntry(key, value.serialize()),
-    ),
+    'features': features.map((key, value) => MapEntry(key, value.serialize())),
     if (schedules != null)
       'schedules': schedules!.map((k, s) => MapEntry(k, s.serialize())),
-    if (cancelledSchedules != null)
-      'cancelled-schedules': cancelledSchedules,
+    if (cancelledSchedules != null) 'cancelled-schedules': cancelledSchedules,
     if (color != null) 'color': color!.toARGB32(),
     if (tags != null) 'tags': tags!,
   };
@@ -171,10 +166,7 @@ class Model {
     schedules![sch.id] = sch;
   }
 
-  cancelSchedule({
-    required String date,
-    required Schedule schedule,
-  }) async {
+  cancelSchedule({required String date, required Schedule schedule}) async {
     if (schedule.period == null) {
       schedules!.remove(schedule.id);
     } else {
@@ -294,20 +286,19 @@ class Schedule {
     skipMatch: map['skip-match'],
   );
 
-  factory Schedule.empty({required String day, String? period}) =>
-      Schedule(
-        day: day,
-        period: period,
-        id: UniqueKey().toString(),
-        place: DateTime.now().millisecondsSinceEpoch.toDouble(),
-        startDate: DateTime.now().copyWith(
-          hour: 0,
-          minute: 0,
-          second: 0,
-          millisecond: 0,
-          microsecond: 0,
-        ),
-      );
+  factory Schedule.empty({required String day, String? period}) => Schedule(
+    day: day,
+    period: period,
+    id: UniqueKey().toString(),
+    place: DateTime.now().millisecondsSinceEpoch.toDouble(),
+    startDate: DateTime.now().copyWith(
+      hour: 0,
+      minute: 0,
+      second: 0,
+      millisecond: 0,
+      microsecond: 0,
+    ),
+  );
 
   serialize() => {
     'id': id,

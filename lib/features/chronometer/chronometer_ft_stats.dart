@@ -11,7 +11,7 @@ class ChronometerFtStatsWidget extends StatelessWidget {
     required this.ft,
   });
   double getElapsedTime(Map<String, dynamic> rec) {
-    return rec['elapsedTime']?.toDouble() ?? 0.0;
+    return rec['duration']?.toDouble() ?? 0.0;
   }
 
   @override
