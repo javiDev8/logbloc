@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:logbloc/features/feature_widget.dart';
 import 'package:logbloc/features/timer/timer_ft_class.dart';
+import 'package:logbloc/utils/feedback.dart';
 import 'package:logbloc/utils/fmt_duration.dart';
 import 'package:logbloc/widgets/design/button.dart';
 import 'package:logbloc/widgets/design/exp.dart';
@@ -155,7 +156,17 @@ class _TimerFtWidgetState extends State<TimerFtWidget> {
                   fmtDuration(widget.ft.duration, exact: false),
                   lead: Icons.timer,
                   filled: false,
-                  onPressed: () => setState(() => pickerIsToggled = true),
+                  onPressed: () async {
+                    if ((await notif.requestNotifPermission()) != true) {
+                      feedback(
+                        'this feature needs permission to send notifications,'
+                        ' give it from your device settings',
+                        type: FeedbackType.error,
+                      );
+                      return;
+                    }
+                    setState(() => pickerIsToggled = true);
+                  },
                 ),
             ],
           ),
@@ -203,7 +214,7 @@ class _TimerFtWidgetState extends State<TimerFtWidget> {
                           onPressed: () => pauseTimer(),
                           icon: Icon(Icons.pause),
                         )
-                      else
+                      else if (widget.ft.passedTime != widget.ft.duration)
                         IconButton(
                           onPressed: () async {
                             startTimer();
