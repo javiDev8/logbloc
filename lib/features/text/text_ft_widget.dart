@@ -36,7 +36,7 @@ class TextFtWidget extends StatelessWidget {
           ),
         if (!lock.record)
           TxtField(
-	    borderless: true,
+            borderless: true,
             maxLines: null,
             initialValue: ft.content,
             label: 'content',
@@ -53,9 +53,14 @@ class TextFtWidget extends StatelessWidget {
             lock.model &&
             !detailed &&
             ft.content.isNotEmpty)
-          Txt(
-            ft.content,
-            p: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Txt(
+                ft.content,
+                p: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+              ),
+            ],
           ),
       ],
     );

@@ -111,7 +111,8 @@ class WeeklyChart extends StatelessWidget {
                             ],
                           ),
                         ],
-                      ),
+                      ) else 
+			SizedBox(height: 58,),
 
                     Padding(
                       padding: EdgeInsets.all(10),

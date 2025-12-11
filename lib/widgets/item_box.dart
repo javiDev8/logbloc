@@ -72,7 +72,7 @@ class ItemBox extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: EdgeInsets.all(20),
+                    padding: EdgeInsets.all(22),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -91,7 +91,7 @@ class ItemBox extends StatelessWidget {
                                     item.model!.name,
                                     style: TextStyle(
                                       fontWeight: FontWeight.w800,
-                                      fontSize: 17,
+                                      fontSize: 20,
                                     ),
                                   ),
                                 ),

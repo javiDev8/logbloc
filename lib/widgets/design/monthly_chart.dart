@@ -114,7 +114,10 @@ class MonthlyChart extends StatelessWidget {
                             ],
                           ),
                         ],
-                      ),
+                      )
+                    else
+                      SizedBox(height: 58),
+
                     Padding(
                       padding: const EdgeInsets.all(10),
                       child: Row(
