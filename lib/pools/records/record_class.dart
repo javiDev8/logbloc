@@ -113,10 +113,6 @@ double getCompleteness({
       }
     }
 
-    if ((features.length - reminderFts) == 0) {
-      return 1 / 0; //force NaN
-    }
-
     return total / (features.length - reminderFts);
   } catch (e) {
     return 0;

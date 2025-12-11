@@ -8,6 +8,7 @@ import 'package:logbloc/pools/records/records_pool.dart';
 import 'package:flutter/material.dart';
 import 'package:logbloc/screens/daily/item_screen.dart';
 import 'package:logbloc/utils/feedback.dart';
+import 'package:logbloc/utils/nav.dart';
 
 class Item {
   final String id;
@@ -91,7 +92,10 @@ class Item {
           id: UniqueKey().toString(),
           modelId: modelId,
           features: serializedFeatures,
-	  completeness: getCompleteness(modelId: modelId, features: serializedFeatures)
+          completeness: getCompleteness(
+            modelId: modelId,
+            features: serializedFeatures,
+          ),
         ).save();
       } else {
         recordsPool.data![recordId]!.features = serializedFeatures;
@@ -100,6 +104,11 @@ class Item {
 
       feedback('${model!.name} record saved', type: FeedbackType.success);
       stagedFeatures = {};
+
+      // app will present a bug if this is removed!
+      // to solve, maybe item pool is needed
+      navPop();
+
       return true;
     } catch (e) {
       throw Exception('Item save failed: $e');

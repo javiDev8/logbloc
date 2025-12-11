@@ -8,6 +8,7 @@ import 'package:logbloc/utils/color_convert.dart';
 import 'package:logbloc/utils/fmt_date.dart';
 import 'package:logbloc/utils/nav.dart';
 import 'package:flutter/material.dart';
+import 'package:logbloc/utils/noticable_print.dart';
 
 class ItemBox extends StatelessWidget {
   final Item item;
@@ -40,6 +41,8 @@ class ItemBox extends StatelessWidget {
         pinnedFts.isNotEmpty ||
         unpinnedFts.length > 5 ||
         item.model!.name.length > 15;
+
+    //nPrint('on item box, item sch	')
 
     return Expanded(
       child: Container(
