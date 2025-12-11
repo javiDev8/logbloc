@@ -282,6 +282,8 @@ class _VoiceNotePlayerState extends State<VoiceNotePlayer> {
                                   recordingDuration,
                                   exact: false,
                                 ),
+                                s: 20,
+                                w: 6,
                               )
                             else ...[
                               Txt(

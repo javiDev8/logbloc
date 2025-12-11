@@ -15,6 +15,7 @@ class TextFtStatsWidget extends StatelessWidget {
   }
 
   double getWords(Map<String, dynamic> rec) {
+    if (rec['content'] == '') return 0;
     return rec['content']?.split(' ').length.toDouble() ?? 0.0;
   }
 

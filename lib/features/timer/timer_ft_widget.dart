@@ -225,7 +225,7 @@ class _TimerFtWidgetState extends State<TimerFtWidget> {
                       Txt(
                         fmtDuration(remainingTime, exact: false),
                         s: 20,
-                        w: 6, // bold weight
+                        w: 6,
                       ),
 
                       Expanded(

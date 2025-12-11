@@ -56,10 +56,9 @@ class TextFtWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Txt(
+              Expanded(child: Txt(
                 ft.content,
-                p: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-              ),
+              )),
             ],
           ),
       ],
