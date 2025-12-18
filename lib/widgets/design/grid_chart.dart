@@ -56,7 +56,7 @@ class GridChart extends StatelessWidget {
         dayColor = Colors.white.withAlpha(0);
         dayValue = 0;
       } else {
-        if (opts.getDayColor == null) {
+        if (opts.getDayColor?.call(matches.first) == null) {
           dayColor = defaultColor;
         } else {
           for (final m in matches) {
@@ -85,7 +85,7 @@ class GridChart extends StatelessWidget {
           // in case of mood ft or any other thats uses different colors:
           // get value only from the records of "same color"
           matches.where(
-            (m) => opts.getDayColor == null
+            (m) => opts.getDayColor?.call(m) == null
                 ? true
                 : dayColor == opts.getDayColor!(m),
           ),

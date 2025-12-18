@@ -48,7 +48,7 @@ class ModelRecordsScreen extends StatelessWidget {
                   chartOpts: ChartOpts(
                     mode: 'calendar',
                     getDayColor: (_) => model.color != null
-                        ? enThemeColor(model.color!, context)
+                        ? enThemeColor(model.color!)
                         : null,
                     isFt: false,
                     integer: true,
