@@ -96,7 +96,8 @@ class AddFtButton extends StatelessWidget {
           showDragHandle: true,
           context: context,
           builder: (context) => SizedBox(
-            height: availableFtTypes.length * 50 + 100,
+            //height: availableFtTypes.length * 50 + 100,
+            height: double.infinity,
             child: Padding(
               padding: EdgeInsets.all(10),
               child: Center(

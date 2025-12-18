@@ -57,7 +57,7 @@ class AddScheduleButton extends StatelessWidget {
           isDismissible: false,
           context: context,
           builder: (context) => SizedBox(
-            height: 350,
+            height: double.infinity,
             child: Padding(
               padding: EdgeInsets.all(10),
               child: ListView(
