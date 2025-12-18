@@ -58,9 +58,9 @@ class Model {
               final Feature f =
                   featureSwitch(parseType: 'class', entry: ftEntry) as Feature;
               return MapEntry(ftEntry.key, f);
-	    } catch (e) {
-	      rethrow;
-	    }
+            } catch (e) {
+              rethrow;
+            }
           }),
     ),
 
@@ -202,7 +202,8 @@ class Model {
             break;
 
           case 'year':
-            date.year.toString();
+            day =
+                '${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
             break;
         }
 

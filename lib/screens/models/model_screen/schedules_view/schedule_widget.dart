@@ -42,6 +42,9 @@ class ScheduleWidget extends StatelessWidget {
       case 'month':
         day = schedule.day;
         break;
+      case 'year':
+        day = hdateYear(schedule.day);
+        break;
     }
 
     final editing = modelEditPool.editingSchs.contains(schedule.id);
@@ -81,9 +84,7 @@ class ScheduleWidget extends StatelessWidget {
                     }
                     modelEditPool.controller.sink.add('schedules');
                   },
-                  icon: Icon(
-                    editing ? Icons.expand_less : Icons.expand_more,
-                  ),
+                  icon: Icon(editing ? Icons.expand_less : Icons.expand_more),
                 ),
               ],
             ),
@@ -151,9 +152,7 @@ class ScheduleWidget extends StatelessWidget {
                       ],
                     ),
                   if (schedule.includedFts != null)
-                    ...modelEditPool.data.features.values.map<Widget>((
-                      ft,
-                    ) {
+                    ...modelEditPool.data.features.values.map<Widget>((ft) {
                       return Row(
                         children: [
                           StatefulBuilder(
@@ -164,16 +163,12 @@ class ScheduleWidget extends StatelessWidget {
                               onChanged: (val) {
                                 modelEditPool.dirt(true);
                                 if (val == true &&
-                                    schedule.includedFts?.contains(
-                                          ft.key,
-                                        ) !=
+                                    schedule.includedFts?.contains(ft.key) !=
                                         true) {
                                   schedule.includedFts ??= [];
                                   schedule.includedFts!.add(ft.key);
                                 } else if (val == false &&
-                                    schedule.includedFts?.contains(
-                                          ft.key,
-                                        ) ==
+                                    schedule.includedFts?.contains(ft.key) ==
                                         true) {
                                   schedule.includedFts!.removeWhere(
                                     (ftKey) => ftKey == ft.key,
@@ -184,10 +179,7 @@ class ScheduleWidget extends StatelessWidget {
                             ),
                           ),
                           Icon(
-                            featureSwitch(
-                              parseType: 'icon',
-                              ftType: ft.type,
-                            ),
+                            featureSwitch(parseType: 'icon', ftType: ft.type),
                           ),
                           Txt(ft.title, w: 7),
                         ],

@@ -4,6 +4,7 @@ import 'package:logbloc/pools/models/model_edit_pool.dart';
 import 'package:logbloc/screens/models/model_screen/schedules_view/simple_pickers/simple_biweek_picker.dart';
 import 'package:logbloc/screens/models/model_screen/schedules_view/simple_pickers/simple_monthday_picker.dart';
 import 'package:logbloc/screens/models/model_screen/schedules_view/simple_pickers/simple_weekday_picker.dart';
+import 'package:logbloc/screens/models/model_screen/schedules_view/simple_pickers/simple_yearday_picker.dart';
 import 'package:logbloc/utils/feedback.dart';
 import 'package:logbloc/utils/fmt_date.dart';
 import 'package:logbloc/utils/nav.dart';
@@ -108,13 +109,18 @@ class AddScheduleButton extends StatelessWidget {
                       .map<Widget>(
                         (ppe) => ListTile(
                           title: Text(ppe.key),
-                          onTap: deserialSchs[ppe.key]?.isNotEmpty == true
+
+                          onTap:
+                              ppe.key == 'year' ||
+                                  deserialSchs[ppe.key]?.isNotEmpty == true
                               ? () => ppe.value.picker(context)
                               : () {
                                   modelEditPool.setSchedulePeriod(
                                     period: ppe.key,
+
                                     simple: true,
                                   );
+
                                   Navigator.of(context).pop();
                                 },
                         ),
@@ -127,6 +133,12 @@ class AddScheduleButton extends StatelessWidget {
       },
     );
   }
+}
+
+bool isValidDay(int month, int day) {
+  if (month == 2) return day <= 29;
+  if ([4, 6, 9, 11].contains(month)) return day <= 30;
+  return true;
 }
 
 class PeriodPicker {
@@ -241,5 +253,113 @@ final periodPickers = {
       Navigator.of(context).pop();
     },
     simplePicker: (ms) => SimpleMonthdayPicker(schedules: ms?.toList()),
+  ),
+
+  'year': PeriodPicker(
+    picker: (BuildContext context) async {
+      int? selectedMonth;
+      int? selectedDay;
+      await showDialog(
+        context: context,
+        builder: (context) => StatefulBuilder(
+          builder: (context, setState) => AlertDialog(
+            title: Text('Pick yearly date'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Month'),
+                Wrap(
+                  spacing: 4,
+                  runSpacing: 4,
+                  children: List.generate(12, (i) => i + 1)
+                      .map(
+                        (m) => SizedBox(
+                          width: 70,
+                          height: 36,
+                          child: TextButton(
+                            onPressed: () =>
+                                setState(() => selectedMonth = m),
+                            style: TextButton.styleFrom(
+                              backgroundColor: selectedMonth == m
+                                  ? Theme.of(context).colorScheme.primary
+                                  : null,
+                              foregroundColor: selectedMonth == m
+                                  ? Theme.of(context).colorScheme.onPrimary
+                                  : null,
+                            ),
+                            child: Text(
+                              months[m],
+                              style: TextStyle(fontSize: 12),
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
+                SizedBox(height: 20),
+                Text('Day'),
+                Wrap(
+                  spacing: 2,
+                  runSpacing: 2,
+                  children: List.generate(31, (i) => i + 1)
+                      .map(
+                        (d) => SizedBox(
+                          width: 32,
+                          height: 32,
+                          child: TextButton(
+                            onPressed:
+                                selectedMonth == null ||
+                                    !isValidDay(selectedMonth!, d)
+                                ? null
+                                : () => setState(() => selectedDay = d),
+                            style: TextButton.styleFrom(
+                              backgroundColor: selectedDay == d
+                                  ? Theme.of(context).colorScheme.primary
+                                  : null,
+                              foregroundColor: selectedDay == d
+                                  ? Theme.of(context).colorScheme.onPrimary
+                                  : null,
+                              padding: EdgeInsets.zero,
+                              minimumSize: Size(32, 32),
+                            ),
+                            child: Text(
+                              d.toString(),
+                              style: TextStyle(fontSize: 12),
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: selectedMonth != null && selectedDay != null
+                    ? () {
+                        final dayStr =
+                            '${selectedMonth!.toString().padLeft(2, '0')}-${selectedDay!.toString().padLeft(2, '0')}';
+                        final schedule = Schedule.empty(
+                          period: 'year',
+                          day: dayStr,
+                        );
+                        modelEditPool.addSchedule(schedule);
+                        Navigator.of(context).pop();
+                      }
+                    : null,
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        ),
+      );
+      // ignore: use_build_context_synchronously
+      Navigator.of(context).pop();
+    },
+    simplePicker: (ys) => SimpleYeardayPicker(schedules: ys?.toList()),
   ),
 };

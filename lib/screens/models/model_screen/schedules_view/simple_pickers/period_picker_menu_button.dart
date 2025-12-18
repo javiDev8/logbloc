@@ -27,34 +27,32 @@ class PeriodPickerMenuButton extends StatelessWidget {
       options: [
         MenuOption(
           value: 'delete',
-          widget: ListTile(
-            title: Text('delete'),
-            leading: Icon(Icons.delete),
-          ),
+          widget: ListTile(title: Text('delete'), leading: Icon(Icons.delete)),
         ),
-        MenuOption(
-          value: 'turn advanced',
-          widget: Wrap(
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              Text('advanced'),
-              StatefulBuilder(
-                builder: (context, setState) => Switch(
-                  value:
-                      modelEditPool.data.simplePeriods?.contains(period) !=
-                      true,
-                  onChanged: (val) {
-                    modelEditPool.setSchedulePeriod(
-                      period: period,
-                      simple: !val,
-                    );
-                    setState(() => {});
-                  },
+        if (period != 'year')
+          MenuOption(
+            value: 'turn advanced',
+            widget: Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                Text('advanced'),
+                StatefulBuilder(
+                  builder: (context, setState) => Switch(
+                    value:
+                        modelEditPool.data.simplePeriods?.contains(period) !=
+                        true,
+                    onChanged: (val) {
+                      modelEditPool.setSchedulePeriod(
+                        period: period,
+                        simple: !val,
+                      );
+                      setState(() => {});
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
       ],
     );
   }

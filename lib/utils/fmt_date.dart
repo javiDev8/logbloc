@@ -34,6 +34,13 @@ String hdate(DateTime date) {
   return '$dayOfMonth $month $year';
 }
 
+String hdateYear(String mmdd) {
+  final parts = mmdd.split('-');
+  final month = int.parse(parts[0]);
+  final day = int.parse(parts[1]);
+  return '${day.toString().padLeft(2, '0')} ${months[month]}';
+}
+
 String fmtTime(TimeOfDay time) {
   final String hourStr = time.hour.toString().padLeft(2, '0');
   final String minuteStr = time.minute.toString().padLeft(2, '0');
@@ -62,9 +69,7 @@ TimeOfDay timeFromString(String timeOfDayString) {
     final int hour = int.parse(parts[0]);
     final int minute = int.parse(parts[1]);
     if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
-      throw FormatException(
-        'Hour or minute out of valid range: $hour:$minute',
-      );
+      throw FormatException('Hour or minute out of valid range: $hour:$minute');
     }
     return TimeOfDay(hour: hour, minute: minute);
   } on FormatException catch (e) {
