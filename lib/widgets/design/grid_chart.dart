@@ -15,7 +15,7 @@ class GridChart extends StatelessWidget {
   });
 
   List<Widget> _buildGridSquares(BuildContext context) {
-    final defaultColor = Theme.of(context).colorScheme.tertiaryContainer;
+    final defaultColor = detaTheme.colorScheme.tertiaryContainer;
 
     final int leadingBlanks = firstDayOfMonth.weekday - 1;
     final int daysInMonth = DateUtils.getDaysInMonth(
@@ -104,9 +104,7 @@ class GridChart extends StatelessWidget {
             decoration: BoxDecoration(
               color: dayColor.withAlpha(
                 //max value -> 255
-                maxVal == 0
-                    ? 0
-                    : dayValue == 0
+                     dayValue == 0
                     ? 0
                     : (((dayValue / maxVal) * 155).toInt()) + 100,
               ),

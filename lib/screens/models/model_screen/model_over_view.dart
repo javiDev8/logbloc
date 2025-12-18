@@ -13,6 +13,7 @@ import 'package:logbloc/utils/nav.dart';
 import 'package:logbloc/widgets/design/act_button.dart';
 import 'package:logbloc/widgets/design/button.dart';
 import 'package:logbloc/widgets/design/exp.dart';
+import 'package:logbloc/widgets/design/mini_overview_grid.dart';
 import 'package:logbloc/widgets/design/none.dart';
 import 'package:logbloc/widgets/design/section_divider.dart';
 import 'package:logbloc/widgets/design/txt.dart';
@@ -228,7 +229,7 @@ class ModelOverView extends StatelessWidget {
                   padding: EdgeInsetsGeometry.only(
                     left: 20,
                     right: 20,
-                    bottom: 40,
+                    bottom: 10,
                   ),
                   child: Column(
                     children:
@@ -257,13 +258,16 @@ class ModelOverView extends StatelessWidget {
                   ),
                 ),
 
+		SectionDivider(string: 'Records',),
+                MiniOverviewGrid(modelId: modelEditPool.data.id),
+
                 Row(
                   children: [
                     Exp(),
                     Swimmer<Map<String, Model>?>(
                       pool: modelsPool,
                       builder: (context, allModels) => Button(
-                        'Insight records ',
+                        'Records Insight',
                         lead: Icons.bar_chart,
                         onPressed: () => navPush(
                           screen: ModelRecordsScreen(
