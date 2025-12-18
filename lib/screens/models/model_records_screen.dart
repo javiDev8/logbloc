@@ -5,7 +5,6 @@ import 'package:logbloc/pools/pools.dart';
 import 'package:logbloc/pools/records/record_class.dart';
 import 'package:logbloc/pools/records/records_pool.dart';
 import 'package:logbloc/screens/models/model_screen/feature_stats_screen.dart';
-import 'package:logbloc/utils/color_convert.dart';
 import 'package:logbloc/utils/nav.dart';
 import 'package:logbloc/widgets/design/section_divider.dart';
 import 'package:logbloc/widgets/design/topbar_wrap.dart';
@@ -47,9 +46,7 @@ class ModelRecordsScreen extends StatelessWidget {
                 TimeStats(
                   chartOpts: ChartOpts(
                     mode: 'calendar',
-                    getDayColor: (_) => model.color != null
-                        ? enThemeColor(model.color!)
-                        : null,
+                    getDayColor: (_) => model.color,
                     isFt: false,
                     integer: true,
                     unit: '%',

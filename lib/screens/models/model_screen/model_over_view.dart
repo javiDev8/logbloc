@@ -7,7 +7,6 @@ import 'package:logbloc/pools/models/models_pool.dart';
 import 'package:logbloc/pools/pools.dart';
 import 'package:logbloc/screens/models/model_records_screen.dart';
 import 'package:logbloc/screens/models/model_screen/add_tag_button.dart';
-import 'package:logbloc/utils/color_convert.dart';
 import 'package:logbloc/utils/fmt_date.dart';
 import 'package:logbloc/utils/nav.dart';
 import 'package:logbloc/widgets/design/act_button.dart';
@@ -208,12 +207,7 @@ class ModelOverView extends StatelessWidget {
                                 ),
                               );
                             },
-                            icon: Icon(
-                              Icons.palette,
-                              color: model.color == null
-                                  ? null
-                                  : enThemeColor(model.color!),
-                            ),
+                            icon: Icon(Icons.palette, color: model.color),
                           ),
                         ),
                       ],
@@ -258,7 +252,7 @@ class ModelOverView extends StatelessWidget {
                   ),
                 ),
 
-		SectionDivider(string: 'Records',),
+                SectionDivider(string: 'Records'),
                 MiniOverviewGrid(modelId: modelEditPool.data.id),
 
                 Row(
