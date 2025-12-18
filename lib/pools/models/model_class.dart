@@ -7,10 +7,6 @@ import 'package:logbloc/pools/tags/tags_pool.dart';
 import 'package:logbloc/screens/models/model_screen/schedules_view/simple_pickers/simple_biweek_picker.dart';
 import 'package:logbloc/utils/feedback.dart';
 import 'package:logbloc/utils/fmt_date.dart';
-import 'package:logbloc/utils/noticable_print.dart';
-
-// the num represents a priority for sorting, being
-// 0 the default, so "0" means is there, null means is not
 
 typedef Features = Map<String, Feature>;
 

@@ -33,9 +33,9 @@ class MonthlyChart extends StatelessWidget {
 
         final dump = opts.mode == 'dump';
 
-        final defaultColor = Theme.of(
-          context,
-        ).colorScheme.tertiaryContainer;
+        final color =
+            opts.getDayColor?.call({}) ??
+            detaTheme.colorScheme.tertiaryContainer;
 
         return SizedBox(
           height: 430,
@@ -181,7 +181,7 @@ class MonthlyChart extends StatelessWidget {
                                   getDotPainter: (_, _, _, _) =>
                                       FlDotCirclePainter(
                                         radius: 5,
-                                        color: defaultColor,
+                                        color: color,
                                       ),
                                 ),
                                 spots: List.generate(daysInMonth, (index) {
@@ -194,7 +194,7 @@ class MonthlyChart extends StatelessWidget {
                                     monthData[index]!,
                                   );
                                 }),
-                                color: defaultColor,
+                                color: color,
                                 barWidth: 3,
                                 isStrokeCapRound: true,
                               ),
