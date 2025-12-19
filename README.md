@@ -161,12 +161,3 @@ Key dependencies include:
 - `workmanager`: Background tasks
 
 For full list, see `pubspec.yaml`.
-
-## Version
-
-Current version: 1.1.3+33
-
-## License
-
-[Add license information if available]</content>
-<parameter name="filePath">README.md

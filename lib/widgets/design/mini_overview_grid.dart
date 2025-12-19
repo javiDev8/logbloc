@@ -48,9 +48,9 @@ class MiniOverviewGrid extends StatelessWidget {
         double maxVal = 0;
 
         // First pass to find maxVal
-        for (int week = 0; week < 13; week++) {
+        for (int week = 0; week < 21; week++) {
           final monday = currentMonday.subtract(
-            Duration(days: (12 - week) * 7),
+            Duration(days: (20 - week) * 7),
           );
           for (int day = 0; day < 7; day++) {
             final date = monday.add(Duration(days: day));
@@ -71,9 +71,9 @@ class MiniOverviewGrid extends StatelessWidget {
         final List<Widget> squares = [];
 
         for (int day = 0; day < 7; day++) {
-          for (int week = 0; week < 13; week++) {
+          for (int week = 0; week < 21; week++) {
             final monday = currentMonday.subtract(
-              Duration(days: (12 - week) * 7),
+              Duration(days: (20 - week) * 7),
             );
             final date = monday.add(Duration(days: day));
             final matches = recordFts.where(
@@ -108,17 +108,14 @@ class MiniOverviewGrid extends StatelessWidget {
 
         return SizedBox(
           height: 150,
-	  width: 300,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 5, bottom: 10, left: 120),
-            child: GridView.count(
-              crossAxisCount: 13,
-              mainAxisSpacing: 4.0,
-              crossAxisSpacing: 4.0,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              children: squares,
-            ),
+          //width: 4000,
+          child: GridView.count(
+            crossAxisCount: 21,
+            mainAxisSpacing: 4.0,
+            crossAxisSpacing: 4.0,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            children: squares,
           ),
         );
       },

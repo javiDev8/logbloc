@@ -11,7 +11,6 @@ import 'package:logbloc/utils/fmt_date.dart';
 import 'package:logbloc/utils/nav.dart';
 import 'package:logbloc/widgets/design/act_button.dart';
 import 'package:logbloc/widgets/design/button.dart';
-import 'package:logbloc/widgets/design/exp.dart';
 import 'package:logbloc/widgets/design/mini_overview_grid.dart';
 import 'package:logbloc/widgets/design/none.dart';
 import 'package:logbloc/widgets/design/section_divider.dart';
@@ -254,14 +253,13 @@ class ModelOverView extends StatelessWidget {
 
                 SectionDivider(string: 'Records'),
                 MiniOverviewGrid(modelId: modelEditPool.data.id),
-
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Exp(),
                     Swimmer<Map<String, Model>?>(
                       pool: modelsPool,
                       builder: (context, allModels) => Button(
-                        'Records Insight',
+                        'Insight',
                         lead: Icons.bar_chart,
                         onPressed: () => navPush(
                           screen: ModelRecordsScreen(

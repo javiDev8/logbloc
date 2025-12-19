@@ -36,7 +36,7 @@ class MoodFtStats extends StatelessWidget {
                   'neutral': makeMoodGet('neutral'),
                 },
                 chartOpts: ChartOpts(
-                  mode: 'calendar',
+                  mode: 'grid',
                   operation: ChartOperation.average,
                   getDayColor: (r) => r == null
                       ? null

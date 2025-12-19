@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logbloc/pools/theme_mode_pool.dart';
 import 'package:logbloc/utils/fmt_date.dart';
-import 'package:logbloc/widgets/design/txt.dart';
 import 'package:logbloc/widgets/time_stats.dart';
 
 class GridChart extends StatelessWidget {
@@ -24,13 +23,13 @@ class GridChart extends StatelessWidget {
     );
     final List<Widget> squares = [];
 
-    // add week days labels
-    const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    for (final day in weekDays) {
-      squares.add(
-        Container(alignment: Alignment.center, child: Txt(w: 6, day)),
-      );
-    }
+    //// add week days labels
+    //const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    //for (final day in weekDays) {
+    //  squares.add(
+    //    Container(alignment: Alignment.center, child: Text(day)),
+    //  );
+    //}
 
     for (int i = 0; i < leadingBlanks; i++) {
       squares.add(const SizedBox.shrink());
@@ -99,42 +98,22 @@ class GridChart extends StatelessWidget {
       squares.add(
         Tooltip(
           triggerMode: TooltipTriggerMode.tap,
-          message: dayValue.toInt().toString(),
+          message: '${hdate(date)} | ${dayValue.toInt().toString()}',
           child: Container(
             decoration: BoxDecoration(
               color: dayColor.withAlpha(
                 //max value -> 255
-                     dayValue == 0
+                dayValue == 0
                     ? 0
                     : (((dayValue / maxVal) * 155).toInt()) + 100,
               ),
 
-              borderRadius: BorderRadius.circular(10.0),
+              borderRadius: BorderRadius.circular(30),
 
               // if square date match today set border of primary color
               border: strDate(DateTime.now()) == strDate(date)
                   ? Border.all(color: seedColor, width: 4.0)
                   : null,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Padding(
-                      padding: EdgeInsetsGeometry.all(5),
-                      child: Text(
-                        date.day.toString(),
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
             ),
           ),
         ),
@@ -157,9 +136,8 @@ class GridChart extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: GridView.count(
         crossAxisCount: 7,
-        mainAxisSpacing: 4.0,
-        crossAxisSpacing: 4.0,
-        childAspectRatio: 1.0,
+        mainAxisSpacing: 5,
+        crossAxisSpacing: 5,
         children: _buildGridSquares(context),
       ),
     );

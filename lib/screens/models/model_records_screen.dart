@@ -45,7 +45,7 @@ class ModelRecordsScreen extends StatelessWidget {
               children: [
                 TimeStats(
                   chartOpts: ChartOpts(
-                    mode: 'calendar',
+                    mode: 'grid',
                     getDayColor: (_) => model.color,
                     isFt: false,
                     integer: true,

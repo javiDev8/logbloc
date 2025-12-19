@@ -4,6 +4,7 @@ import 'package:logbloc/widgets/design/button.dart';
 import 'package:logbloc/widgets/design/dropdown.dart';
 import 'package:logbloc/widgets/design/monthly_chart.dart';
 import 'package:logbloc/widgets/design/weekly_chart.dart';
+import 'package:logbloc/widgets/design/yearly_chart.dart';
 
 class TimeStats extends StatelessWidget {
   final ChartOpts chartOpts;
@@ -23,7 +24,9 @@ class TimeStats extends StatelessWidget {
     return StatefulBuilder(
       builder: (context, setState) {
         chartOpts.mode = mode;
-        if (mode == 'calendar') timeLapse = 'month';
+	if (mode == 'grid' && timeLapse == 'week') {
+	  timeLapse = 'month';
+	}
 
         return Column(
           children: [
@@ -31,7 +34,7 @@ class TimeStats extends StatelessWidget {
               padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
-                children: ['dump', 'calendar', 'chart']
+                children: ['dump', 'grid', 'chart']
                     .map<Widget>(
                       (p) => Button(
                         p,
@@ -47,10 +50,10 @@ class TimeStats extends StatelessWidget {
               padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
-                children: ['month', 'week']
+                children: ['year', 'month', 'week']
                     .map<Widget>(
                       (p) => Button(
-                        disabled: mode == 'calendar',
+                        disabled: mode == 'grid' && p == 'week',
                         p,
                         variant: 2,
                         filled: p == timeLapse,
@@ -92,7 +95,9 @@ class TimeStats extends StatelessWidget {
             if (timeLapse == 'week')
               WeeklyChart(opts: chartOpts)
             else if (timeLapse == 'month')
-              MonthlyChart(opts: chartOpts),
+              MonthlyChart(opts: chartOpts)
+            else if (timeLapse == 'year')
+              YearlyChart(opts: chartOpts),
           ],
         );
       },
