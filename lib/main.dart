@@ -9,11 +9,14 @@ import 'package:logbloc/pools/theme_mode_pool.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:logbloc/screens/welcome/welcome_screen.dart';
 import 'package:logbloc/utils/app_review_manager.dart';
-import 'package:logbloc/widgets/crash_screen.dart';
+import 'package:logbloc/utils/tour_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:logbloc/widgets/crash_screen.dart';
 import 'package:logbloc/pools/pools.dart';
 import 'package:logbloc/screens/root_screen_switch.dart';
 import 'package:logbloc/widgets/navbar.dart';
+import 'package:logbloc/utils/tour_overlay.dart';
+import 'package:logbloc/pools/tour_step_pool.dart';
 import 'package:flutter/material.dart';
 
 final sharedPrefs = SharedPreferencesAsync();
@@ -62,7 +65,7 @@ class Logbloc extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     FlutterLocalization.instance.init(
-      mapLocales: [const MapLocale('en', Tr.en), const MapLocale('es', Tr.es)],
+      mapLocales: [const MapLocale('en', Tr.en)],
       initLanguageCode: 'en',
     );
 
@@ -90,9 +93,31 @@ class Logbloc extends StatelessWidget {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
                       AppReviewManager.checkAndRequestReview(context);
                     });
-                    return Scaffold(
-                      body: RootScreenSwitch(key: UniqueKey()),
-                      bottomNavigationBar: Navbar(),
+                    return Stack(
+                      children: [
+                        Scaffold(
+                          body: RootScreenSwitch(key: UniqueKey()),
+                          bottomNavigationBar: Navbar(),
+                        ),
+                        Swimmer<int>(
+                          pool: tourStepPool,
+                          builder: (context, step) {
+                            if (step == 0) {
+                              return TourOverlay(
+                                step: TourStep.swipe,
+                                onNext: () {
+                                  tourStepPool.nextStep();
+                                },
+                                onSkip: () {
+                                  TourManager.markTourCompleted();
+                                  tourStepPool.endTour();
+                                },
+                              );
+                            }
+                            return const SizedBox.shrink();
+                          },
+                        ),
+                      ],
                     );
                   },
                 )

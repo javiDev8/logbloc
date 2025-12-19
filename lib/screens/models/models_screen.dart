@@ -15,6 +15,8 @@ import 'package:logbloc/widgets/design/section_divider.dart';
 import 'package:logbloc/widgets/design/topbar_wrap.dart';
 import 'package:logbloc/widgets/design/txt.dart';
 
+final GlobalKey addModelButtonKey = GlobalKey();
+
 class ModelsScreen extends StatelessWidget {
   const ModelsScreen({super.key});
 
@@ -23,10 +25,7 @@ class ModelsScreen extends StatelessWidget {
     return Scaffold(
       appBar: wrapBar(
         children: [
-          Padding(
-            padding: EdgeInsetsGeometry.all(10),
-            child: TrText(Tr.models),
-          ),
+          Padding(padding: EdgeInsets.all(10), child: TrText(Tr.models)),
         ],
         backable: false,
       ),
@@ -65,6 +64,7 @@ class ModelsScreen extends StatelessWidget {
           ),
 
           ActButton(
+            key: addModelButtonKey,
             icon: Icon(MdiIcons.notebookPlusOutline, size: 30),
             onPressed: () async {
               if (membershipApi.currentPlan == 'free' &&
