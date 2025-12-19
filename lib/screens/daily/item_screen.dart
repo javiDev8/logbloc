@@ -64,15 +64,12 @@ class ItemScreen extends StatelessWidget {
         backable: true,
         onBack: () async {
           if (!dirtItemFlagPool.data) return true;
-          final res = await warnUnsavedChanges(
-            context,
-            save: globalItem!.save,
-          );
+          final res = await warnUnsavedChanges(context, save: globalItem!.save);
           if (res == true) dirtItemFlagPool.data = false;
           return res ?? false;
         },
         children: [
-          SizedBox(width: 200, child: Txt(item.model!.name)),
+          Txt(item.model!.name),
           Exp(),
 
           Swimmer<bool>(
@@ -119,8 +116,7 @@ class ItemScreen extends StatelessWidget {
                       if (res) navPop();
                       return res;
                     },
-                    msg:
-                        'Are you sure you want this record to be deleted?',
+                    msg: 'Are you sure you want this record to be deleted?',
                   );
                   break;
               }

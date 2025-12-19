@@ -21,10 +21,7 @@ class ModelRecordsScreen extends StatelessWidget {
     double getCompleteRate(sr) => Rec.fromMap(sr).completeness * 100;
 
     return Scaffold(
-      appBar: wrapBar(
-        backable: true,
-        children: [Txt('${model.name} records')],
-      ),
+      appBar: wrapBar(backable: true, children: [Txt('${model.name} records')]),
       body: Swimmer<Map<String, Rec>?>(
         pool: recordsPool,
         builder: (context, recs) {
@@ -71,15 +68,11 @@ class ModelRecordsScreen extends StatelessWidget {
                     .where((f) => f.type != 'reminder')
                     .map(
                       (ft) => ListTile(
-                        onTap: () => navPush(
-                          screen: FeatureStatsScreen(ftKey: ft.key),
-                        ),
+                        onTap: () =>
+                            navPush(screen: FeatureStatsScreen(ftKey: ft.key)),
                         title: Text(ft.title),
                         leading: Icon(
-                          featureSwitch(
-                            parseType: 'icon',
-                            ftType: ft.type,
-                          ),
+                          featureSwitch(parseType: 'icon', ftType: ft.type),
                         ),
                       ),
                     ),

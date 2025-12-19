@@ -11,13 +11,10 @@ import 'package:logbloc/widgets/design/none.dart';
 import 'package:logbloc/widgets/design/txt.dart';
 
 List<Widget> makeModelTitle({bool? isNew}) => [
-  SizedBox(
-    width: 200,
-    child: LazySwimmer<Model>(
-      pool: modelEditPool,
-      listenedEvents: ['name'],
-      builder: (context, model) => Txt(model.name),
-    ),
+  LazySwimmer<Model>(
+    pool: modelEditPool,
+    listenedEvents: ['name'],
+    builder: (context, model) => Txt(model.name),
   ),
   Exp(),
   LazySwimmer<Model>(

@@ -15,7 +15,7 @@ import 'package:logbloc/utils/tour_manager.dart';
 import 'package:logbloc/widgets/design/act_button.dart';
 import 'package:logbloc/widgets/design/button.dart';
 import 'package:logbloc/widgets/design/pretty_date.dart';
-import 'package:logbloc/widgets/design/topbar_wrap.dart';
+
 import 'package:logbloc/widgets/design/txt.dart';
 import 'package:logbloc/widgets/item_box.dart';
 import 'package:flutter/material.dart';
@@ -27,9 +27,7 @@ final currentDatePool = Pool<DateTime>(initDate);
 
 UniqueKey agendaKey = UniqueKey();
 
-final agendaFilterPool = Pool<MapEntry<String, String?>>(
-  MapEntry('all', null),
-);
+final agendaFilterPool = Pool<MapEntry<String, String?>>(MapEntry('all', null));
 
 class DailyScreen extends StatelessWidget {
   DailyScreen({super.key});
@@ -55,16 +53,11 @@ class DailyScreen extends StatelessWidget {
           });
         }
         return Scaffold(
-          appBar: wrapBar(
-            backable: false,
-            children: [
-              Expanded(
-                child: Swimmer<DateTime>(
-                  pool: currentDatePool,
-                  builder: (context, date) => PrettyDate(date: date),
-                ),
-              ),
-            ],
+          appBar: AppBar(
+            title: Swimmer<DateTime>(
+              pool: currentDatePool,
+              builder: (context, date) => PrettyDate(date: date),
+            ),
           ),
           body: LazySwimmer(
             pool: itemsByDayPool,
@@ -85,19 +78,16 @@ class DailyScreen extends StatelessWidget {
                           child: Column(
                             children: [
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: opts
                                     .map<Widget>(
                                       (opt) => Button(
                                         opt,
                                         variant: 1,
                                         filled: filter.key == opt,
-                                        onPressed: () =>
-                                            agendaFilterPool.set(
-                                              (f) =>
-                                                  MapEntry(opt, f.value),
-                                            ),
+                                        onPressed: () => agendaFilterPool.set(
+                                          (f) => MapEntry(opt, f.value),
+                                        ),
                                       ),
                                     )
                                     .toList(),
@@ -112,11 +102,9 @@ class DailyScreen extends StatelessWidget {
                                           '#$tag',
                                           variant: 1,
                                           filled: filter.value == tag,
-                                          onPressed: () =>
-                                              agendaFilterPool.set(
-                                                (f) =>
-                                                    MapEntry(f.key, tag),
-                                              ),
+                                          onPressed: () => agendaFilterPool.set(
+                                            (f) => MapEntry(f.key, tag),
+                                          ),
                                         ),
                                       )
                                       .toList(),
@@ -131,9 +119,7 @@ class DailyScreen extends StatelessWidget {
                             onPageChanged: (currentPageIndex) {
                               currentDatePool.set(
                                 (_) => initDate.add(
-                                  Duration(
-                                    days: currentPageIndex - initPage,
-                                  ),
+                                  Duration(days: currentPageIndex - initPage),
                                 ),
                               );
                             },
@@ -148,8 +134,7 @@ class DailyScreen extends StatelessWidget {
                                 key: UniqueKey(),
                                 pool: dayReloadPool,
                                 builder: (context, e) {
-                                  final items =
-                                      itemsByDayPool.data[dateKey];
+                                  final items = itemsByDayPool.data[dateKey];
 
                                   if (items == null) {
                                     itemsByDayPool.retrieve(dateKey);
@@ -162,9 +147,7 @@ class DailyScreen extends StatelessWidget {
                                     );
                                   }
                                   if (items.isEmpty) {
-                                    return Center(
-                                      child: Text('no entries'),
-                                    );
+                                    return Center(child: Text('no entries'));
                                   }
 
                                   items.sort(
@@ -173,18 +156,14 @@ class DailyScreen extends StatelessWidget {
                                     ),
                                   );
 
-                                  final filteredItems = items.where((
-                                    item,
-                                  ) {
+                                  final filteredItems = items.where((item) {
                                     switch (agendaFilterPool.data.key) {
                                       case 'all':
                                         return true;
                                       case 'done':
-                                        return item.record?.completeness ==
-                                            1;
+                                        return item.record?.completeness == 1;
                                       case 'pending':
-                                        return item.record?.completeness !=
-                                            1;
+                                        return item.record?.completeness != 1;
                                       case 'by tag':
                                         return item.model!.tags?.contains(
                                               agendaFilterPool.data.value,
@@ -198,10 +177,7 @@ class DailyScreen extends StatelessWidget {
                                   Widget printItem(item) => Row(
                                     key: Key(item.id),
                                     children: [
-                                      ItemBox(
-                                        key: UniqueKey(),
-                                        item: item,
-                                      ),
+                                      ItemBox(key: UniqueKey(), item: item),
                                     ],
                                   );
 
@@ -209,21 +185,16 @@ class DailyScreen extends StatelessWidget {
                                     padding: EdgeInsetsGeometry.symmetric(
                                       horizontal: 7,
                                     ),
-                                    child:
-                                        agendaFilterPool.data.key == 'all'
+                                    child: agendaFilterPool.data.key == 'all'
                                         ? ReorderableListView(
                                             onReorder:
-                                                (
-                                                  oldIndex,
-                                                  newIndex,
-                                                ) async {
+                                                (oldIndex, newIndex) async {
                                                   final itemToReorder =
                                                       items[oldIndex];
                                                   await itemsByDayPool
                                                       .reorderItem(
                                                         strDay: dateKey,
-                                                        item:
-                                                            itemToReorder,
+                                                        item: itemToReorder,
                                                         index: newIndex,
                                                       );
                                                 },
@@ -287,9 +258,7 @@ class DailyScreen extends StatelessWidget {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
-                                        Txt(
-                                          'You dont have any logbooks yet',
-                                        ),
+                                        Txt('You dont have any logbooks yet'),
                                         Button(
                                           'Create your first logbook',
                                           onPressed: () {

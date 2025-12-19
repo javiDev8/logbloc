@@ -137,6 +137,10 @@ Hive-based persistence with transaction support for data integrity.
 - Implement proper navigation with root screen system
 
 ## Testing
+check Lsp:
+```bash
+dart analyze lib
+```
 
 Run tests:
 ```bash
@@ -149,15 +153,3 @@ flutter test
 2. Use meaningful commit messages
 3. Test changes thoroughly
 4. Update documentation as needed
-
-## Dependencies
-
-Key dependencies include:
-- `hive_ce`: Local database
-- `flutter_local_notifications`: Push notifications
-- `fl_chart`: Data visualization
-- `shared_preferences`: Simple key-value storage
-- `in_app_purchase`: Monetization
-- `workmanager`: Background tasks
-
-For full list, see `pubspec.yaml`.

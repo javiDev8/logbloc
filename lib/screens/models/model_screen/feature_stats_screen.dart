@@ -20,7 +20,7 @@ class FeatureStatsScreen extends StatelessWidget {
         backable: true,
         children: [
           Icon(featureSwitch(parseType: 'icon', ftType: mFt.type)),
-          SizedBox(width: 250, child: Txt('${model.name} / ${mFt.title}')),
+          Txt('${model.name} / ${mFt.title}'),
         ],
       ),
       body: Swimmer<Map<String, Rec>?>(
@@ -44,11 +44,7 @@ class FeatureStatsScreen extends StatelessWidget {
               )
               .toList();
           ftRecs.sort((a, b) => a['date'].compareTo(b['date']));
-          return featureSwitch(
-            parseType: 'stats',
-            ft: mFt,
-            ftRecs: ftRecs,
-          );
+          return featureSwitch(parseType: 'stats', ft: mFt, ftRecs: ftRecs);
         },
       ),
     );
