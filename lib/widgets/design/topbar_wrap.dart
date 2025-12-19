@@ -14,7 +14,12 @@ PreferredSize wrapBar({
   return PreferredSize(
     preferredSize: Size.fromHeight(80),
     child: Padding(
-      padding: EdgeInsetsGeometry.only(left: 15, right: 15, top: 50, bottom: 5),
+      padding: EdgeInsetsGeometry.only(
+        left: 15,
+        right: 15,
+        top: 50,
+        bottom: 5,
+      ),
       child: Swimmer<ThemeMode>(
         pool: themeModePool,
         builder: (context, theme) {
@@ -31,11 +36,14 @@ PreferredSize wrapBar({
           return DefaultTextStyle(
             style: TextStyle(
               fontSize: 20,
-              color: theme == ThemeMode.light ? Colors.black : Colors.white,
+              color: theme == ThemeMode.light
+                  ? Colors.black
+                  : Colors.white,
             ),
 
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 if (backable)
                   IconButton(
@@ -49,11 +57,14 @@ PreferredSize wrapBar({
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     controller: controller,
-                    child: IntrinsicWidth(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: children,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(minWidth: 300),
+                      child: IntrinsicWidth(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: children,
+                        ),
                       ),
                     ),
                   ),

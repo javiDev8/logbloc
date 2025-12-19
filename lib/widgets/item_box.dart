@@ -8,6 +8,7 @@ import 'package:logbloc/utils/color_convert.dart';
 import 'package:logbloc/utils/fmt_date.dart';
 import 'package:logbloc/utils/nav.dart';
 import 'package:flutter/material.dart';
+import 'package:logbloc/widgets/design/exp.dart';
 
 class ItemBox extends StatelessWidget {
   final Item item;
@@ -35,11 +36,6 @@ class ItemBox extends StatelessWidget {
         unpinnedFts.add(ft);
       }
     }
-
-    final splitHead =
-        pinnedFts.isNotEmpty ||
-        unpinnedFts.length > 5 ||
-        item.model!.name.length > 15;
 
     return Expanded(
       child: Container(
@@ -76,30 +72,29 @@ class ItemBox extends StatelessWidget {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Expanded(
-                          child: fromRecords
-                              ? Text(
-                                  hdate(
-                                    DateTime.parse(
-                                      item.record!.schedule.day,
-                                    ),
-                                  ),
-                                )
-                              : SizedBox(
-                                  width: splitHead ? 270 : 120,
-                                  child: Text(
-                                    item.model!.name,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: 18,
-                                    ),
+                        fromRecords
+                            ? Text(
+                                hdate(
+                                  DateTime.parse(
+                                    item.record!.schedule.day,
                                   ),
                                 ),
-                        ),
+                              )
+                            : SizedBox(
+                                width: 220,
+                                child: Text(
+                                  item.model!.name,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ),
 
-                        if (item.record?.completeness == 1)
-                          Icon(Icons.check)
-                        else
+                        if (item.record?.completeness == 1) ...[
+                          Exp(),
+                          Icon(Icons.check),
+                        ] else
                         // check that item record completeness is not NaN
                         if (item.record?.completeness.toString() !=
                                 'NaN' &&
