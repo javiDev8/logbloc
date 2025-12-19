@@ -79,15 +79,15 @@ class WelcomeScreenState extends State<WelcomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Txt('I Design', s: 20, w: 6, p: EdgeInsets.all(0)),
+                    Txt('I Design a logbook', s: 20, w: 6, p: EdgeInsets.all(0)),
                     Txt(
-                      'Create a logbook, choose its features and schedules',
+                      'Make it fit your routine, choose its features and schedules',
                       s: 15,
                       w: 5,
                       p: EdgeInsets.all(0),
                     ),
                     Txt(
-                      'II Record',
+                      'II Record on it',
                       s: 20,
                       w: 6,
                       p: EdgeInsets.only(top: 5),
@@ -99,7 +99,7 @@ class WelcomeScreenState extends State<WelcomeScreen> {
                       p: EdgeInsets.all(0),
                     ),
                     Txt(
-                      'III Insight',
+                      'III Get Insight',
                       s: 20,
                       w: 6,
                       p: EdgeInsets.only(top: 5),
