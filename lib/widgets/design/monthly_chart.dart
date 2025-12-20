@@ -38,7 +38,7 @@ class MonthlyChart extends StatelessWidget {
             detaTheme.colorScheme.tertiaryContainer;
 
         return SizedBox(
-          height: 430,
+          height: 430 + (opts.mode == 'dump' ? (opts.isFt ? 100 : 60) : 0),
           child: PageView.builder(
             controller: pageController,
             itemBuilder: (context, index) {
@@ -115,7 +115,7 @@ class MonthlyChart extends StatelessWidget {
                           ),
                         ],
                       )
-                    else
+                    else if (opts.mode != 'dump')
                       SizedBox(height: 58),
 
                     Padding(

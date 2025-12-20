@@ -26,8 +26,6 @@ initLogbloc() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FlutterLocalization.instance.ensureInitialized();
 
-  //await sharedPrefs.clear();
-
   await db.init();
   await notif.init();
   await eventProcessor.init();

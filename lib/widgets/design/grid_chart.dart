@@ -135,6 +135,7 @@ class GridChart extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: GridView.count(
+        physics: const NeverScrollableScrollPhysics(),
         crossAxisCount: 7,
         mainAxisSpacing: 5,
         crossAxisSpacing: 5,

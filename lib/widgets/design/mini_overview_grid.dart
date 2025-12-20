@@ -107,8 +107,7 @@ class MiniOverviewGrid extends StatelessWidget {
         }
 
         return SizedBox(
-          height: 150,
-          //width: 4000,
+          height: 140,
           child: GridView.count(
             crossAxisCount: 21,
             mainAxisSpacing: 4.0,

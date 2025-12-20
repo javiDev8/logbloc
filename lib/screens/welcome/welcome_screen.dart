@@ -79,7 +79,12 @@ class WelcomeScreenState extends State<WelcomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Txt('I Design a logbook', s: 20, w: 6, p: EdgeInsets.all(0)),
+                    Txt(
+                      'I Design a logbook',
+                      s: 20,
+                      w: 6,
+                      p: EdgeInsets.all(0),
+                    ),
                     Txt(
                       'Make it fit your routine, choose its features and schedules',
                       s: 15,
@@ -142,6 +147,13 @@ class WelcomeScreenState extends State<WelcomeScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          Txt(
+                            'Start your journey with 3 free logbooks'
+                            ' with no time limits, yours forever.',
+                            s: 20,
+                            w: 6,
+                          ),
+
                           Padding(
                             padding: EdgeInsetsGeometry.only(bottom: 10),
                             child: Row(
@@ -163,9 +175,9 @@ class WelcomeScreenState extends State<WelcomeScreen> {
                                   .toList(),
                             ),
                           ),
+
                           Txt(
-                            'Start your journey with 3 free logbooks.'
-                            ' You can unlock unlimited logbooks with a single,'
+                            'You can unlock unlimited logbooks with a single,'
                             ' low-cost purchase.',
                             s: 20,
                             w: 6,

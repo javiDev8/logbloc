@@ -20,8 +20,38 @@ class ModelRecordsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     double getCompleteRate(sr) => Rec.fromMap(sr).completeness * 100;
 
+    double Function(Map<String, dynamic>) genFtCountGetter(String type) =>
+        (sr) {
+          final rec = Rec.fromMap(sr);
+          return rec.features.entries
+              .where((f) {
+                final completeness =
+                    (featureSwitch(
+                              parseType: 'class',
+                              entry: MapEntry(
+                                f.key,
+                                model.features[f.key]!.serialize(),
+                              ),
+                              recordFt: f.value,
+                              ftType: f.value['type'],
+                            )
+                            as Feature)
+                        .completeness;
+                if (type == 'complete') {
+                  return completeness == 1;
+                } else {
+                  return completeness < 1;
+                }
+              })
+              .length
+              .toDouble();
+        };
+
     return Scaffold(
-      appBar: wrapBar(backable: true, children: [Txt('${model.name} records')]),
+      appBar: wrapBar(
+        backable: true,
+        children: [Txt('${model.name} records')],
+      ),
       body: Swimmer<Map<String, Rec>?>(
         pool: recordsPool,
         builder: (context, recs) {
@@ -59,7 +89,8 @@ class ModelRecordsScreen extends StatelessWidget {
                   ),
                   showOptions: {
                     'complete rate (%)': getCompleteRate,
-                    'records': (_) => 1,
+                    'completed features': genFtCountGetter('complete'),
+                    'uncompleted features': genFtCountGetter('uncomplete'),
                   },
                 ),
 
@@ -68,16 +99,20 @@ class ModelRecordsScreen extends StatelessWidget {
                     .where((f) => f.type != 'reminder')
                     .map(
                       (ft) => ListTile(
-                        onTap: () =>
-                            navPush(screen: FeatureStatsScreen(ftKey: ft.key)),
+                        onTap: () => navPush(
+                          screen: FeatureStatsScreen(ftKey: ft.key),
+                        ),
                         title: Text(ft.title),
                         leading: Icon(
-                          featureSwitch(parseType: 'icon', ftType: ft.type),
+                          featureSwitch(
+                            parseType: 'icon',
+                            ftType: ft.type,
+                          ),
                         ),
                       ),
                     ),
 
-                SizedBox(height: 10),
+                SizedBox(height: 20),
               ],
             ),
           );

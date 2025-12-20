@@ -38,7 +38,7 @@ class YearlyChart extends StatelessWidget {
             detaTheme.colorScheme.tertiaryContainer;
 
         return SizedBox(
-          height: 430,
+          height: 430 + (opts.mode == 'dump' ? (opts.isFt ? 100 : 60) : 0),
           child: PageView.builder(
             controller: pageController,
             itemBuilder: (context, index) {
@@ -109,7 +109,7 @@ class YearlyChart extends StatelessWidget {
                           ),
                         ],
                       )
-                    else
+                    else if (opts.mode != 'dump')
                       SizedBox(height: 58),
 
                     Padding(
@@ -142,15 +142,17 @@ class YearlyChart extends StatelessWidget {
                                           .toList(),
                                     )
                                     .map(
-                                      (w) =>
-                                          Row(children: [Expanded(child: w)]),
+                                      (w) => Row(
+                                        children: [Expanded(child: w)],
+                                      ),
                                     )
                                     .toList()
                               : dumpRecrods(
                                   recordFts
                                       .where(
                                         (rec) =>
-                                            rec['date'].year == targetYear.year,
+                                            rec['date'].year ==
+                                            targetYear.year,
                                       )
                                       .map((sr) => Rec.fromMap(sr))
                                       .toList(),

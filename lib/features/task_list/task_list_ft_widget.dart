@@ -78,7 +78,7 @@ class TaskListFtWidget extends StatelessWidget {
                       Expanded(
                         child: TxtField(
                           round: true,
-                          label: 'list title',
+                          label: 'task title',
                           initialValue: ft.title,
                           validator: (str) =>
                               str?.isNotEmpty != true ? 'empty!' : null,

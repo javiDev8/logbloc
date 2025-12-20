@@ -251,25 +251,27 @@ class ModelOverView extends StatelessWidget {
                   ),
                 ),
 
-                SectionDivider(string: 'Records'),
-                MiniOverviewGrid(modelId: modelEditPool.data.id),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Swimmer<Map<String, Model>?>(
-                      pool: modelsPool,
-                      builder: (context, allModels) => Button(
-                        'Records Insights',
-                        lead: Icons.bar_chart,
-                        onPressed: () => navPush(
-                          screen: ModelRecordsScreen(
-                            model: modelEditPool.data,
+                if (modelEditPool.data.recordCount > 0) ...[
+                  SectionDivider(string: 'Records'),
+                  MiniOverviewGrid(modelId: modelEditPool.data.id),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Swimmer<Map<String, Model>?>(
+                        pool: modelsPool,
+                        builder: (context, allModels) => Button(
+                          'Records Insights',
+                          lead: Icons.bar_chart,
+                          onPressed: () => navPush(
+                            screen: ModelRecordsScreen(
+                              model: modelEditPool.data,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
+                ],
               ],
             ],
           ),
