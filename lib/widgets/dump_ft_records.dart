@@ -34,7 +34,13 @@ List<Widget> dumpFtRecords({
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Txt('${weekdays[date.weekday]} ${date.day}', w: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Txt(weekdays[date.weekday], w: 8),
+                    Txt(hdate(date)),
+                  ],
+                ),
                 featureSwitch(
                   parseType: 'widget',
                   ft: featureSwitch(
