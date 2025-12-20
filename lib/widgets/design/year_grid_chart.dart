@@ -43,9 +43,20 @@ class YearGridChart extends StatelessWidget {
 
     final List<Widget> monthWidgets = [];
     for (int m = 1; m <= 12; m++) {
+      final firstDayOfMonth = DateTime(firstDayOfYear.year, m, 1);
+      final leadingBlanks = firstDayOfMonth.weekday - 1; // weekday 1 = Monday
       final daysInMonth = DateUtils.getDaysInMonth(firstDayOfYear.year, m);
       final List<Widget> monthSquares = [];
-      for (int d = 1; d <= daysInMonth; d++) {
+
+      // Add leading blanks
+      for (int i = 0; i < leadingBlanks; i++) {
+        monthSquares.add(const SizedBox.shrink());
+      }
+
+      // Add days, limited to fit in 35 squares (7x5)
+      final maxDaysToAdd = 35 - leadingBlanks;
+      final daysToAdd = daysInMonth < maxDaysToAdd ? daysInMonth : maxDaysToAdd;
+      for (int d = 1; d <= daysToAdd; d++) {
         final date = DateTime(firstDayOfYear.year, m, d);
         final matches = opts.recordFts.where(
           (rf) => strDate(rf['date'] as DateTime) == strDate(date),
@@ -78,26 +89,26 @@ class YearGridChart extends StatelessWidget {
         }
 
         monthSquares.add(
-          ClipOval(
-            child: Container(
-              decoration: BoxDecoration(
-                color: dayColor.withAlpha(
-                  maxVal == 0
-                      ? 0
-                      : dayValue == 0
-                      ? 0
-                      : (((dayValue / maxVal) * 155).toInt()) + 100,
-                ),
-                border: strDate(DateTime.now()) == strDate(date)
-                    ? Border.all(color: seedColor, width: 1.0)
-                    : null,
+          Container(
+            decoration: BoxDecoration(
+              color: dayColor.withAlpha(
+                maxVal == 0
+                    ? 0
+                    : dayValue == 0
+                    ? 0
+                    : (((dayValue / maxVal) * 155).toInt()) + 100,
               ),
+              borderRadius: BorderRadius.circular(30),
+              border: strDate(DateTime.now()) == strDate(date)
+                  ? Border.all(color: seedColor, width: 1.0)
+                  : null,
             ),
           ),
         );
       }
-      // Fill to 35 squares (5x7)
-      for (int i = daysInMonth; i < 35; i++) {
+
+      // Fill to 35 squares (7x5)
+      while (monthSquares.length < 35) {
         monthSquares.add(const SizedBox.shrink());
       }
 
@@ -105,7 +116,7 @@ class YearGridChart extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(2.0),
           child: GridView.count(
-            crossAxisCount: 5,
+            crossAxisCount: 7,
             mainAxisSpacing: 1.0,
             crossAxisSpacing: 1.0,
             shrinkWrap: true,
