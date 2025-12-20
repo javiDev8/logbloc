@@ -259,7 +259,7 @@ class ModelOverView extends StatelessWidget {
                     Swimmer<Map<String, Model>?>(
                       pool: modelsPool,
                       builder: (context, allModels) => Button(
-                        'Insight',
+                        'Records Insights',
                         lead: Icons.bar_chart,
                         onPressed: () => navPush(
                           screen: ModelRecordsScreen(

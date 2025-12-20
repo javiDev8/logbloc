@@ -99,7 +99,7 @@ class WelcomeScreenState extends State<WelcomeScreen> {
                       p: EdgeInsets.all(0),
                     ),
                     Txt(
-                      'III Get Insight',
+                      'III Get Insights',
                       s: 20,
                       w: 6,
                       p: EdgeInsets.only(top: 5),

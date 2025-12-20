@@ -230,6 +230,7 @@ class _TimerFtWidgetState extends State<TimerFtWidget> {
 
                       Expanded(
                         child: LinearProgressIndicator(
+                          borderRadius: BorderRadius.circular(10),
                           value:
                               1 -
                               (remainingTime.inSeconds /

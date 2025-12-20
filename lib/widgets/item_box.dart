@@ -81,7 +81,7 @@ class ItemBox extends StatelessWidget {
                                 ),
                               )
                             : SizedBox(
-                                width: 220,
+                                width: 200,
                                 child: Text(
                                   item.model!.name,
                                   style: TextStyle(
@@ -107,6 +107,7 @@ class ItemBox extends StatelessWidget {
                                 horizontal: 10,
                               ),
                               child: LinearProgressIndicator(
+				borderRadius: BorderRadius.circular(10),
                                 value: item.record == null
                                     ? 0
                                     : item.record!.completeness,
