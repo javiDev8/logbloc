@@ -34,7 +34,7 @@ class YearlyChart extends StatelessWidget {
         final dump = opts.mode == 'dump';
 
         final color =
-            opts.getDayColor?.call({}) ??
+            (opts.isFt ? null : opts.getDayColor?.call(recordFts.first)) ??
             detaTheme.colorScheme.tertiaryContainer;
 
         return SizedBox(
