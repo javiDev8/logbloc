@@ -33,6 +33,7 @@ initLogbloc() async {
   await eventProcessor.init();
   await themeModePool.init();
   await membershipApi.init();
+  await tourStepPool.init();
 
   await modelsPool.retrieve();
 
