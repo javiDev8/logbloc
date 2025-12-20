@@ -64,7 +64,10 @@ class ItemScreen extends StatelessWidget {
         backable: true,
         onBack: () async {
           if (!dirtItemFlagPool.data) return true;
-          final res = await warnUnsavedChanges(context, save: globalItem!.save);
+          final res = await warnUnsavedChanges(
+            context,
+            save: globalItem!.save,
+          );
           if (res == true) dirtItemFlagPool.data = false;
           return res ?? false;
         },
@@ -116,7 +119,8 @@ class ItemScreen extends StatelessWidget {
                       if (res) navPop();
                       return res;
                     },
-                    msg: 'Are you sure you want this record to be deleted?',
+                    msg:
+                        'Are you sure you want this record to be deleted?',
                   );
                   break;
               }
@@ -149,34 +153,37 @@ class ItemScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Form(
-        key: itemFormKey,
-        child: ListView(
-          children: [
-            Padding(
-              padding: EdgeInsetsGeometry.symmetric(
-                horizontal: 20,
-                vertical: 10,
+      body: Padding(
+        padding: EdgeInsetsGeometry.symmetric(horizontal: 5),
+        child: Form(
+          key: itemFormKey,
+          child: ListView(
+            children: [
+              Padding(
+                padding: EdgeInsetsGeometry.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Txt(
+                      hdate(DateTime.parse(item.date)),
+                      s: 24,
+                      w: 8,
+                      a: TextAlign.center,
+                    ),
+                  ],
+                ),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Txt(
-                    hdate(DateTime.parse(item.date)),
-                    s: 24,
-                    w: 8,
-                    a: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
 
-            // pinned
-            ...sortedFts.where((f) => f.pinned).map<Widget>(paintFt),
+              // pinned
+              ...sortedFts.where((f) => f.pinned).map<Widget>(paintFt),
 
-            // not pinned
-            ...sortedFts.where((f) => !f.pinned).map<Widget>(paintFt),
-          ],
+              // not pinned
+              ...sortedFts.where((f) => !f.pinned).map<Widget>(paintFt),
+            ],
+          ),
         ),
       ),
     );

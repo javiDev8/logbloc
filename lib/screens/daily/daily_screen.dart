@@ -183,7 +183,7 @@ class DailyScreen extends StatelessWidget {
 
                                   return Padding(
                                     padding: EdgeInsetsGeometry.symmetric(
-                                      horizontal: 7,
+                                      horizontal: 10,
                                     ),
                                     child: agendaFilterPool.data.key == 'all'
                                         ? ReorderableListView(
